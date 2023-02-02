@@ -1,51 +1,57 @@
-# ResilientDB: A High-throughput yielding Permissioned Blockchain Fabric.
+In this document, we explain how to run the PoC codebase and produce the performance results.
 
- ResilientDB aims at *Making Permissioned Blockchain Systems Fast Again*. ResilientDB makes *system-centric* design decisions by adopting a *multi-thread architecture* that encompasses *deep-pipelines*. Further, we *separate* the ordering of client transactions from their execution, which allows us to perform *out-of-order processing of messages*.
+# Steps to Setup
 
 
-## System Design:
+Setup code and machine
+The code is based on the release of version [NexRes](https://github.com/resilientdb/resilientdb).
 
-High Level Design: 
 
-[ResDBServer](https://docs.google.com/presentation/d/1i5sKocV4LQrngwNVLTTLRtshVIKICt3_tqMH4e5QgYQ/edit#slide=id.p)
-
-[ConsensusService-PBFT](https://docs.google.com/presentation/d/1HjXVlCGbjkSzs6d7o4bT_wT-cllSCx1RkvVUskTaZJA/edit#slide=id.p)
-
-[Full Design Doc](https://docs.google.com/document/d/1YA-vIMhSUnq6necRPY3t3thh4Zc2OuP9_GUwwuzSo-w/edit#)
-
-## User Development guide
-https://docs.google.com/presentation/d/1YIX6dG6cuc5EhXdytrJXoxMhGLP2BxLCmnVMhiC4WBc/edit#slide=id.p
-
----
-
-## Steps to Run KVServer
-
-Install dependences.
+## Install dependences.
 
     sh INSTALL
 
+Note: All developement and experimentation was done on Ubuntu 20.04.
 
-Start local KVServers:
+# Steps to prepare to deploy
+Prepare the machines you want to run the experimance and place the ip address in the [iplist file](https://github.com/cjcchen/poc/blob/main/oracle_script/iplist.txt) and run the [certificate script](https://github.com/cjcchen/poc/blob/main/oracle_script/generate_config.sh) to generate certificates.
 
-    sh example/start_kv_server.sh
-- This script will start 4 local kv servers and 1 local client proxy. The client proxy is the proxy transferring the messages between servers and the user client.
+    sh generate_config.sh
+ 
+Once the certificates are generated, it will be placed in the [cert folder](https://github.com/cjcchen/poc/tree/main/oracle_script/cert).
+Also, it will generate [svr_list.txt](https://github.com/cjcchen/poc/blob/main/oracle_script/svr_list.txt) and [cli_list.txt](https://github.com/cjcchen/poc/blob/main/oracle_script/cli_list.txt).
 
-Build KVServer Toos:
+We have prepared serial performance deployment folders under [here](https://github.com/cjcchen/poc/tree/main/oracle_script/pbft) and [here](https://github.com/cjcchen/poc/tree/main/oracle_script/pow).
 
-    bazel build example/kv_server_tools
-    
-Run tools to get value by key(for example, get the value with key "test"):
+# Deploy the binaries
+PoC contains two parts of machines, one is for pbft and the other is for PoW.
 
-    bazel-bin/example/kv_server_tools example/kv_client_config.config get test
-    
-You will see this if success:
+## Pbft
+Go into one of the folder under pbft, like [pbft/rep_32](https://github.com/cjcchen/poc/tree/main/oracle_script/pbft/rep_32), put the certificates you have generated into the cert folder. Also put the iplist.txt, server.config, client.config generated above to this folder.
 
-    client get value = xxx
+Run the script to deploy the server to the machines list in the iplist.txt.
 
-Run tools to set value by key(for example, set the value with key "test" and value "test_value"):
+    sh run_svr.sh
 
-    bazel-bin/example/kv_server_tools example/kv_client_config.config set test test_value
-    
-You will see this if success:
+## PoW
+This is the same as deploying Pbft.
 
-    client set ret = 0
+Go into one of the folder under pbft, like [pow/rep_32](https://github.com/cjcchen/poc/tree/main/oracle_script/pow/rep_32), put the certificates you have generated into the cert folder. Also put the iplist.txt, server.config, client.config generated above to this folder.
+
+Run the script to deploy the server to the machines list in the iplist.txt.
+
+    sh run_poc.sh
+
+# Produce the performance
+Run the script under [pow folder](https://github.com/cjcchen/poc/blob/main/oracle_script/pow/):
+
+    sh run_cli.sh
+
+This will trigger the client to keep sending transactions to Pbft instances. Then PoW instances will keep fetching the transactions from Pbft instances.
+
+# Get the results
+Run the python script under [pow folder](https://github.com/cjcchen/poc/blob/main/oracle_script/pow/):
+
+    python benchmark_result.py
+  
+Then you will see the mining time, commited blocks of each instance, and the total tps among all instances.
