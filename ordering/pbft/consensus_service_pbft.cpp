@@ -36,12 +36,11 @@ std::vector<ReplicaInfo> ConsensusServicePBFT::GetReplicas() {
 // The implementation of PBFT.
 int ConsensusServicePBFT::ConsensusCommit(std::unique_ptr<Context> context,
                                           std::unique_ptr<Request> request) {
-   //LOG(ERROR) << "recv impl type:" << request->type() << " "
-    //       << "sender id:" << request->sender_id();
+  // LOG(ERROR) << "recv impl type:" << request->type() << " "
+  //        << "sender id:" << request->sender_id();
   switch (request->type()) {
     case Request::TYPE_CLIENT_REQUEST:
-      return response_manager_->NewClientRequest(std::move(context),
-                                                 std::move(request));
+      return response_manager_->StartEval();
     case Request::TYPE_RESPONSE:
       return response_manager_->ProcessResponseMsg(std::move(context),
                                                    std::move(request));
@@ -75,6 +74,10 @@ int ConsensusServicePBFT::ConsensusCommit(std::unique_ptr<Context> context,
   return 0;
 }
 
+void ConsensusServicePBFT::SetupPerformanceDataFunc(
+    std::function<std::string()> func) {
+  response_manager_->SetDataFunc(func);
+}
 void ConsensusServicePBFT::AddNewReplica(const ReplicaInfo& info) {
   recovery_->AddNewReplica(info);
 }

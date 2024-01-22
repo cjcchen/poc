@@ -126,13 +126,13 @@ int PoWManager::GetShiftMsg(const SliceInfo& slice_info) {
 
 int PoWManager::GetMiningTxn(MiningType type){
        std::unique_lock<std::mutex> lck(tx_mutex_);
-       LOG(ERROR)<<"get mining txn status:"<<current_status_;
+       //LOG(ERROR)<<"get mining txn status:"<<current_status_;
 	if(current_status_ == NEXT_NEWBLOCK){
 		type = MiningType::NEWBLOCK;
 	}
 	if(type == NEWBLOCK){
 		uint64_t max_seq = std::max(block_manager_->GetLastSeq(), block_manager_->GetLastCandidateSeq());
-		LOG(ERROR)<<"get block last max:"<<block_manager_->GetLastSeq()<<" "<<block_manager_->GetLastCandidateSeq();
+		//LOG(ERROR)<<"get block last max:"<<block_manager_->GetLastSeq()<<" "<<block_manager_->GetLastCandidateSeq();
 		auto client_tx = transaction_accessor_->ConsumeTransactions(max_seq+1);
 		if(client_tx == nullptr){
 		  return -2;
@@ -242,10 +242,10 @@ void PoWManager::MiningProcess() {
 	MiningType type = MiningType::NEWBLOCK;
 	while (IsRunning()) {
 		int ret = GetMiningTxn(type);
-		LOG(ERROR)<<"get mining ret:"<<ret;
+		//LOG(ERROR)<<"get mining ret:"<<ret;
 		if(ret<0){
-		      usleep(10000);
-		continue;
+      usleep(100000);
+      continue;
 		}
 		else if(ret>0){
 			LOG(ERROR)<<"get new block";

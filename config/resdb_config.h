@@ -98,7 +98,7 @@ class ResDBConfig {
   bool is_test_mode_ = false;
   uint32_t max_process_txn_ = 2048;
   uint32_t client_batch_wait_time_ms_ = 100000;
-  uint32_t client_batch_num_ = 1;
+  uint32_t client_batch_num_ = 100;
 
   uint32_t worker_num_ = 8;
   uint32_t input_worker_num_ = 8;

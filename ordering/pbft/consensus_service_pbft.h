@@ -23,6 +23,8 @@ class ConsensusServicePBFT : public ConsensusService {
   std::vector<ReplicaInfo> GetReplicas() override;
 
   void Start();
+  void SetupPerformanceDataFunc(
+    std::function<std::string()> func);
 
  protected:
   virtual void AddNewReplica(const ReplicaInfo& info);

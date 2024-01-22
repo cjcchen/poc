@@ -106,8 +106,8 @@ void TransactionExecutor::Execute(std::unique_ptr<Request> request) {
     LOG(ERROR) << "parse data fail";
   }
 
-   LOG(ERROR) << " get request batch size:"
-          << batch_request.client_requests_size()<<" cur seq:"<<request->seq();
+  // LOG(ERROR) << " get request batch size:"
+  //        << batch_request.client_requests_size()<<" cur seq:"<<request->seq();
   std::unique_ptr<BatchClientResponse> batch_response =
       std::make_unique<BatchClientResponse>();
 

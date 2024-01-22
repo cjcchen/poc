@@ -46,7 +46,7 @@ int main(int argc, char** argv) {
       static_cast<ResDBPoCConfig*>(pow_config.get());
 
   pow_config_ptr->SetMaxNonceBit(42);
-  pow_config_ptr->SetDifficulty(32);
+  pow_config_ptr->SetDifficulty(28);
   
   ResDBServer server(*pow_config_ptr,
                      std::make_unique<ConsensusServicePoW>(*pow_config_ptr));

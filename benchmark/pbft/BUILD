@@ -20,6 +20,7 @@ cc_binary(
         "//config:resdb_config_utils",
         "//ordering/pbft:consensus_service_pbft",
         "//server:resdb_server",
+      "//proto:kv_server_cc_proto"
     ],
 )
 

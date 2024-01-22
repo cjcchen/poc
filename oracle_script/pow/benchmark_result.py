@@ -8,100 +8,72 @@ from datetime import datetime
 from oracle_script.comm.utils import *
 from oracle_script.comm.comm_config import *
 
+cert_path="pbft_cert/"
+config_path=""
+home=""
+svr_ip_file=""
+cli_ip_file=""
+svr_bin_file=""
+cert_dir=""
+svr_config_path=""
+pow_config_path=""
+svr_bin_bazel_path=""
+bft_config_path=""
 
-def get_avg(config):
-    iplist=get_ips(config["svr_ip_file"])
-    count = {}
-    avg_time = []
-    tot = 0
-    lat = 0
-    num = 0
-    for (idx,svr_ip) in iplist:
-        cmd="grep \'minging time:\' /home/ubuntu/pow_server{}.log".format(idx)
-        res=run_remote_cmd(svr_ip, cmd)
-        for r in res:
-            rep=r.decode('utf8')
-            print("re:{}".format(rep))
-            if len(rep)>0:
-        #data = res.split(':')[-1]
-                print("re:{}".format(rep))
-                #print("get res:",rep[5], rep[6])
-                #lat += int(rep[5])
-                #num += int(rep[6])
+def parse_config(config):
+    global svr_ip_file, cli_ip_file,svr_bin_bazel_path,cert_dir,svr_config_path,pow_config_path, bft_config_path
+    svr_ip_file = config["svr_ip_file"]
+    svr_ip_file = config_path+"/"+svr_ip_file
 
-        #if num > 0:
-        #    print("avg time:",lat/num)
-        #tot += float(data)
-    #print("avg time:",lat/num)
+    cli_ip_file = config["cli_ip_file"]
+    cli_ip_file = config_path+"/"+cli_ip_file
 
-    '''
-    tp = 0
-    tp_num = 0
-    for (idx,svr_ip) in iplist:
-        cmd="grep \'update block:\' /home/ubuntu/pow_server{}.log".format(idx)
-        res=run_remote_cmd(svr_ip, cmd)
-        for r in res:
-            rep=r.decode('utf8').split(':')
-            if len(rep)>1:
-                print("get res:",rep[1])
-                tp += int(rep[1])
-                tp_num +=1
+    pow_config_path = config["pow_config_path"]
+    pow_config_path = config_path+"/"+pow_config_path
 
-        #tot += float(data)
-    print("tput :",tp/tp_num)
-    '''
+    bft_config_path = config["bft_config_path"]
+    bft_config_path = config_path+"/"+ bft_config_path
 
+    svr_bin_bazel_path = config["svr_bin_bazel_path"]
+    svr_bin_bazel_path= home+"/"+ svr_bin_bazel_path
 
-def get_block_time(config):
-    iplist=get_ips(config["svr_ip_file"])
-    count = {}
-    avg_time = []
-    total_time = []
-    for (idx,svr_ip) in iplist:
-        cmd="grep \'total commit:\' /home/ubuntu/pow_server{}.log | grep avg | tail -1".format(idx)
-        res=run_remote_cmd(svr_ip, cmd)
-        res=res[0].decode('utf8')
-        data = res.split()
-        print("res:",data)
-        avg_time.append(data[-1].split(':')[-1])
-        total_time.append(data[-3].split(':')[-1])
-    print("avg commit:",avg_time)
-    print("avg commit:",total_time)
+    cert_dir=config_path+"/cert/"
 
 def get_min_block(config):
-    iplist=get_ips(config["svr_ip_file"])
+    iplist=get_ips(svr_ip_file)
     count = {}
     commit_count = {}
+    mining_time={}
     for (idx,svr_ip) in iplist:
-        cmd="grep \'mine block successful, id\' /home/ubuntu/pow_server{}.log".format(idx)
+        cmd="grep \'mining time\' /home/ubuntu/pow_server{}.log".format(idx)
         res=run_remote_cmd(svr_ip, cmd)
         if(len(res)):
             l = []
             for s in res:
-                seq=s.decode('utf8').split(':')
-                print("result:seq{}".format(seq))
-                if(len(seq)):
-                    d = seq[-1].strip()
-                    l.append(d)
-                    if d not in count:
-                        count[d]=1
-                    else:
-                        count[d] = count[d]+1
-                        print("{} is re-committed".format(d))
-            commit_count[idx] = len(l)
-    print("commit per:",commit_count)
+                seq=s.decode('utf8').split(':')[4:7]
+                #print("result:seq{}".format(seq))
+                if (seq[0],seq[1]) not in mining_time:
+                  mining_time[(seq[0],seq[1])] = seq[2]
+    total_time = 0.0
+    for (k,v) in mining_time.items():
+      total_time = total_time +  float(v)
+    print("avg mining time:{} second:".format(total_time/len(mining_time.items())))
+
     print("=====================")
 
     avg_time = []
+    tps=[]
     for (idx,svr_ip) in iplist:
-        cmd="grep \'commit new block\' /home/ubuntu/pow_server{}.log".format(idx)
+        cmd="grep \'execute seq:\' /home/ubuntu/pow_server{}.log | grep -v total".format(idx)
         res=run_remote_cmd(svr_ip, cmd)
         if(len(res)):
             delta = 0
             last = 0
             for s in res:
+                print("get s:",s.split())
+                seq = str(s.decode("utf-8").split()[5][5:-1].strip()).split(',')
+                #print("seq:",int(seq[0]),int(seq[1]))
                 t = str(s.split()[1].strip().decode('utf8'))
-                print("s:",t.split(':'))
                 if(len(t.split(':'))<3):
                     print("!!!!! no data")
                     continue
@@ -112,20 +84,26 @@ def get_min_block(config):
                 datetime_obj = datetime.strptime(t, "%Y-%m-%d %H:%M:%S.%f")
                 stamp = int(time.mktime(datetime_obj.timetuple()) * 1000.0 + datetime_obj.microsecond / 1000.0)
                 if last > 0:
-                    delta += stamp - last
-                    print("last :{} cur:{}, delta:{}, time:{}".format(last, stamp, delta, t))
+                    delta = stamp - last
+                    print("last :{} cur:{}, delta:{}, time:{}, {}-{}".format(last, stamp, delta, t, int(seq[1]), int(seq[0])))
+                    tps.append((int(seq[1]) - int(seq[0]))/delta*1000)
                 last = stamp
             avg_time.append(delta/(len(res)-1)/1000)
-    print("avg_time:",sum(avg_time)/len(avg_time))
+            break
+    print("tps:",sum(tps)/len(tps)*100)
 
 def stat(config):
-    #get_avg(config)
-    #get_block_time(config)
     get_min_block(config)
 
 if __name__ == '__main__':
     config_file=sys.argv[1]
     config = read_config(config_file)
+
+    config_path=os.path.dirname(config_file)
+    home = os.path.realpath(config_path+"/../../../")
+    print("home:",home)
+    parse_config(config)
+
     #stat(config)
-    get_avg(config)
+    stat(config)
 

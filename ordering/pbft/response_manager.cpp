@@ -14,48 +14,69 @@ ResponseManager::ResponseManager(const ResDBConfig& config,
           "response", config_.GetMaxProcessTxn(), nullptr)),
       context_pool_(std::make_unique<LockFreeCollectorPool>(
           "context", config_.GetMaxProcessTxn(), nullptr)),
-      batch_queue_("client request", config_.ClientBatchNum()),
+      batch_queue_("client request"),
       system_info_(system_info) {
   stop_ = false;
-  local_id_ = 1;
-  client_req_thread_ = std::thread(&ResponseManager::BatchProposeMsg, this);
+  eval_started_ = false;
+  eval_ready_future_ = eval_ready_promise_.get_future();
+  if (config_.GetPublicKeyCertificateInfo()
+          .public_key()
+          .public_key_info()
+          .type() == CertificateKeyInfo::CLIENT) {
+    for (int i = 0; i < 2; ++i) {
+      user_req_thread_[i] =
+          std::thread(&ResponseManager::BatchProposeMsg, this);
+    }
+  }
+
   global_stats_ = Stats::GetGlobalStats();
+  send_num_=0;
+  total_num_ = 0;
 }
 
 ResponseManager::~ResponseManager() {
   stop_ = true;
-  if (client_req_thread_.joinable()) {
-    client_req_thread_.join();
+  for (int i = 0; i < 16; ++i) {
+    if (user_req_thread_[i].joinable()) {
+      user_req_thread_[i].join();
+    }
   }
+
 }
 
 // use system info
 int ResponseManager::GetPrimary() { return system_info_->GetPrimaryId(); }
 
-int ResponseManager::AddContextList(
-    std::vector<std::unique_ptr<Context>> context_list, uint64_t id) {
-  return context_pool_->GetCollector(id)->SetContextList(
-      id, std::move(context_list));
+std::unique_ptr<Request> ResponseManager::GenerateUserRequest() {
+  std::unique_ptr<Request> request = std::make_unique<Request>();
+  request->set_data(data_func_());
+  return request;
 }
 
-std::vector<std::unique_ptr<Context>> ResponseManager::FetchContextList(
-    uint64_t id) {
-  auto context = context_pool_->GetCollector(id)->FetchContextList(id);
-  context_pool_->Update(id);
-  return context;
+void ResponseManager::SetDataFunc(std::function<std::string()> func) {
+  LOG(ERROR)<<"set data func";
+  data_func_ = std::move(func);
 }
 
-int ResponseManager::NewClientRequest(std::unique_ptr<Context> context,
-                                      std::unique_ptr<Request> client_request) {
-  if (!client_request->need_response()) {
-    context->client = nullptr;
+int ResponseManager::StartEval() {
+  if (eval_started_) {
+    return 0;
   }
-
-  std::unique_ptr<QueueItem> queue_item = std::make_unique<QueueItem>();
-  queue_item->context = std::move(context);
-  queue_item->client_request = std::move(client_request);
-
-  batch_queue_.Push(std::move(queue_item));
+  LOG(WARNING) << "start eval";
+  eval_started_ = true;
+  for (int i = 0; i < 60000000; ++i) {
+    std::unique_ptr<QueueItem> queue_item = std::make_unique<QueueItem>();
+    queue_item->context = nullptr;
+    queue_item->client_request = GenerateUserRequest();
+    batch_queue_.Push(std::move(queue_item));
+    if (i == 20000) {
+      eval_ready_promise_.set_value(true);
+    }
+    if(i%10000 == 0){
+      LOG(ERROR)<<"data done:"<<i;
+    }
+  }
+  LOG(WARNING) << "start eval done";
   return 0;
 }
 
@@ -65,6 +86,15 @@ int ResponseManager::NewClientRequest(std::unique_ptr<Context> context,
 int ResponseManager::ProcessResponseMsg(std::unique_ptr<Context> context,
                                         std::unique_ptr<Request> request) {
   std::unique_ptr<Request> response;
+  std::string hash = request->hash();
+  uint64_t seq = request->seq();
+  /*
+  if (request->ret() == -2) {
+    // LOG(INFO) << "get response fail:" << request->ret();
+     send_num_--;
+    return 0;
+  }
+  */
   // Add the response message, and use the call back to collect the received
   // messages.
   // The callback will be triggered if it received f+1 messages.
@@ -140,7 +170,7 @@ void ResponseManager::SendResponseToClient(
     const BatchClientResponse& batch_response) {
   uint64_t create_time = batch_response.createtime();
   uint64_t local_id = batch_response.local_id();
-  LOG(ERROR) << " send to client";
+  //LOG(ERROR) << " send to client";
   if (create_time > 0) {
     uint64_t run_time = get_sys_clock() - create_time;
     global_stats_->AddLatency(run_time);
@@ -148,55 +178,36 @@ void ResponseManager::SendResponseToClient(
     LOG(ERROR) << "seq:" << local_id << " no resp";
   }
 
-  if (config_.IsPerformanceRunning()) {
-    return;
-  }
 
-  std::vector<std::unique_ptr<Context>> context_list =
-      FetchContextList(batch_response.local_id());
-  if (context_list.empty()) {
-    LOG(ERROR) << "context list is empty. local id:"
-               << batch_response.local_id();
-    return;
-  }
+  send_num_--;
 
-  for (size_t i = 0; i < context_list.size(); ++i) {
-    auto& context = context_list[i];
-    if (context->client == nullptr) {
-      LOG(ERROR) << " no client:";
-      continue;
-    }
-    int ret = context->client->SendRawMessageData(batch_response.response(i));
-    if (ret) {
-      LOG(ERROR) << "send resp fail ret:" << ret;
-    }
-  }
 }
 
 // =================== request ========================
 int ResponseManager::BatchProposeMsg() {
   LOG(ERROR) << "batch wait time?:" << config_.ClientBatchWaitTimeMS()
              << " batch num:" << config_.ClientBatchNum();
+  std::vector<std::unique_ptr<QueueItem>> batch_req;
+  eval_ready_future_.get();
+  LOG(ERROR)<<"start max txn:"<<config_.GetMaxProcessTxn();
   while (!stop_) {
-    std::vector<std::unique_ptr<QueueItem>> batch_req =
-        batch_queue_.Pop(config_.ClientBatchWaitTimeMS());
-    if (batch_req.empty()) {
+    if (send_num_ >= config_.GetMaxProcessTxn()) {
+      usleep(100000);
       continue;
     }
-    int ret = DoBatch(batch_req);
-    if (ret != 0) {
-      Response response;
-      response.set_result(Response::ERROR);
-      for (size_t i = 0; i < batch_req.size(); ++i) {
-        if (batch_req[i]->context && batch_req[i]->context->client) {
-          int ret = batch_req[i]->context->client->SendRawMessage(response);
-          if (ret) {
-            LOG(ERROR) << "send resp" << response.DebugString()
-                       << " fail ret:" << ret;
-          }
-        }
+    if (batch_req.size() < config_.ClientBatchNum()) {
+      std::unique_ptr<QueueItem> item =
+          batch_queue_.Pop(config_.ClientBatchWaitTimeMS());
+      if (item == nullptr) {
+        continue;
+      }
+      batch_req.push_back(std::move(item));
+      if (batch_req.size() < config_.ClientBatchNum()) {
+        continue;
       }
     }
+    int ret = DoBatch(batch_req);
+    batch_req.clear();
     // usleep(10);
   }
   return 0;
@@ -209,28 +220,12 @@ int ResponseManager::DoBatch(
   if (new_request == nullptr) {
     return -2;
   }
-  std::vector<std::unique_ptr<Context>> context_list;
-
   BatchClientRequest batch_request;
   for (size_t i = 0; i < batch_req.size(); ++i) {
     BatchClientRequest::ClientRequest* req =
         batch_request.add_client_requests();
     req->mutable_request()->Swap(batch_req[i]->client_request.get());
-    *req->mutable_signature() = batch_req[i]->context->signature;
     req->set_id(i);
-    context_list.push_back(std::move(batch_req[i]->context));
-  }
-  LOG(ERROR)<<"get client batch:"<<batch_req.size();
-
-  if (!config_.IsPerformanceRunning()) {
-    LOG(ERROR) << "add context list:" << new_request->seq()
-               << " list size:" << context_list.size();
-    batch_request.set_local_id(local_id_);
-    int ret = AddContextList(std::move(context_list), local_id_++);
-    if (ret != 0) {
-      LOG(ERROR) << "add context list fail:";
-      return ret;
-    }
   }
 
   batch_request.set_createtime(get_sys_clock());
@@ -238,6 +233,16 @@ int ResponseManager::DoBatch(
   new_request->set_hash(SignatureVerifier::CalculateHash(new_request->data()));
   new_request->set_proxy_id(config_.GetSelfInfo().id());
   replica_client_->SendMessage(*new_request, GetPrimary());
+
+  send_num_++;
+  if (total_num_++ == 1000000) {
+    stop_ = true;
+    LOG(WARNING) << "total num is done:" << total_num_;
+  }
+  if (total_num_ % 10000 == 0) {
+    LOG(WARNING) << "total num is :" << total_num_;
+  }
+  global_stats_->IncClientCall();
   return 0;
 }
 

@@ -46,8 +46,8 @@ Stats::Stats(int sleep_time) {
   broad_cast_msg_ = 0;
   send_broad_cast_msg_ = 0;
 
-//	global_thread_ =
-  //     std::thread(&Stats::MonitorGlobal, this);  // pass by reference
+	global_thread_ =
+       std::thread(&Stats::MonitorGlobal, this);  // pass by reference
 }
 
 void Stats::Stop() { stop_ = true; }
