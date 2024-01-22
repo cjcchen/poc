@@ -9,21 +9,46 @@ The code is based on the release of version [NexRes](https://github.com/resilien
 
 ## Install dependences.
 
-    sh INSTALL
+    ./INSTALL.sh
 
 Note: All developement and experimentation was done on Ubuntu 20.04.
 
-# Steps to prepare to deploy
-Prepare the machines you want to run the experimance and place the ip address in the [iplist file](https://github.com/cjcchen/poc/blob/main/oracle_script/iplist.txt) and run the [certificate script](https://github.com/cjcchen/poc/blob/main/oracle_script/generate_config.sh) to generate certificates.
+# Steps to deploy and run performance
 
-    sh generate_config.sh
- 
-Once the certificates are generated, it will be placed in the [cert folder](https://github.com/cjcchen/poc/tree/main/oracle_script/cert).
-Also, it will generate [svr_list.txt](https://github.com/cjcchen/poc/blob/main/oracle_script/svr_list.txt) and [cli_list.txt](https://github.com/cjcchen/poc/blob/main/oracle_script/cli_list.txt).
+## PBFT
 
-We have prepared serial performance deployment folders under [here](https://github.com/cjcchen/poc/tree/main/oracle_script/pbft) and [here](https://github.com/cjcchen/poc/tree/main/oracle_script/pow).
+Before deploying binaries, we need to build tools to generate certificates:
 
-# Deploy the binaries
+	bazel build //tools:certificate_tools
+
+put the ssh key path to oracle_script/comm/comm_config.py and ensure it contains the right mode (e.g. 0600).
+
+Prepare the machines you want to run the experimance and place the ip address in the iplist file.
+
+1. go to oracle_script
+
+	cd oracle_script
+
+2. Add the ipaddress to iplist.txt
+3. Run script to generate certificates
+	
+	./generate_pbft_config.sh
+
+Once the certificates are generated, place the outputs to the deploy folder
+	
+	cp *.txt pbft/deploy/
+	cp cert/* pbft/deploy/cert/
+
+## Deploy the PBFT service
+
+	cd pbft/deploy
+	./run_svr.sh
+
+## Obtain the performance of PBFT service
+
+	./run_cli.sh
+
+
 PoC contains two parts of machines, one is for pbft and the other is for PoW.
 
 ## Pbft

@@ -1,1 +1,1 @@
-KEY="/home/ubuntu/.ssh/junchao.pem"
+KEY="/home/ubuntu/poc/junchao.pem"

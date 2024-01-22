@@ -7,6 +7,8 @@ def run_cmd(cmd):
     p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     output=p.stdout.readlines()
     p.wait()
+    for o in output:
+        print(o)
     return output
 
 def run_cmd_no_wait(cmd):
