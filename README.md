@@ -27,12 +27,12 @@ Prepare the machines you want to run the experimance and place the ip address in
 
 1. go to oracle_script
 
-	cd oracle_script
+		cd oracle_script
 
-2. Add the ipaddress to iplist.txt
-3. Run script to generate certificates
+4. Add the ipaddress to iplist.txt
+5. Run script to generate certificates
 	
-	./generate_pbft_config.sh
+		./generate_pbft_config.sh
 
 Once the certificates are generated, place the outputs to the deploy folder
 	
@@ -60,12 +60,12 @@ Run get_result.sh to obtain the max and average TPS.
 
 1. go to oracle_script
 
-	cd oracle_script
+		cd oracle_script
 
 2. Add the ipaddress to iplist.txt
 3. Run script to generate certificates
 	
-	./generate_pow_config.sh
+		./generate_pow_config.sh
 
 Once the certificates are generated, place the outputs to the deploy folder
 	
