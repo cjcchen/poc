@@ -3,8 +3,8 @@
 #include "application/utils/server_factory.h"
 #include "kv_server/kv_server_executor.h"
 
-using resdb::KVServerExecutor;
-using resdb::ResDBServer;
+using xxxdb::KVServerExecutor;
+using xxxdb::XXXDBServer;
 
 void ShowUsage() {
   printf("<config> <private_key> <cert_file> [logging_dir]\n");
@@ -25,7 +25,7 @@ int main(int argc, char **argv) {
   }
 
   auto server =
-      GenerateResDBServer(config_file, private_key_file, cert_file,
+      GenerateXXXDBServer(config_file, private_key_file, cert_file,
                           std::make_unique<KVServerExecutor>(), logging_dir);
   server->Run();
 }

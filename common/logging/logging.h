@@ -2,7 +2,7 @@
 
 #include <google/protobuf/message.h>
 
-namespace resdb {
+namespace xxxdb {
 
 class Logging {
 public:
@@ -23,4 +23,4 @@ public:
 private:
   int fd_;
 };
-} // namespace resdb
+} // namespace xxxdb

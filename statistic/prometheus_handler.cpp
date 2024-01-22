@@ -2,7 +2,7 @@
 
 #include <glog/logging.h>
 
-namespace resdb {
+namespace xxxdb {
 
 using prometheus::Histogram;
 
@@ -166,4 +166,4 @@ void PrometheusHandler::Inc(MetricName name, int num) {
   counter_metric_[metric_name_str]->Increment(num);
 }
 
-} // namespace resdb
+} // namespace xxxdb

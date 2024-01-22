@@ -4,9 +4,9 @@
 
 #include "glog/logging.h"
 
-namespace resdb {
+namespace xxxdb {
 
-Query::Query(const ResDBConfig &config, TransactionManager *transaction_manager)
+Query::Query(const XXXDBConfig &config, TransactionManager *transaction_manager)
     : config_(config), transaction_manager_(transaction_manager) {}
 
 Query::~Query() {}
@@ -58,4 +58,4 @@ int Query::ProcessQuery(std::unique_ptr<Context> context,
   return 0;
 }
 
-} // namespace resdb
+} // namespace xxxdb

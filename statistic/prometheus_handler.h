@@ -6,7 +6,7 @@
 #include <prometheus/histogram.h>
 #include <prometheus/registry.h>
 
-namespace resdb {
+namespace xxxdb {
 
 enum TableName {
   MINING,
@@ -64,4 +64,4 @@ private:
   std::map<std::string, prometheus::Gauge *> gauge_metric_;
 };
 
-} // namespace resdb
+} // namespace xxxdb

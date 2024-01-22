@@ -1,17 +1,17 @@
 #pragma once
 
 #include "absl/status/status.h"
-#include "config/resdb_poc_config.h"
+#include "config/xxxdb_poc_config.h"
 #include "ordering/poc/pow/miner.h"
 #include "ordering/poc/proto/pow.pb.h"
 #include "statistic/stats.h"
 
-namespace resdb {
+namespace xxxdb {
 
 // Manager all the blocks and mine the new blocks.
 class BlockManager {
 public:
-  BlockManager(const ResDBPoCConfig &config);
+  BlockManager(const XXXDBPoCConfig &config);
   virtual ~BlockManager() = default;
   // ================ mining a new block ============================
   // All the mining functions below are not thread safe.
@@ -67,7 +67,7 @@ private:
       std::unique_ptr<BatchClientTransactions> client_request);
 
 private:
-  ResDBPoCConfig config_;
+  XXXDBPoCConfig config_;
   std::mutex mtx_;
   std::unique_ptr<Miner> miner_;
   // Blocks that have been committed.
@@ -84,4 +84,4 @@ private:
   PrometheusHandler *prometheus_handler_;
 };
 
-} // namespace resdb
+} // namespace xxxdb

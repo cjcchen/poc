@@ -6,11 +6,11 @@
 #include "glog/logging.h"
 #include "ordering/pbft/transaction_utils.h"
 
-namespace resdb {
+namespace xxxdb {
 
-Commitment::Commitment(const ResDBConfig &config,
+Commitment::Commitment(const XXXDBConfig &config,
                        TransactionManager *transaction_manager,
-                       ResDBReplicaClient *replica_client,
+                       XXXDBReplicaClient *replica_client,
                        SignatureVerifier *verifier)
     : config_(config), transaction_manager_(transaction_manager), stop_(false),
       replica_client_(replica_client), verifier_(verifier) {
@@ -58,7 +58,7 @@ int Commitment::ProcessProposeMsg(std::unique_ptr<Context> context,
     return -2;
   }
   global_stats_->IncPropose();
-  std::unique_ptr<Request> prepare_request = resdb::NewRequest(
+  std::unique_ptr<Request> prepare_request = xxxdb::NewRequest(
       Request::TYPE_PREPARE, *request, config_.GetSelfInfo().id());
   prepare_request->clear_data();
 
@@ -81,7 +81,7 @@ int Commitment::ProcessPrepareMsg(std::unique_ptr<Context> context,
     return -2;
   }
   global_stats_->IncPrepare();
-  std::unique_ptr<Request> commit_request = resdb::NewRequest(
+  std::unique_ptr<Request> commit_request = xxxdb::NewRequest(
       Request::TYPE_COMMIT, *request, config_.GetSelfInfo().id());
   // Add request to message_manager.
   // If it has received enough same requests(2f+1), broadcast the commit
@@ -131,4 +131,4 @@ int Commitment::PostProcessExecutedMsg() {
   return 0;
 }
 
-} // namespace resdb
+} // namespace xxxdb

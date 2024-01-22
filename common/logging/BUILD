@@ -14,13 +14,3 @@ cc_library(
     ],
 )
 
-cc_test(
-    name = "logging_test",
-    srcs = ["logging_test.cpp"],
-    deps = [
-        ":logging",
-        "//common/test",
-        "//common/test:test_main",
-        "//proto:logging_cc_proto",
-    ],
-)

@@ -4,7 +4,7 @@
 
 #include "common/utils/utils.h"
 
-namespace resdb {
+namespace xxxdb {
 
 std::mutex g_mutex;
 
@@ -222,4 +222,4 @@ void Stats::AddLatency(uint64_t run_time) {
   run_req_run_time_ += run_time;
 }
 
-} // namespace resdb
+} // namespace xxxdb

@@ -1,18 +1,18 @@
 #include "application/utils/server_factory.h"
 #include "benchmark/pbft/benchmark_server_impl.h"
-#include "config/resdb_config_utils.h"
+#include "config/xxxdb_config_utils.h"
 #include "ordering/pbft/consensus_service_pbft.h"
 #include "proto/kv_server.pb.h"
 #include "statistic/stats.h"
 
-using resdb::BenchmarkServerImpl;
-using resdb::ConsensusServicePBFT;
-using resdb::GenerateResDBConfig;
-using resdb::GenerateResDBServer;
-using resdb::KVRequest;
-using resdb::ResDBConfig;
-using resdb::ResDBServer;
-using resdb::Stats;
+using xxxdb::BenchmarkServerImpl;
+using xxxdb::ConsensusServicePBFT;
+using xxxdb::GenerateXXXDBConfig;
+using xxxdb::GenerateXXXDBServer;
+using xxxdb::KVRequest;
+using xxxdb::XXXDBConfig;
+using xxxdb::XXXDBServer;
+using xxxdb::Stats;
 
 void ShowUsage() { printf("<config> <private_key> <cert_file>\n"); }
 
@@ -32,8 +32,8 @@ int main(int argc, char **argv) {
   char *private_key_file = argv[2];
   char *cert_file = argv[3];
 
-  std::unique_ptr<ResDBConfig> config =
-      GenerateResDBConfig(config_file, private_key_file, cert_file);
+  std::unique_ptr<XXXDBConfig> config =
+      GenerateXXXDBConfig(config_file, private_key_file, cert_file);
 
   Stats::GetGlobalStats(/*int sleep_seconds = */ 5);
 
@@ -49,16 +49,16 @@ int main(int argc, char **argv) {
     return request_data;
   });
 
-  // auto server = std::make_unique<ResDBServer>(
+  // auto server = std::make_unique<XXXDBServer>(
   //    *config,
   //    std::make_unique<ConsensusServicePBFT>(*config, std::move(executor)));
 
   auto server =
-      std::make_unique<ResDBServer>(*config, std::move(performance_consens));
-  // auto server = GenerateResDBServer(
+      std::make_unique<XXXDBServer>(*config, std::move(performance_consens));
+  // auto server = GenerateXXXDBServer(
   //    config_file, private_key_file, cert_file,
   //    std::make_unique<BenchmarkServerImpl>(), nullptr,
-  //    [&](ResDBConfig* config) { config->RunningPerformance(true); });
+  //    [&](XXXDBConfig* config) { config->RunningPerformance(true); });
 
   server->Run();
 }

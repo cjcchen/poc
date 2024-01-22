@@ -1,19 +1,19 @@
 #pragma once
 
 #include "common/queue/blocking_queue.h"
-#include "config/resdb_poc_config.h"
+#include "config/xxxdb_poc_config.h"
 #include "ordering/poc/pow/block_manager.h"
 #include "ordering/poc/pow/miner_manager.h"
 #include "ordering/poc/pow/shift_manager.h"
 #include "ordering/poc/pow/transaction_accessor.h"
 #include "ordering/poc/proto/pow.pb.h"
-#include "server/resdb_replica_client.h"
+#include "server/xxxdb_replica_client.h"
 
-namespace resdb {
+namespace xxxdb {
 
 class PoWManager {
 public:
-  PoWManager(const ResDBPoCConfig &config, ResDBReplicaClient *bc_client);
+  PoWManager(const XXXDBPoCConfig &config, XXXDBReplicaClient *bc_client);
   virtual ~PoWManager();
 
   void Start();
@@ -41,11 +41,11 @@ public:
 
 protected:
   virtual std::unique_ptr<TransactionAccessor>
-  GetTransactionAccessor(const ResDBPoCConfig &config);
+  GetTransactionAccessor(const XXXDBPoCConfig &config);
   virtual std::unique_ptr<ShiftManager>
-  GetShiftManager(const ResDBPoCConfig &config);
+  GetShiftManager(const XXXDBPoCConfig &config);
   virtual std::unique_ptr<BlockManager>
-  GetBlockManager(const ResDBPoCConfig &config);
+  GetBlockManager(const XXXDBPoCConfig &config);
 
   virtual MiningStatus Wait();
   virtual void NotifyBroadCast();
@@ -63,7 +63,7 @@ protected:
   void GossipProcess();
 
 private:
-  ResDBPoCConfig config_;
+  XXXDBPoCConfig config_;
   std::unique_ptr<BlockManager> block_manager_;
   std::unique_ptr<ShiftManager> shift_manager_;
   std::unique_ptr<TransactionAccessor> transaction_accessor_;
@@ -73,9 +73,9 @@ private:
   std::mutex broad_cast_mtx_, mutex_, tx_mutex_;
   std::condition_variable broad_cast_cv_, cv_;
   std::atomic<BlockStatus> current_status_ = BlockStatus::GENERATE_NEW;
-  ResDBReplicaClient *bc_client_;
+  XXXDBReplicaClient *bc_client_;
   SliceInfo need_slice_info_;
   PrometheusHandler *prometheus_handler_;
 };
 
-} // namespace resdb
+} // namespace xxxdb

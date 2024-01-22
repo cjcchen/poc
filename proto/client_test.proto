@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package resdb;
+package xxxdb;
 
 message ClientTestRequest {
     string value = 1;

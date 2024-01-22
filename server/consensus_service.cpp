@@ -5,7 +5,7 @@
 
 #include "proto/broadcast.pb.h"
 
-namespace resdb {
+namespace xxxdb {
 
 namespace {
 
@@ -21,7 +21,7 @@ bool ReplicaExisted(const ReplicaInfo &replica_info,
 
 } // namespace
 
-ConsensusService::ConsensusService(const ResDBConfig &config)
+ConsensusService::ConsensusService(const XXXDBConfig &config)
     : config_(config), global_stats_(Stats::GetGlobalStats()) {
   if (config_.SignatureVerifierEnabled()) {
     verifier_ = std::make_unique<SignatureVerifier>(
@@ -39,7 +39,7 @@ void ConsensusService::UpdateBroadCastClient() {
   bc_client_ = GetReplicaClient(GetReplicas(), true);
 }
 
-ResDBReplicaClient *ConsensusService::GetBroadCastClient() {
+XXXDBReplicaClient *ConsensusService::GetBroadCastClient() {
   return bc_client_.get();
 }
 
@@ -50,14 +50,14 @@ SignatureVerifier *ConsensusService::GetSignatureVerifier() {
 bool ConsensusService::IsReady() const { return is_ready_; }
 
 void ConsensusService::Stop() {
-  ResDBService::Stop();
+  XXXDBService::Stop();
   if (heartbeat_thread_.joinable()) {
     heartbeat_thread_.join();
   }
 }
 
 void ConsensusService::Start() {
-  ResDBService::Start();
+  XXXDBService::Start();
   if (config_.HeartBeatEnabled() && verifier_) {
     heartbeat_thread_ =
         std::thread(&ConsensusService::HeartBeat, this); // pass by reference
@@ -116,7 +116,7 @@ int ConsensusService::Process(std::unique_ptr<Context> context,
                               std::unique_ptr<DataInfo> request_info) {
   global_stats_->IncClientCall();
   // Decode the whole message, it includes the certificate and data.
-  ResDBMessage message;
+  XXXDBMessage message;
   if (!message.ParseFromArray(request_info->buff, request_info->data_len)) {
     LOG(ERROR) << "parse data info fail";
     return -1;
@@ -262,10 +262,10 @@ void ConsensusService::SendMessage(const google::protobuf::Message &message,
   }
 }
 
-std::unique_ptr<ResDBReplicaClient>
+std::unique_ptr<XXXDBReplicaClient>
 ConsensusService::GetReplicaClient(const std::vector<ReplicaInfo> &replicas,
                                    bool is_use_long_conn) {
-  return std::make_unique<ResDBReplicaClient>(
+  return std::make_unique<XXXDBReplicaClient>(
       replicas, verifier_ == nullptr ? nullptr : verifier_.get(),
       is_use_long_conn, config_.GetOutputWorkerNum());
 }
@@ -277,4 +277,4 @@ void ConsensusService::AddNewClient(const ReplicaInfo &info) {
   bc_client_->UpdateClientReplicas(clients_);
 }
 
-} // namespace resdb
+} // namespace xxxdb

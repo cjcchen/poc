@@ -3,7 +3,7 @@
 #include "common/utils/utils.h"
 #include "glog/logging.h"
 
-namespace resdb {
+namespace xxxdb {
 namespace {
 
 std::unique_ptr<Request> NewRequest(PoWRequest type,
@@ -18,7 +18,7 @@ std::unique_ptr<Request> NewRequest(PoWRequest type,
 
 } // namespace
 
-PoWManager::PoWManager(const ResDBPoCConfig &config, ResDBReplicaClient *client)
+PoWManager::PoWManager(const XXXDBPoCConfig &config, XXXDBReplicaClient *client)
     : config_(config), bc_client_(client) {
   Reset();
   is_stop_ = false;
@@ -36,17 +36,17 @@ PoWManager::~PoWManager() {
 }
 
 std::unique_ptr<TransactionAccessor>
-PoWManager::GetTransactionAccessor(const ResDBPoCConfig &config) {
+PoWManager::GetTransactionAccessor(const XXXDBPoCConfig &config) {
   return std::make_unique<TransactionAccessor>(config);
 }
 
 std::unique_ptr<ShiftManager>
-PoWManager::GetShiftManager(const ResDBPoCConfig &config) {
+PoWManager::GetShiftManager(const XXXDBPoCConfig &config) {
   return std::make_unique<ShiftManager>(config);
 }
 
 std::unique_ptr<BlockManager>
-PoWManager::GetBlockManager(const ResDBPoCConfig &config) {
+PoWManager::GetBlockManager(const XXXDBPoCConfig &config) {
   return std::make_unique<BlockManager>(config);
 }
 
@@ -260,4 +260,4 @@ void PoWManager::MiningProcess() {
   }
 }
 
-} // namespace resdb
+} // namespace xxxdb

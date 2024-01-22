@@ -6,7 +6,7 @@
 #include "crypto/key_generator.h"
 #include "crypto/signature_verifier.h"
 
-using namespace resdb;
+using namespace xxxdb;
 
 void WriteKey(const std::string &key, const std::string &file_name) {
   printf("save key to path %s\n", file_name.c_str());

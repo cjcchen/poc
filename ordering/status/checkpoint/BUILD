@@ -7,9 +7,9 @@ cc_library(
     deps = [
         "//common:comm",
         "//common/logging",
-        "//config:resdb_config",
+        "//config:xxxdb_config",
         "//crypto:signature_verifier",
         "//proto:checkpoint_info_cc_proto",
-        "//proto:resdb_cc_proto",
+        "//proto:xxxdb_cc_proto",
     ],
 )

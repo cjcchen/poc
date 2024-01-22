@@ -1,15 +1,15 @@
 #pragma once
 
-#include "config/resdb_config.h"
+#include "config/xxxdb_config.h"
 #include "ordering/pbft/checkpoint_collector.h"
 #include "ordering/status/checkpoint/check_point_info.h"
-#include "server/resdb_replica_client.h"
+#include "server/xxxdb_replica_client.h"
 
-namespace resdb {
+namespace xxxdb {
 
 class CheckPoint {
 public:
-  CheckPoint(const ResDBConfig &config, ResDBReplicaClient *replica_client);
+  CheckPoint(const XXXDBConfig &config, XXXDBReplicaClient *replica_client);
   virtual ~CheckPoint();
 
   virtual int ProcessCheckPoint(std::unique_ptr<Context> context,
@@ -21,12 +21,12 @@ private:
   void UpdateCheckPointStatus();
 
 protected:
-  ResDBConfig config_;
-  ResDBReplicaClient *replica_client_;
+  XXXDBConfig config_;
+  XXXDBReplicaClient *replica_client_;
   std::unique_ptr<CheckPointInfo> checkpoint_info_;
   std::unique_ptr<CheckPointCollector> checkpoint_collector_;
   std::thread checkpoint_thread_;
   std::atomic<bool> stop_;
 };
 
-} // namespace resdb
+} // namespace xxxdb

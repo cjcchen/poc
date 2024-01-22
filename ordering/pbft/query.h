@@ -1,13 +1,13 @@
 #pragma once
 
-#include "config/resdb_config.h"
+#include "config/xxxdb_config.h"
 #include "ordering/pbft/transaction_manager.h"
 
-namespace resdb {
+namespace xxxdb {
 
 class Query {
 public:
-  Query(const ResDBConfig &config, TransactionManager *transaction_manager);
+  Query(const XXXDBConfig &config, TransactionManager *transaction_manager);
   virtual ~Query();
 
   virtual int ProcessGetReplicaState(std::unique_ptr<Context> context,
@@ -16,8 +16,8 @@ public:
                            std::unique_ptr<Request> request);
 
 protected:
-  ResDBConfig config_;
+  XXXDBConfig config_;
   TransactionManager *transaction_manager_;
 };
 
-} // namespace resdb
+} // namespace xxxdb

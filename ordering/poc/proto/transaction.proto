@@ -2,7 +2,7 @@ syntax = "proto3";
 
 import "proto/signature_info.proto";
 
-package resdb;
+package xxxdb;
 
 message Transaction {
   bytes data = 1;

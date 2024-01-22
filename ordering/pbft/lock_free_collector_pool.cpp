@@ -2,7 +2,7 @@
 
 #include <glog/logging.h>
 
-namespace resdb {
+namespace xxxdb {
 
 namespace {
 uint32_t GetCapacity(uint32_t size) {
@@ -46,4 +46,4 @@ TransactionCollector *LockFreeCollectorPool::GetCollector(uint64_t seq) {
   return collector_[idx].get();
 }
 
-} // namespace resdb
+} // namespace xxxdb

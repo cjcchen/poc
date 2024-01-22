@@ -4,7 +4,7 @@
 
 #include "execution/transaction_executor_impl.h"
 
-namespace resdb {
+namespace xxxdb {
 
 class KVServerExecutor : public TransactionExecutorImpl {
 public:
@@ -20,4 +20,4 @@ private:
   std::map<std::string, std::string> kv_map_;
 };
 
-} // namespace resdb
+} // namespace xxxdb

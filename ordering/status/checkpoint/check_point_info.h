@@ -4,15 +4,15 @@
 #include <set>
 
 #include "common/logging/logging.h"
-#include "config/resdb_config.h"
+#include "config/xxxdb_config.h"
 #include "proto/checkpoint_info.pb.h"
-#include "proto/resdb.pb.h"
+#include "proto/xxxdb.pb.h"
 
-namespace resdb {
+namespace xxxdb {
 
 class CheckPointInfo {
 public:
-  CheckPointInfo(const ResDBConfig &config);
+  CheckPointInfo(const XXXDBConfig &config);
 
   void AddCommitData(const Request &request);
 
@@ -27,7 +27,7 @@ private:
 
 private:
   std::unique_ptr<Logging> logging_;
-  ResDBConfig config_;
+  XXXDBConfig config_;
   std::mutex mutex_;
   uint64_t last_seq_ = 0; // the max sequence of the latest checkpoint.
   std::string last_hash_; // the hash value of the latest checkpoint.
@@ -40,4 +40,4 @@ private:
   std::vector<CheckPointData> stable_checkpoints_;
 };
 
-} // namespace resdb
+} // namespace xxxdb

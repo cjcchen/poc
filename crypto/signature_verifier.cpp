@@ -11,10 +11,7 @@
 #include <cryptopp/whrlpool.h>
 #include <glog/logging.h>
 
-//#include <cryptopp/modes.h>
-//#include <iomanip>
-
-namespace resdb {
+namespace xxxdb {
 
 namespace {
 
@@ -298,4 +295,4 @@ bool SignatureVerifier::VerifyMessage(const std::string &message,
   }
 }
 
-} // namespace resdb
+} // namespace xxxdb

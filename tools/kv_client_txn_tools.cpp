@@ -1,15 +1,15 @@
 #include <glog/logging.h>
 
-#include "client/resdb_txn_client.h"
-#include "config/resdb_config_utils.h"
+#include "client/xxxdb_txn_client.h"
+#include "config/xxxdb_config_utils.h"
 #include "proto/kv_server.pb.h"
 
-using resdb::BatchClientRequest;
-using resdb::GenerateResDBConfig;
-using resdb::KVRequest;
-using resdb::Request;
-using resdb::ResDBConfig;
-using resdb::ResDBTxnClient;
+using xxxdb::BatchClientRequest;
+using xxxdb::GenerateXXXDBConfig;
+using xxxdb::KVRequest;
+using xxxdb::Request;
+using xxxdb::XXXDBConfig;
+using xxxdb::XXXDBTxnClient;
 
 int main(int argc, char **argv) {
   if (argc < 2) {
@@ -26,9 +26,9 @@ int main(int argc, char **argv) {
     max_seq = atoi(argv[3]);
   }
 
-  ResDBConfig config = GenerateResDBConfig(config_file);
+  XXXDBConfig config = GenerateXXXDBConfig(config_file);
 
-  ResDBTxnClient client(config);
+  XXXDBTxnClient client(config);
   auto resp = client.GetTxn(min_seq, max_seq);
   absl::StatusOr<std::vector<std::pair<uint64_t, std::string>>> GetTxn(
       uint64_t min_seq, uint64_t max_seq);

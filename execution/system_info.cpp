@@ -2,9 +2,9 @@
 
 #include <glog/logging.h>
 
-namespace resdb {
+namespace xxxdb {
 
-SystemInfo::SystemInfo(const ResDBConfig &config) : primary_id_(1), view_(1) {
+SystemInfo::SystemInfo(const XXXDBConfig &config) : primary_id_(1), view_(1) {
   SetReplicas(config.GetReplicaInfos());
 }
 
@@ -49,4 +49,4 @@ void SystemInfo::ProcessRequest(const SystemInfoRequest &request) {
   }
 }
 
-} // namespace resdb
+} // namespace xxxdb

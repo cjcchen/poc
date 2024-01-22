@@ -1,18 +1,18 @@
 #pragma once
 
 #include "common/queue/batch_queue.h"
-#include "config/resdb_config.h"
+#include "config/xxxdb_config.h"
 #include "ordering/pbft/response_manager.h"
 #include "ordering/pbft/transaction_manager.h"
-#include "server/resdb_replica_client.h"
+#include "server/xxxdb_replica_client.h"
 #include "statistic/stats.h"
 
-namespace resdb {
+namespace xxxdb {
 
 class Commitment {
 public:
-  Commitment(const ResDBConfig &config, TransactionManager *transaction_manager,
-             ResDBReplicaClient *replica_client, SignatureVerifier *verifier);
+  Commitment(const XXXDBConfig &config, TransactionManager *transaction_manager,
+             XXXDBReplicaClient *replica_client, SignatureVerifier *verifier);
   virtual ~Commitment();
 
   virtual int ProcessNewRequest(std::unique_ptr<Context> context,
@@ -29,14 +29,14 @@ protected:
   virtual int PostProcessExecutedMsg();
 
 protected:
-  ResDBConfig config_;
+  XXXDBConfig config_;
   TransactionManager *transaction_manager_;
   std::thread executed_thread_;
   std::atomic<bool> stop_;
-  ResDBReplicaClient *replica_client_;
+  XXXDBReplicaClient *replica_client_;
 
   SignatureVerifier *verifier_;
   Stats *global_stats_;
 };
 
-} // namespace resdb
+} // namespace xxxdb

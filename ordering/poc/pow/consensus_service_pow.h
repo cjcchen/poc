@@ -1,15 +1,15 @@
 #pragma once
 
-#include "config/resdb_poc_config.h"
+#include "config/xxxdb_poc_config.h"
 #include "ordering/poc/pow/miner_manager.h"
 #include "ordering/poc/pow/pow_manager.h"
 #include "server/consensus_service.h"
 
-namespace resdb {
+namespace xxxdb {
 
 class ConsensusServicePoW : public ConsensusService {
 public:
-  ConsensusServicePoW(const ResDBPoCConfig &config);
+  ConsensusServicePoW(const XXXDBPoCConfig &config);
   virtual ~ConsensusServicePoW();
 
   // Start the service.
@@ -25,4 +25,4 @@ protected:
   std::unique_ptr<MinerManager> miner_manager_;
 };
 
-} // namespace resdb
+} // namespace xxxdb

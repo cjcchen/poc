@@ -21,14 +21,14 @@
 
 #include "chain/storage/memory_db.h"
 #include "executor/kv/kv_executor.h"
-#include "platform/config/resdb_config_utils.h"
+#include "platform/config/xxxdb_config_utils.h"
 #include "platform/consensus/ordering/pbft/consensus_manager_pbft.h"
 #include "platform/networkstrate/service_network.h"
 #include "platform/statistic/stats.h"
 #include "proto/kv/kv.pb.h"
 
-using namespace resdb;
-using namespace resdb::storage;
+using namespace xxxdb;
+using namespace xxxdb::storage;
 
 void ShowUsage() {
   printf("<config> <private_key> <cert_file> [logging_dir]\n");
@@ -58,8 +58,8 @@ int main(int argc, char **argv) {
     monitor_port->SetPrometheus(argv[4]);
   }
 
-  std::unique_ptr<ResDBConfig> config =
-      GenerateResDBConfig(config_file, private_key_file, cert_file);
+  std::unique_ptr<XXXDBConfig> config =
+      GenerateXXXDBConfig(config_file, private_key_file, cert_file);
 
   config->RunningPerformance(true);
 

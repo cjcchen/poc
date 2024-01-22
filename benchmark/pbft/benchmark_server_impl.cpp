@@ -4,7 +4,7 @@
 
 #include "benchmark/pbft/proto/benchmark.pb.h"
 
-namespace resdb {
+namespace xxxdb {
 
 BenchmarkServerImpl::BenchmarkServerImpl() {}
 std::unique_ptr<std::string>
@@ -16,4 +16,4 @@ BenchmarkServerImpl::ExecuteData(const std::string &request) {
   return resp;
 }
 
-} // namespace resdb
+} // namespace xxxdb

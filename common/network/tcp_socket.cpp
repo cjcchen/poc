@@ -9,7 +9,7 @@
 
 #include <thread>
 
-namespace resdb {
+namespace xxxdb {
 
 namespace {
 
@@ -215,4 +215,4 @@ void TcpSocket::SetSendTimeout(int64_t microseconds) {
   }
 }
 
-} // namespace resdb
+} // namespace xxxdb

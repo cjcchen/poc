@@ -2,9 +2,9 @@
 
 #include "ordering/poc/proto/transaction.pb.h"
 
-namespace resdb {
+namespace xxxdb {
 
-PBFTClient::PBFTClient(const ResDBConfig &config) : ResDBUserClient(config) {}
+PBFTClient::PBFTClient(const XXXDBConfig &config) : XXXDBUserClient(config) {}
 
 int PBFTClient::Set(const std::string &data) {
   Transaction txn;
@@ -12,4 +12,4 @@ int PBFTClient::Set(const std::string &data) {
   return SendRequest(txn);
 }
 
-} // namespace resdb
+} // namespace xxxdb

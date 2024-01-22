@@ -6,10 +6,10 @@
 #include "crypto/signature_verifier.h"
 #include "ordering/poc/pow/merkle.h"
 #include "ordering/poc/pow/miner_utils.h"
-#include "proto/resdb.pb.h"
+#include "proto/xxxdb.pb.h"
 #include "statistic/stats.h"
 
-namespace resdb {
+namespace xxxdb {
 namespace {
 uint64_t GetCurrentTime() {
   uint64_t ret = 0;
@@ -20,7 +20,7 @@ uint64_t GetCurrentTime() {
 }
 } // namespace
 
-BlockManager::BlockManager(const ResDBPoCConfig &config) : config_(config) {
+BlockManager::BlockManager(const XXXDBPoCConfig &config) : config_(config) {
   miner_ = std::make_unique<Miner>(config);
   global_stats_ = Stats::GetGlobalStats();
   last_update_time_ = 0;
@@ -293,4 +293,4 @@ void BlockManager::SetTargetValue(const HashValue &target_value) {
   miner_->SetTargetValue(target_value);
 }
 
-} // namespace resdb
+} // namespace xxxdb

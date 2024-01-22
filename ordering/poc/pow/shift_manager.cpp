@@ -2,9 +2,9 @@
 
 #include <glog/logging.h>
 
-namespace resdb {
+namespace xxxdb {
 
-ShiftManager::ShiftManager(const ResDBPoCConfig &config) : config_(config) {}
+ShiftManager::ShiftManager(const XXXDBPoCConfig &config) : config_(config) {}
 
 void ShiftManager::AddSliceInfo(const SliceInfo &slice_info) {
   std::unique_lock<std::mutex> lk(mutex_);
@@ -35,4 +35,4 @@ bool ShiftManager::Check(const SliceInfo &slice_info, int timeout_ms) {
   return check_done();
 }
 
-} // namespace resdb
+} // namespace xxxdb

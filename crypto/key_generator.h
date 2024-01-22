@@ -2,11 +2,11 @@
 
 #include "proto/signature_info.pb.h"
 
-namespace resdb {
+namespace xxxdb {
 
 class KeyGenerator {
 public:
   static SecretKey GeneratorKeys(SignatureInfo::HashType type);
 };
 
-} // namespace resdb
+} // namespace xxxdb

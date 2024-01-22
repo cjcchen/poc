@@ -3,9 +3,9 @@
 #include "common/utils/utils.h"
 #include <glog/logging.h>
 
-namespace resdb {
+namespace xxxdb {
 
-TransactionAccessor::TransactionAccessor(const ResDBPoCConfig &config,
+TransactionAccessor::TransactionAccessor(const XXXDBPoCConfig &config,
                                          bool auto_start)
     : config_(config) {
   stop_ = false;
@@ -30,7 +30,7 @@ void TransactionAccessor::Start() {
 }
 
 void TransactionAccessor::TransactionFetching() {
-  std::unique_ptr<ResDBTxnClient> client = GetResDBTxnClient();
+  std::unique_ptr<XXXDBTxnClient> client = GetXXXDBTxnClient();
   assert(client != nullptr);
 
   uint64_t last_time = 0;
@@ -93,8 +93,8 @@ void TransactionAccessor::TransactionFetching() {
   return;
 }
 
-std::unique_ptr<ResDBTxnClient> TransactionAccessor::GetResDBTxnClient() {
-  return std::make_unique<ResDBTxnClient>(*config_.GetBFTConfig());
+std::unique_ptr<XXXDBTxnClient> TransactionAccessor::GetXXXDBTxnClient() {
+  return std::make_unique<XXXDBTxnClient>(*config_.GetBFTConfig());
 }
 
 // obtain [seq, seq+batch_num-1] transactions
@@ -134,4 +134,4 @@ TransactionAccessor::ConsumeTransactions(uint64_t seq) {
   return batch_transactions;
 }
 
-} // namespace resdb
+} // namespace xxxdb

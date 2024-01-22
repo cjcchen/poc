@@ -6,11 +6,11 @@
 #include "glog/logging.h"
 #include "ordering/pbft/transaction_utils.h"
 
-namespace resdb {
+namespace xxxdb {
 
-Recovery::Recovery(const ResDBConfig &config,
+Recovery::Recovery(const XXXDBConfig &config,
                    TransactionManager *transaction_manager,
-                   ResDBReplicaClient *replica_client,
+                   XXXDBReplicaClient *replica_client,
                    SignatureVerifier *verifier)
     : config_(config), transaction_manager_(transaction_manager),
       replica_client_(replica_client), verifier_(verifier), stop_(false) {
@@ -187,4 +187,4 @@ void Recovery::HealthCheck() {
   }
 }
 
-} // namespace resdb
+} // namespace xxxdb

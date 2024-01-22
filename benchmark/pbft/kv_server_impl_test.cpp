@@ -5,7 +5,7 @@
 
 #include "proto/kv_server.pb.h"
 
-namespace resdb {
+namespace xxxdb {
 namespace {
 
 using ::testing::Test;
@@ -59,4 +59,4 @@ TEST_F(KVServerImplTest, GetValue) { EXPECT_EQ(Get("test_key"), ""); }
 
 } // namespace
 
-} // namespace resdb
+} // namespace xxxdb

@@ -17,10 +17,10 @@ cc_binary(
     deps = [
         ":benchmark_server_impl",
         "//application/utils:server_factory",
-        "//config:resdb_config_utils",
+        "//config:xxxdb_config_utils",
         "//ordering/pbft:consensus_service_pbft",
         "//proto:kv_server_cc_proto",
-        "//server:resdb_server",
+        "//server:xxxdb_server",
     ],
 )
 
@@ -30,8 +30,8 @@ cc_library(
     hdrs = ["benchmark_client.h"],
     deps = [
         "//benchmark/pbft/proto:benchmark_cc_proto",
-        "//client:resdb_user_client",
-        "//config:resdb_config_utils",
+        "//client:xxxdb_user_client",
+        "//config:xxxdb_config_utils",
     ],
 )
 
@@ -41,6 +41,6 @@ cc_binary(
     deps = [
         ":benchmark_client",
         "//common/utils",
-        "//config:resdb_config_utils",
+        "//config:xxxdb_config_utils",
     ],
 )

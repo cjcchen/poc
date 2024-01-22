@@ -1,7 +1,7 @@
 #pragma once
-#include "proto/resdb.pb.h"
+#include "proto/xxxdb.pb.h"
 
-namespace resdb {
+namespace xxxdb {
 
 enum CollectorResultCode {
   INVALID = -2,
@@ -12,4 +12,4 @@ enum CollectorResultCode {
 std::unique_ptr<Request> NewRequest(Request::Type type, const Request &request,
                                     int sender_id);
 
-} // namespace resdb
+} // namespace xxxdb

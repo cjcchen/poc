@@ -2,13 +2,13 @@
 
 #include <thread>
 
-#include "client/resdb_txn_client.h"
+#include "client/xxxdb_txn_client.h"
 #include "common/queue/lock_free_queue.h"
-#include "config/resdb_poc_config.h"
+#include "config/xxxdb_poc_config.h"
 #include "ordering/poc/proto/pow.pb.h"
 #include "statistic/stats.h"
 
-namespace resdb {
+namespace xxxdb {
 
 // TransactionAccessor obtains the transaction from BFT cluster.
 // It broadcasts the request to all the replicas in BFT cluster
@@ -17,7 +17,7 @@ namespace resdb {
 class TransactionAccessor {
 public:
   // For test, it is started by the tester.
-  TransactionAccessor(const ResDBPoCConfig &config, bool auto_start = true);
+  TransactionAccessor(const XXXDBPoCConfig &config, bool auto_start = true);
   virtual ~TransactionAccessor();
 
   // consume the transaction between [seq, seq+batch_num-1]
@@ -29,10 +29,10 @@ public:
 
 protected:
   void TransactionFetching();
-  virtual std::unique_ptr<ResDBTxnClient> GetResDBTxnClient();
+  virtual std::unique_ptr<XXXDBTxnClient> GetXXXDBTxnClient();
 
 private:
-  ResDBPoCConfig config_;
+  XXXDBPoCConfig config_;
   std::atomic<bool> stop_;
   std::thread fetching_thread_;
   std::atomic<uint64_t> max_received_seq_;
@@ -46,4 +46,4 @@ private:
   PrometheusHandler *prometheus_handler_;
 };
 
-} // namespace resdb
+} // namespace xxxdb

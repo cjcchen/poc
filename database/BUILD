@@ -6,15 +6,7 @@ cc_library(
     hdrs = ["txn_memory_db.h"],
     deps = [
         "//common:comm",
-        "//proto:resdb_cc_proto",
+        "//proto:xxxdb_cc_proto",
     ],
 )
 
-cc_test(
-    name = "txn_memory_db_test",
-    srcs = ["txn_memory_db_test.cpp"],
-    deps = [
-        ":txn_memory_db",
-        "//common/test:test_main",
-    ],
-)

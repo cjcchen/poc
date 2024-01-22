@@ -35,8 +35,8 @@ cc_proto_library(
 )
 
 proto_library(
-    name = "resdb_proto",
-    srcs = ["resdb.proto"],
+    name = "xxxdb_proto",
+    srcs = ["xxxdb.proto"],
     deps = [
         ":replica_info_proto",
         ":signature_info_proto",
@@ -44,8 +44,8 @@ proto_library(
 )
 
 cc_proto_library(
-    name = "resdb_cc_proto",
-    deps = [":resdb_proto"],
+    name = "xxxdb_cc_proto",
+    deps = [":xxxdb_proto"],
 )
 
 proto_library(

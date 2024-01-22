@@ -3,10 +3,6 @@ In this document, we explain how to run the PoC codebase and produce the perform
 # Steps to Setup
 
 
-Setup code and machine
-The code is based on the release of version [NexRes](https://github.com/resilientdb/resilientdb).
-
-
 ## Install dependences.
 
     ./INSTALL.sh

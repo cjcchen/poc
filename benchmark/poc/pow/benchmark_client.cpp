@@ -1,10 +1,10 @@
 #include "application/poc/pbft_client.h"
-#include "config/resdb_config_utils.h"
+#include "config/xxxdb_config_utils.h"
 
-using resdb::GenerateReplicaInfo;
-using resdb::PBFTClient;
-using resdb::ReplicaInfo;
-using resdb::ResDBConfig;
+using xxxdb::GenerateReplicaInfo;
+using xxxdb::PBFTClient;
+using xxxdb::ReplicaInfo;
+using xxxdb::XXXDBConfig;
 
 int main(int argc, char **argv) {
   if (argc < 5) {
@@ -21,8 +21,8 @@ int main(int argc, char **argv) {
 
   ReplicaInfo self_info = GenerateReplicaInfo(0, client_ip, 88888);
 
-  std::unique_ptr<ResDBConfig> config =
-      GenerateResDBConfig(config_file, private_key_file, cert_file, self_info);
+  std::unique_ptr<XXXDBConfig> config =
+      GenerateXXXDBConfig(config_file, private_key_file, cert_file, self_info);
 
   srand(time(0));
   PBFTClient client(*config);

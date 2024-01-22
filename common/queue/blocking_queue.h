@@ -7,7 +7,7 @@
 
 #include "absl/status/statusor.h"
 
-namespace resdb {
+namespace xxxdb {
 
 template <typename T> class BlockingQueue {
 public:
@@ -83,4 +83,4 @@ private:
   int64_t timeout_ms_ = 500; // microsecond for timeout.
 };
 
-} // namespace resdb
+} // namespace xxxdb

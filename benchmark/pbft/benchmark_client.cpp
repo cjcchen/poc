@@ -4,10 +4,10 @@
 
 #include "benchmark/pbft/proto/benchmark.pb.h"
 
-namespace resdb {
+namespace xxxdb {
 
-BenchmarkClient::BenchmarkClient(const ResDBConfig &config)
-    : ResDBUserClient(config) {}
+BenchmarkClient::BenchmarkClient(const XXXDBConfig &config)
+    : XXXDBUserClient(config) {}
 
 int BenchmarkClient::Set(const std::string &data) {
   BenchmarkMessage request;
@@ -17,4 +17,4 @@ int BenchmarkClient::Set(const std::string &data) {
   //  return SendRequest(request, &response);
 }
 
-} // namespace resdb
+} // namespace xxxdb

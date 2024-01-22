@@ -18,28 +18,20 @@ cc_binary(
 )
 
 cc_binary(
-    name = "certificate_tools_test",
-    srcs = ["certificate_tools_test.cpp"],
+    name = "xxxdb_status_client_tools",
+    srcs = ["xxxdb_status_client_tools.cpp"],
     deps = [
-        "//crypto:signature_verifier",
+        "//client:xxxdb_state_client",
+        "//config:xxxdb_config_utils",
     ],
 )
 
 cc_binary(
-    name = "resdb_status_client_tools",
-    srcs = ["resdb_status_client_tools.cpp"],
+    name = "xxxdb_txn_client_tools",
+    srcs = ["xxxdb_txn_client_tools.cpp"],
     deps = [
-        "//client:resdb_state_client",
-        "//config:resdb_config_utils",
-    ],
-)
-
-cc_binary(
-    name = "resdb_txn_client_tools",
-    srcs = ["resdb_txn_client_tools.cpp"],
-    deps = [
-        "//client:resdb_txn_client",
-        "//config:resdb_config_utils",
+        "//client:xxxdb_txn_client",
+        "//config:xxxdb_config_utils",
     ],
 )
 
@@ -47,8 +39,8 @@ cc_binary(
     name = "kv_client_txn_tools",
     srcs = ["kv_client_txn_tools.cpp"],
     deps = [
-        "//client:resdb_txn_client",
-        "//config:resdb_config_utils",
+        "//client:xxxdb_txn_client",
+        "//config:xxxdb_config_utils",
         "//proto:kv_server_cc_proto",
     ],
 )

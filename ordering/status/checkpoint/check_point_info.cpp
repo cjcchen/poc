@@ -6,9 +6,9 @@
 
 #include "crypto/signature_verifier.h"
 
-namespace resdb {
+namespace xxxdb {
 
-CheckPointInfo::CheckPointInfo(const ResDBConfig &config) : config_(config) {
+CheckPointInfo::CheckPointInfo(const XXXDBConfig &config) : config_(config) {
   if (!config.GetCheckPointLoggingPath().empty()) {
     logging_ = std::make_unique<Logging>(config.GetCheckPointLoggingPath());
   }
@@ -82,4 +82,4 @@ void CheckPointInfo::UpdateStableCheckPoint(
   stable_checkpoints_ = datas;
 }
 
-} // namespace resdb
+} // namespace xxxdb

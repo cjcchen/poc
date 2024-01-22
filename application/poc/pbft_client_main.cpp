@@ -1,9 +1,9 @@
 #include "application/poc/pbft_client.h"
-#include "config/resdb_config_utils.h"
+#include "config/xxxdb_config_utils.h"
 
-using resdb::GenerateResDBConfig;
-using resdb::PBFTClient;
-using resdb::ResDBConfig;
+using xxxdb::GenerateXXXDBConfig;
+using xxxdb::PBFTClient;
+using xxxdb::XXXDBConfig;
 
 int main(int argc, char **argv) {
   if (argc < 3) {
@@ -13,7 +13,7 @@ int main(int argc, char **argv) {
   std::string config_file = argv[1];
   std::string value = argv[2];
 
-  ResDBConfig config = GenerateResDBConfig(config_file);
+  XXXDBConfig config = GenerateXXXDBConfig(config_file);
 
   PBFTClient client(config);
   int ret = client.Set(value);

@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <sys/time.h>
 
-namespace resdb {
+namespace xxxdb {
 
 #define CPU_FREQ 2.2
 #define TIME_ENABLE true
@@ -39,4 +39,4 @@ uint64_t get_current_time() {
   return static_cast<uint64_t>(tv.tv_sec) * 1000000000ll + tv.tv_usec;
 }
 
-} // namespace resdb
+} // namespace xxxdb

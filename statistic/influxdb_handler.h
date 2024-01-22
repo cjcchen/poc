@@ -3,7 +3,7 @@
 #include "statistic/influxdb.hpp"
 #include <glog/logging.h>
 
-namespace resdb {
+namespace xxxdb {
 
 class InfluxdbHandler {
 public:
@@ -13,4 +13,4 @@ public:
   void IncQPS();
 };
 
-} // namespace resdb
+} // namespace xxxdb

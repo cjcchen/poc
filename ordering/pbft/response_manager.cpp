@@ -4,9 +4,9 @@
 
 #include "common/utils/utils.h"
 
-namespace resdb {
-ResponseManager::ResponseManager(const ResDBConfig &config,
-                                 ResDBReplicaClient *replica_client,
+namespace xxxdb {
+ResponseManager::ResponseManager(const XXXDBConfig &config,
+                                 XXXDBReplicaClient *replica_client,
                                  SystemInfo *system_info)
     : config_(config), replica_client_(replica_client),
       collector_pool_(std::make_unique<LockFreeCollectorPool>(
@@ -241,4 +241,4 @@ int ResponseManager::DoBatch(
   return 0;
 }
 
-} // namespace resdb
+} // namespace xxxdb

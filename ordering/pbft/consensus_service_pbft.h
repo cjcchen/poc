@@ -1,6 +1,6 @@
 #pragma once
 
-#include "config/resdb_config.h"
+#include "config/xxxdb_config.h"
 #include "ordering/pbft/checkpoint.h"
 #include "ordering/pbft/commitment.h"
 #include "ordering/pbft/query.h"
@@ -9,11 +9,11 @@
 #include "ordering/pbft/transaction_manager.h"
 #include "server/consensus_service.h"
 
-namespace resdb {
+namespace xxxdb {
 
 class ConsensusServicePBFT : public ConsensusService {
 public:
-  ConsensusServicePBFT(const ResDBConfig &config,
+  ConsensusServicePBFT(const XXXDBConfig &config,
                        std::unique_ptr<TransactionExecutorImpl> executor);
   virtual ~ConsensusServicePBFT() = default;
 
@@ -39,4 +39,4 @@ protected:
   Stats *global_stats_;
 };
 
-} // namespace resdb
+} // namespace xxxdb

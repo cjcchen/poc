@@ -8,7 +8,7 @@
 #include "absl/status/statusor.h"
 #include "proto/signature_info.pb.h"
 
-namespace resdb {
+namespace xxxdb {
 
 // SignatureVerifier used to sign signatures using private_key,
 // and verify signatures using the public keys of the senders identified
@@ -57,4 +57,4 @@ private:
   mutable std::shared_mutex mutex_;
 };
 
-} // namespace resdb
+} // namespace xxxdb

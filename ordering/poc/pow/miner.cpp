@@ -9,9 +9,9 @@
 #include "crypto/signature_verifier.h"
 #include "ordering/poc/pow/miner_utils.h"
 
-namespace resdb {
+namespace xxxdb {
 
-Miner::Miner(const ResDBPoCConfig &config) : config_(config) {
+Miner::Miner(const XXXDBPoCConfig &config) : config_(config) {
   // the number of zeros ahead of the binary value.
   difficulty_ = config_.GetDifficulty();
   worker_num_ = config_.GetWokerNum();
@@ -163,4 +163,4 @@ bool Miner::IsValidHash(const Block *block) {
   return CalculatePoWHash(block) == block->hash();
 }
 
-} // namespace resdb
+} // namespace xxxdb

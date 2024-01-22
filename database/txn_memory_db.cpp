@@ -2,7 +2,7 @@
 
 #include <glog/logging.h>
 
-namespace resdb {
+namespace xxxdb {
 
 TxnMemoryDB::TxnMemoryDB() : max_seq_(0) {}
 
@@ -22,4 +22,4 @@ void TxnMemoryDB::Put(std::unique_ptr<Request> request) {
 
 uint64_t TxnMemoryDB::GetMaxSeq() { return max_seq_; }
 
-} // namespace resdb
+} // namespace xxxdb

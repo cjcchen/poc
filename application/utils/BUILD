@@ -5,8 +5,8 @@ cc_library(
     srcs = ["server_factory.cpp"],
     hdrs = ["server_factory.h"],
     deps = [
-        "//config:resdb_config_utils",
+        "//config:xxxdb_config_utils",
         "//ordering/pbft:consensus_service_pbft",
-        "//server:resdb_server",
+        "//server:xxxdb_server",
     ],
 )

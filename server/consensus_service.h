@@ -3,25 +3,25 @@
 #include <thread>
 
 #include "common/queue/blocking_queue.h"
-#include "config/resdb_config.h"
+#include "config/xxxdb_config.h"
 #include "proto/replica_info.pb.h"
-#include "proto/resdb.pb.h"
-#include "server/resdb_replica_client.h"
-#include "server/resdb_service.h"
+#include "proto/xxxdb.pb.h"
+#include "server/xxxdb_replica_client.h"
+#include "server/xxxdb_service.h"
 #include "statistic/stats.h"
 
-namespace resdb {
+namespace xxxdb {
 
 // ConsensusService is an consus algorithm implimentation of ConsensusService.
-// It receives the messages from ResDBServer and running a consus algorithm
+// It receives the messages from XXXDBServer and running a consus algorithm
 // like PBFT to commit.
 // It also handles the public key information exchanged from others.
-class ConsensusService : public ResDBService {
+class ConsensusService : public XXXDBService {
 public:
-  ConsensusService(const ResDBConfig &config);
+  ConsensusService(const XXXDBConfig &config);
   virtual ~ConsensusService();
 
-  // Process a request receied from ResDBServer.
+  // Process a request receied from XXXDBServer.
   // context contains the client socket and request_info contains the data
   // received from the network.
   virtual int Process(std::unique_ptr<Context> context,
@@ -53,7 +53,7 @@ protected:
                        std::unique_ptr<Request> request);
   // =======================================================
 
-  virtual std::unique_ptr<ResDBReplicaClient>
+  virtual std::unique_ptr<XXXDBReplicaClient>
   GetReplicaClient(const std::vector<ReplicaInfo> &replicas,
                    bool is_use_long_conn = false);
 
@@ -62,7 +62,7 @@ protected:
   virtual void AddNewReplica(const ReplicaInfo &info);
   void AddNewClient(const ReplicaInfo &info);
 
-  ResDBReplicaClient *GetBroadCastClient();
+  XXXDBReplicaClient *GetBroadCastClient();
   // Update broad cast client to reflush the replica list.
   void UpdateBroadCastClient();
 
@@ -73,7 +73,7 @@ private:
   void BroadCastThread();
 
 protected:
-  ResDBConfig config_;
+  XXXDBConfig config_;
   std::unique_ptr<SignatureVerifier> verifier_;
   struct QueueItem {
     std::unique_ptr<Request> request;
@@ -83,9 +83,9 @@ protected:
 private:
   std::thread heartbeat_thread_;
   std::atomic<bool> is_ready_ = false;
-  std::unique_ptr<ResDBReplicaClient> bc_client_;
+  std::unique_ptr<XXXDBReplicaClient> bc_client_;
   std::vector<ReplicaInfo> clients_;
   Stats *global_stats_;
 };
 
-} // namespace resdb
+} // namespace xxxdb

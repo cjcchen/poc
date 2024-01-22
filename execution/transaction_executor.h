@@ -3,13 +3,13 @@
 #include <thread>
 
 #include "common/queue/lock_free_queue.h"
-#include "config/resdb_config.h"
+#include "config/xxxdb_config.h"
 #include "execution/system_info.h"
 #include "execution/transaction_executor_impl.h"
-#include "proto/resdb.pb.h"
+#include "proto/xxxdb.pb.h"
 #include "statistic/stats.h"
 
-namespace resdb {
+namespace xxxdb {
 
 // Execute the requests that may contain system information or client requests.
 class TransactionExecutor {
@@ -19,7 +19,7 @@ public:
       PostExecuteFunc;
   typedef std::function<void(Request *)> PreExecuteFunc;
 
-  TransactionExecutor(const ResDBConfig &config, PostExecuteFunc post_exec_func,
+  TransactionExecutor(const XXXDBConfig &config, PostExecuteFunc post_exec_func,
                       SystemInfo *system_info,
                       std::unique_ptr<TransactionExecutorImpl> executor_impl);
   ~TransactionExecutor();
@@ -59,4 +59,4 @@ private:
   Stats *global_stats_ = nullptr;
 };
 
-} // namespace resdb
+} // namespace xxxdb

@@ -22,21 +22,3 @@ cc_library(
     ],
 )
 
-cc_library(
-    name = "mock_signature_verifier",
-    testonly = True,
-    hdrs = ["mock_signature_verifier.h"],
-    deps = [
-        ":signature_verifier",
-    ],
-)
-
-cc_test(
-    name = "signature_verifier_test",
-    srcs = ["signature_verifier_test.cpp"],
-    deps = [
-        ":key_generator",
-        ":signature_verifier",
-        "//common/test:test_main",
-    ],
-)

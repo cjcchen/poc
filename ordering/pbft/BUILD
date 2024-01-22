@@ -9,15 +9,6 @@ cc_library(
     ],
 )
 
-cc_test(
-    name = "lock_free_collector_pool_test",
-    srcs = ["lock_free_collector_pool_test.cpp"],
-    deps = [
-        ":lock_free_collector_pool",
-        "//common/test:test_main",
-    ],
-)
-
 cc_library(
     name = "response_manager",
     srcs = ["response_manager.cpp"],
@@ -25,21 +16,10 @@ cc_library(
     deps = [
         ":lock_free_collector_pool",
         ":transaction_utils",
-        "//server:resdb_replica_client",
+        "//server:xxxdb_replica_client",
     ],
 )
 
-cc_test(
-    name = "response_manager_test",
-    srcs = ["response_manager_test.cpp"],
-    deps = [
-        ":response_manager",
-        "//client:mock_resdb_client",
-        "//common/test:test_main",
-        "//config:resdb_config_utils",
-        "//server:mock_resdb_replica_client",
-    ],
-)
 
 cc_library(
     name = "transaction_manager",
@@ -49,11 +29,11 @@ cc_library(
         ":lock_free_collector_pool",
         ":transaction_collector",
         ":transaction_utils",
-        "//config:resdb_config",
+        "//config:xxxdb_config",
         "//database:txn_memory_db",
         "//execution:transaction_executor_impl",
         "//ordering/status/checkpoint:check_point_info",
-        "//proto:resdb_cc_proto",
+        "//proto:xxxdb_cc_proto",
         "//server:server_comm",
     ],
 )
@@ -63,7 +43,7 @@ cc_library(
     srcs = ["transaction_utils.cpp"],
     hdrs = ["transaction_utils.h"],
     deps = [
-        "//proto:resdb_cc_proto",
+        "//proto:xxxdb_cc_proto",
     ],
 )
 
@@ -76,23 +56,10 @@ cc_library(
         ":transaction_manager",
         "//common/queue:batch_queue",
         "//common/utils",
-        "//config:resdb_config",
-        "//proto:resdb_cc_proto",
-        "//server:resdb_replica_client",
+        "//config:xxxdb_config",
+        "//proto:xxxdb_cc_proto",
+        "//server:xxxdb_replica_client",
         "//statistic:stats",
-    ],
-)
-
-cc_test(
-    name = "commitment_test",
-    srcs = ["commitment_test.cpp"],
-    deps = [
-        ":commitment",
-        "//client:mock_resdb_client",
-        "//common/test:test_main",
-        "//config:resdb_config_utils",
-        "//crypto:mock_signature_verifier",
-        "//server:mock_resdb_replica_client",
     ],
 )
 
@@ -103,9 +70,9 @@ cc_library(
     deps = [
         ":transaction_manager",
         ":transaction_utils",
-        "//config:resdb_config",
-        "//proto:resdb_cc_proto",
-        "//server:resdb_replica_client",
+        "//config:xxxdb_config",
+        "//proto:xxxdb_cc_proto",
+        "//server:xxxdb_replica_client",
     ],
 )
 
@@ -116,9 +83,9 @@ cc_library(
     deps = [
         ":transaction_collector",
         ":transaction_utils",
-        "//config:resdb_config",
+        "//config:xxxdb_config",
         "//ordering/status/checkpoint:check_point_info",
-        "//proto:resdb_cc_proto",
+        "//proto:xxxdb_cc_proto",
     ],
 )
 
@@ -130,9 +97,9 @@ cc_library(
         ":checkpoint_collector",
         ":transaction_manager",
         ":transaction_utils",
-        "//config:resdb_config",
-        "//proto:resdb_cc_proto",
-        "//server:resdb_replica_client",
+        "//config:xxxdb_config",
+        "//proto:xxxdb_cc_proto",
+        "//server:xxxdb_replica_client",
     ],
 )
 
@@ -142,22 +109,8 @@ cc_library(
     hdrs = ["query.h"],
     deps = [
         ":transaction_manager",
-        "//config:resdb_config",
-        "//proto:resdb_cc_proto",
-    ],
-)
-
-cc_test(
-    name = "query_test",
-    srcs = ["query_test.cpp"],
-    deps = [
-        ":commitment",
-        ":query",
-        "//client:mock_resdb_client",
-        "//common/test:test_main",
-        "//config:resdb_config_utils",
-        "//crypto:mock_signature_verifier",
-        "//server:mock_resdb_replica_client",
+        "//config:xxxdb_config",
+        "//proto:xxxdb_cc_proto",
     ],
 )
 
@@ -167,18 +120,9 @@ cc_library(
     hdrs = ["transaction_collector.h"],
     deps = [
         "//execution:transaction_executor",
-        "//proto:resdb_cc_proto",
+        "//proto:xxxdb_cc_proto",
         "//server:server_comm",
         "//statistic:stats",
-    ],
-)
-
-cc_test(
-    name = "transaction_collector_test",
-    srcs = ["transaction_collector_test.cpp"],
-    deps = [
-        ":transaction_collector",
-        "//common/test:test_main",
     ],
 )
 

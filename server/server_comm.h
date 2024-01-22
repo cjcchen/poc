@@ -1,13 +1,13 @@
 #pragma once
 
-#include "client/resdb_client.h"
-#include "proto/resdb.pb.h"
+#include "client/xxxdb_client.h"
+#include "proto/xxxdb.pb.h"
 
-namespace resdb {
+namespace xxxdb {
 
 struct Context {
-  std::unique_ptr<ResDBClient> client;
+  std::unique_ptr<XXXDBClient> client;
   SignatureInfo signature;
 };
 
-} // namespace resdb
+} // namespace xxxdb

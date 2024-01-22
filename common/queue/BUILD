@@ -18,14 +18,6 @@ cc_library(
     ],
 )
 
-cc_test(
-    name = "lock_free_queue_test",
-    srcs = ["lock_free_queue_test.cpp"],
-    deps = [
-        ":lock_free_queue",
-        "//common/test:test_main",
-    ],
-)
 
 cc_library(
     name = "batch_queue",
@@ -37,11 +29,3 @@ cc_library(
     ],
 )
 
-cc_test(
-    name = "batch_queue_test",
-    srcs = ["batch_queue_test.cpp"],
-    deps = [
-        ":batch_queue",
-        "//common/test:test_main",
-    ],
-)

@@ -2,10 +2,10 @@
 
 #include <glog/logging.h>
 
-namespace resdb {
+namespace xxxdb {
 
 TransactionExecutor::TransactionExecutor(
-    const ResDBConfig &config, PostExecuteFunc post_exec_func,
+    const XXXDBConfig &config, PostExecuteFunc post_exec_func,
     SystemInfo *system_info,
     std::unique_ptr<TransactionExecutorImpl> executor_impl)
     : post_exec_func_(post_exec_func), system_info_(system_info),
@@ -143,4 +143,4 @@ TransactionExecutor::DoExecute(const Request &request) {
   return response;
 }
 
-} // namespace resdb
+} // namespace xxxdb

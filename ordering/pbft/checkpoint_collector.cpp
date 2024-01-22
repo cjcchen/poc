@@ -2,9 +2,9 @@
 
 #include <glog/logging.h>
 
-namespace resdb {
+namespace xxxdb {
 
-CheckPointCollector::CheckPointCollector(const ResDBConfig &config,
+CheckPointCollector::CheckPointCollector(const XXXDBConfig &config,
                                          CheckPointInfo *checkpoint_info)
     : config_(config), checkpoint_info_(checkpoint_info) {}
 
@@ -86,4 +86,4 @@ CheckPointCollector::AddCheckPointMsg(const SignatureInfo &signature,
   return CollectorResultCode::INVALID;
 }
 
-} // namespace resdb
+} // namespace xxxdb

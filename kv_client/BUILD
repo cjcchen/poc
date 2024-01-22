@@ -1,11 +1,11 @@
 package(default_visibility = ["//visibility:public"])
 
 cc_library(
-    name = "resdb_kv_client",
-    srcs = ["resdb_kv_client.cpp"],
-    hdrs = ["resdb_kv_client.h"],
+    name = "xxxdb_kv_client",
+    srcs = ["xxxdb_kv_client.cpp"],
+    hdrs = ["xxxdb_kv_client.h"],
     deps = [
-        "//client:resdb_user_client",
+        "//client:xxxdb_user_client",
         "//proto:kv_server_cc_proto",
     ],
 )

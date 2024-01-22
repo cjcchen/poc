@@ -1,6 +1,6 @@
 #include "network/network_utils.h"
 
-namespace resdb {
+namespace xxxdb {
 
 std::string GetDNSName(const std::string &ip, int port, NetworkType type) {
   char dns_name[1024];
@@ -28,4 +28,4 @@ std::string GetTcpUrl(const std::string &ip, int port) {
   return name;
 }
 
-} // namespace resdb
+} // namespace xxxdb

@@ -5,7 +5,7 @@
 
 #include <thread>
 
-namespace resdb {
+namespace xxxdb {
 
 AsyncAcceptor::Session::Session(boost::asio::io_service *io_service,
                                 CallBack call_back_func)
@@ -127,4 +127,4 @@ void AsyncAcceptor::OnAccept(boost::shared_ptr<Session> client_session,
   client_session->StartRead();
 }
 
-} // namespace resdb
+} // namespace xxxdb

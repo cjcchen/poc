@@ -1,15 +1,15 @@
 #pragma once
 
-#include "client/resdb_user_client.h"
+#include "client/xxxdb_user_client.h"
 
-namespace resdb {
+namespace xxxdb {
 
 // BenchmarkClient to send data to the pbft cluster.
-class BenchmarkClient : public ResDBUserClient {
+class BenchmarkClient : public XXXDBUserClient {
 public:
-  BenchmarkClient(const ResDBConfig &config);
+  BenchmarkClient(const XXXDBConfig &config);
 
   int Set(const std::string &data);
 };
 
-} // namespace resdb
+} // namespace xxxdb

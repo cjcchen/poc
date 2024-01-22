@@ -3,7 +3,7 @@
 #include <memory>
 #include <string>
 
-namespace resdb {
+namespace xxxdb {
 
 // Socket for Tcp Server
 class Socket {
@@ -29,4 +29,4 @@ public:
   virtual int SetAsync(bool is_open = true) { return -1; }
 };
 
-} // namespace resdb
+} // namespace xxxdb

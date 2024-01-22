@@ -5,6 +5,6 @@ cc_binary(
     srcs = ["benchmark_client.cpp"],
     deps = [
         "//application/poc:pbft_client",
-        "//config:resdb_config_utils",
+        "//config:xxxdb_config_utils",
     ],
 )

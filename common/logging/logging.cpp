@@ -6,7 +6,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-namespace resdb {
+namespace xxxdb {
 
 // TODO write to files
 Logging::Logging(const std::string &path) {
@@ -52,4 +52,4 @@ int Logging::Read(google::protobuf::Message *info) {
   return 0;
 }
 
-} // namespace resdb
+} // namespace xxxdb

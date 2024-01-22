@@ -1,9 +1,9 @@
 #pragma once
 #include "absl/status/status.h"
-#include "config/resdb_poc_config.h"
+#include "config/xxxdb_poc_config.h"
 #include "ordering/poc/proto/pow.pb.h"
 
-namespace resdb {
+namespace xxxdb {
 
 // A miner used to mine the block according to its header.
 // It contains the slices as the search space.
@@ -13,7 +13,7 @@ namespace resdb {
 // defined from the config and can be reset later.
 class Miner {
 public:
-  Miner(const ResDBPoCConfig &config);
+  Miner(const XXXDBPoCConfig &config);
 
   std::vector<std::pair<uint64_t, uint64_t>> GetMiningSlices();
 
@@ -32,7 +32,7 @@ private:
   HashValue CalculatePoWHash(const Block *new_block);
 
 private:
-  ResDBPoCConfig config_;
+  XXXDBPoCConfig config_;
   HashValue target_value_;
   int shift_idx_ = 0;
   std::atomic<bool> stop_;
@@ -41,4 +41,4 @@ private:
   uint32_t worker_num_ = 16;
 };
 
-} // namespace resdb
+} // namespace xxxdb

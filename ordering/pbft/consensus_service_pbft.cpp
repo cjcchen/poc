@@ -4,10 +4,10 @@
 
 #include "crypto/signature_verifier.h"
 
-namespace resdb {
+namespace xxxdb {
 
 ConsensusServicePBFT::ConsensusServicePBFT(
-    const ResDBConfig &config,
+    const XXXDBConfig &config,
     std::unique_ptr<TransactionExecutorImpl> executor)
     : ConsensusService(config),
       system_info_(std::make_unique<SystemInfo>(config)),
@@ -82,4 +82,4 @@ void ConsensusServicePBFT::AddNewReplica(const ReplicaInfo &info) {
   recovery_->AddNewReplica(info);
 }
 
-} // namespace resdb
+} // namespace xxxdb

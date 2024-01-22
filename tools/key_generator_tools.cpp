@@ -5,7 +5,7 @@
 
 #include "crypto/key_generator.h"
 
-using namespace resdb;
+using namespace xxxdb;
 
 void WriteKey(const KeyInfo &key, const std::string &file_name) {
   std::string str;

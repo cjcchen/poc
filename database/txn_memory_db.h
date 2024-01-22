@@ -3,9 +3,9 @@
 #include <map>
 #include <unordered_map>
 
-#include "proto/resdb.pb.h"
+#include "proto/xxxdb.pb.h"
 
-namespace resdb {
+namespace xxxdb {
 
 class TxnMemoryDB {
 public:
@@ -20,4 +20,4 @@ private:
   std::atomic<uint64_t> max_seq_;
 };
 
-} // namespace resdb
+} // namespace xxxdb

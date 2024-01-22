@@ -7,7 +7,7 @@
 
 #include "absl/status/statusor.h"
 
-namespace resdb {
+namespace xxxdb {
 
 template <typename T> class LockFreeQueue {
 public:
@@ -54,4 +54,4 @@ private:
   std::atomic<bool> need_notify_;
 };
 
-} // namespace resdb
+} // namespace xxxdb

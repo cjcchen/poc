@@ -5,7 +5,7 @@
 #include <condition_variable>
 #include <list>
 
-namespace resdb {
+namespace xxxdb {
 
 template <typename T> class BatchQueue {
   struct BatchQueueItem {
@@ -62,4 +62,4 @@ private:
   size_t batch_size_;
 };
 
-} // namespace resdb
+} // namespace xxxdb

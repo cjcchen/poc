@@ -4,7 +4,7 @@
 
 #include "ordering/pbft/transaction_collector.h"
 
-namespace resdb {
+namespace xxxdb {
 
 class LockFreeCollectorPool {
 public:
@@ -24,4 +24,4 @@ private:
   bool need_data_collection_;
 };
 
-} // namespace resdb
+} // namespace xxxdb

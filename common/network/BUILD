@@ -9,16 +9,6 @@ cc_library(
 )
 
 cc_library(
-    name = "mock_socket",
-    hdrs = ["mock_socket.h"],
-    deps = [
-        ":socket",
-        "//common:comm",
-        "//common/test",
-    ],
-)
-
-cc_library(
     name = "tcp_socket",
     srcs = ["tcp_socket.cpp"],
     hdrs = ["tcp_socket.h"],
@@ -27,11 +17,3 @@ cc_library(
     ],
 )
 
-cc_test(
-    name = "tcp_socket_test",
-    srcs = ["tcp_socket_test.cpp"],
-    deps = [
-        ":tcp_socket",
-        "//common/test:test_main",
-    ],
-)

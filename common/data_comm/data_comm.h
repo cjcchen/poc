@@ -1,7 +1,7 @@
 #pragma once
 #include <memory>
 
-namespace resdb {
+namespace xxxdb {
 
 struct DataInfo {
   DataInfo() : buff(nullptr), data_len(0) {}
@@ -15,4 +15,4 @@ struct DataInfo {
   size_t data_len = 0;
 };
 
-} // namespace resdb
+} // namespace xxxdb

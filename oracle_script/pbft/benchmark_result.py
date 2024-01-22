@@ -2,9 +2,11 @@
 
 import sys
 
+import oracle_script
 from oracle_script.comm.utils import *
 from oracle_script.comm.comm_config import *
 
+oracle_script.comm.utils.debug = False
 config_path=""
 home=""
 

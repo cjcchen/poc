@@ -6,7 +6,7 @@
 
 #include "execution/transaction_executor_impl.h"
 
-namespace resdb {
+namespace xxxdb {
 
 class BenchmarkServerImpl : public TransactionExecutorImpl {
 public:
@@ -20,4 +20,4 @@ private:
   std::promise<bool> begin_;
 };
 
-} // namespace resdb
+} // namespace xxxdb

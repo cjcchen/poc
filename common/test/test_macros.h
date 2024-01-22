@@ -3,7 +3,7 @@
 
 #include "gmock/gmock.h"
 
-namespace resdb {
+namespace xxxdb {
 namespace testing {
 
 MATCHER_P(EqualsProto, replica, "") {
@@ -11,4 +11,4 @@ MATCHER_P(EqualsProto, replica, "") {
 }
 
 } // namespace testing
-} // namespace resdb
+} // namespace xxxdb

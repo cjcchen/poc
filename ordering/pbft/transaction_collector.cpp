@@ -4,7 +4,7 @@
 
 #include "crypto/signature_verifier.h"
 
-namespace resdb {
+namespace xxxdb {
 
 uint64_t TransactionCollector::Seq() { return seq_; }
 
@@ -125,4 +125,4 @@ int TransactionCollector::Commit() {
   return 0;
 }
 
-} // namespace resdb
+} // namespace xxxdb

@@ -2,16 +2,16 @@
 
 #include <memory>
 
-#include "config/resdb_config.h"
-#include "proto/resdb.pb.h"
+#include "config/xxxdb_config.h"
+#include "proto/xxxdb.pb.h"
 
-namespace resdb {
+namespace xxxdb {
 
 // SystemInfo managers the cluster information which
 // has been agreed on, like the primary, the replicas,etc..
 class SystemInfo {
 public:
-  SystemInfo(const ResDBConfig &config);
+  SystemInfo(const XXXDBConfig &config);
   virtual ~SystemInfo() = default;
 
   std::vector<ReplicaInfo> GetReplicas() const;
@@ -31,4 +31,4 @@ private:
   std::atomic<uint32_t> primary_id_;
   std::atomic<uint64_t> view_;
 };
-} // namespace resdb
+} // namespace xxxdb

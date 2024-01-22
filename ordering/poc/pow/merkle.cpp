@@ -2,7 +2,7 @@
 
 #include "ordering/poc/pow/miner_utils.h"
 
-namespace resdb {
+namespace xxxdb {
 namespace {
 
 std::string TrverseMakeHash(const BatchClientTransactions &transaction,
@@ -25,4 +25,4 @@ HashValue Merkle::MakeHash(const BatchClientTransactions &transaction) {
   return DigestToHash(root_hash);
 }
 
-} // namespace resdb
+} // namespace xxxdb

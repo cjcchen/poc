@@ -1,6 +1,6 @@
 #include "ordering/pbft/transaction_utils.h"
 
-namespace resdb {
+namespace xxxdb {
 
 std::unique_ptr<Request> NewRequest(Request::Type type, const Request &request,
                                     int sender_id) {
@@ -10,4 +10,4 @@ std::unique_ptr<Request> NewRequest(Request::Type type, const Request &request,
   return new_request;
 }
 
-} // namespace resdb
+} // namespace xxxdb

@@ -2,11 +2,11 @@
 
 #include <boost/asio.hpp>
 
-#include "client/resdb_client.h"
+#include "client/xxxdb_client.h"
 #include "common/queue/lock_free_queue.h"
 #include "proto/replica_info.pb.h"
 
-namespace resdb {
+namespace xxxdb {
 
 class AsyncReplicaClient {
 public:
@@ -24,7 +24,7 @@ private:
 
 private:
   LockFreeQueue<std::string> queue_;
-  std::unique_ptr<ResDBClient> client_;
+  std::unique_ptr<XXXDBClient> client_;
   boost::asio::ip::tcp::socket socket_;
   boost::asio::ip::tcp::endpoint endpoint_;
   std::atomic<bool> in_process_;
@@ -40,4 +40,4 @@ private:
   int status_ = 0; // sending status.
 };
 
-} // namespace resdb
+} // namespace xxxdb

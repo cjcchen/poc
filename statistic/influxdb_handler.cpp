@@ -2,7 +2,7 @@
 
 #include <glog/logging.h>
 
-namespace resdb {
+namespace xxxdb {
 
 using prometheus::Histogram;
 
@@ -22,4 +22,4 @@ void InfluxdbHandler::IncQPS() {
             .send_udp("127.0.0.1", 8089);
 }
 
-} // namespace resdb
+} // namespace xxxdb

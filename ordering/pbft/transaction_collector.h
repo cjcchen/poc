@@ -3,11 +3,11 @@
 #include <bitset>
 
 #include "execution/transaction_executor.h"
-#include "proto/resdb.pb.h"
+#include "proto/xxxdb.pb.h"
 #include "server/server_comm.h"
 #include "statistic/stats.h"
 
-namespace resdb {
+namespace xxxdb {
 
 enum TransactionStatue {
   None = 0,
@@ -97,4 +97,4 @@ private:
   std::mutex mutex_;
 };
 
-} // namespace resdb
+} // namespace xxxdb

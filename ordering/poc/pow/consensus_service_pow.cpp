@@ -3,9 +3,9 @@
 #include "common/utils/utils.h"
 #include "glog/logging.h"
 
-namespace resdb {
+namespace xxxdb {
 
-ConsensusServicePoW::ConsensusServicePoW(const ResDBPoCConfig &config)
+ConsensusServicePoW::ConsensusServicePoW(const XXXDBPoCConfig &config)
     : ConsensusService(config) {
   miner_manager_ = std::make_unique<MinerManager>(config);
   pow_manager_ = std::make_unique<PoWManager>(config, GetBroadCastClient());
@@ -49,4 +49,4 @@ int ConsensusServicePoW::ConsensusCommit(std::unique_ptr<Context> context,
   return 0;
 }
 
-} // namespace resdb
+} // namespace xxxdb

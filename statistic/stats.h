@@ -7,7 +7,7 @@
 
 #include "statistic/prometheus_handler.h"
 
-namespace resdb {
+namespace xxxdb {
 
 class Stats {
 public:
@@ -74,4 +74,4 @@ private:
   int monitor_sleep_time_ = 5; // default 5s.
 };
 
-} // namespace resdb
+} // namespace xxxdb

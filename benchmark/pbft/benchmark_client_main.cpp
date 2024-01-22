@@ -2,13 +2,13 @@
 
 #include "benchmark/pbft/benchmark_client.h"
 #include "common/utils/utils.h"
-#include "config/resdb_config_utils.h"
+#include "config/xxxdb_config_utils.h"
 
-using resdb::BenchmarkClient;
-using resdb::GenerateResDBConfig;
-using resdb::get_sys_clock;
-using resdb::ReplicaInfo;
-using resdb::ResDBConfig;
+using xxxdb::BenchmarkClient;
+using xxxdb::GenerateXXXDBConfig;
+using xxxdb::get_sys_clock;
+using xxxdb::ReplicaInfo;
+using xxxdb::XXXDBConfig;
 
 int main(int argc, char **argv) {
   if (argc < 5) {
@@ -18,7 +18,7 @@ int main(int argc, char **argv) {
   std::string config_file = argv[1];
   int value_size = std::stoi(argv[2]);
 
-  ResDBConfig config = GenerateResDBConfig(config_file);
+  XXXDBConfig config = GenerateXXXDBConfig(config_file);
 
   config.SetClientTimeoutMs(10000000);
   BenchmarkClient client(config);

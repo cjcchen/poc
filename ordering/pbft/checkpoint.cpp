@@ -3,10 +3,10 @@
 #include "glog/logging.h"
 #include "ordering/pbft/transaction_utils.h"
 
-namespace resdb {
+namespace xxxdb {
 
-CheckPoint::CheckPoint(const ResDBConfig &config,
-                       ResDBReplicaClient *replica_client)
+CheckPoint::CheckPoint(const XXXDBConfig &config,
+                       XXXDBReplicaClient *replica_client)
     : config_(config), replica_client_(replica_client),
       checkpoint_info_(std::make_unique<CheckPointInfo>(config)),
       checkpoint_collector_(std::make_unique<CheckPointCollector>(
@@ -58,4 +58,4 @@ void CheckPoint::UpdateCheckPointStatus() {
   return;
 }
 
-} // namespace resdb
+} // namespace xxxdb

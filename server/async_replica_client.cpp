@@ -2,11 +2,11 @@
 
 #include <boost/bind/bind.hpp>
 
-#include "client/resdb_client.h"
+#include "client/xxxdb_client.h"
 #include "common/queue/lock_free_queue.h"
 #include "proto/replica_info.pb.h"
 
-namespace resdb {
+namespace xxxdb {
 
 AsyncReplicaClient::AsyncReplicaClient(boost::asio::io_service *io_service,
                                        const std::string &ip, int port,
@@ -91,4 +91,4 @@ void AsyncReplicaClient::ReConnect() {
   });
 }
 
-} // namespace resdb
+} // namespace xxxdb

@@ -2,10 +2,10 @@
 
 #include <glog/logging.h>
 
-namespace resdb {
+namespace xxxdb {
 
 TransactionManager::TransactionManager(
-    const ResDBConfig &config,
+    const XXXDBConfig &config,
     std::unique_ptr<TransactionExecutorImpl> executor_impl,
     CheckPointInfo *checkpoint_info, SystemInfo *system_info)
     : config_(config), queue_("executed"),
@@ -235,4 +235,4 @@ int TransactionManager::GetReplicaState(ReplicaState *state) {
   return 0;
 }
 
-} // namespace resdb
+} // namespace xxxdb

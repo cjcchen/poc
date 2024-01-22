@@ -2,7 +2,7 @@
 
 #include <memory>
 
-namespace resdb {
+namespace xxxdb {
 
 class TransactionExecutorImpl {
 public:
@@ -11,4 +11,4 @@ public:
 
   virtual std::unique_ptr<std::string> ExecuteData(const std::string &request);
 };
-} // namespace resdb
+} // namespace xxxdb

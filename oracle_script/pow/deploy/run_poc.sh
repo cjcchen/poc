@@ -4,7 +4,7 @@ CONFIG_PATH=$PWD/poc.conf
 sh $PWD/../run_poc.sh $CONFIG_PATH
 
 
-sleep 60
+sleep 180
 
 
 ./kill_svr.sh

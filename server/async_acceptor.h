@@ -2,7 +2,7 @@
 #include <boost/asio.hpp>
 #include <memory>
 
-namespace resdb {
+namespace xxxdb {
 
 class AsyncAcceptor {
 public:
@@ -54,4 +54,4 @@ private:
   std::vector<boost::shared_ptr<Session>> sessions_;
 };
 
-} // namespace resdb
+} // namespace xxxdb

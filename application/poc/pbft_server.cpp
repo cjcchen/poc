@@ -1,11 +1,11 @@
-#include "config/resdb_config_utils.h"
+#include "config/xxxdb_config_utils.h"
 #include "ordering/pbft/consensus_service_pbft.h"
-#include "server/resdb_server.h"
+#include "server/xxxdb_server.h"
 
-using resdb::ConsensusServicePBFT;
-using resdb::GenerateResDBConfig;
-using resdb::ResDBConfig;
-using resdb::ResDBServer;
+using xxxdb::ConsensusServicePBFT;
+using xxxdb::GenerateXXXDBConfig;
+using xxxdb::XXXDBConfig;
+using xxxdb::XXXDBServer;
 
 void ShowUsage() { printf("<config> <private_key> <cert_file>\n"); }
 
@@ -19,10 +19,10 @@ int main(int argc, char **argv) {
   char *private_key_file = argv[2];
   char *cert_file = argv[3];
 
-  std::unique_ptr<ResDBConfig> config =
-      GenerateResDBConfig(config_file, private_key_file, cert_file);
+  std::unique_ptr<XXXDBConfig> config =
+      GenerateXXXDBConfig(config_file, private_key_file, cert_file);
 
-  ResDBServer server(*config,
+  XXXDBServer server(*config,
                      std::make_unique<ConsensusServicePBFT>(*config, nullptr));
   server.Run();
 }

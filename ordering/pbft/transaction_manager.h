@@ -8,7 +8,7 @@
 #include <set>
 
 #include "common/queue/lock_free_queue.h"
-#include "config/resdb_config.h"
+#include "config/xxxdb_config.h"
 #include "database/txn_memory_db.h"
 #include "execution/transaction_executor_impl.h"
 #include "ordering/pbft/lock_free_collector_pool.h"
@@ -16,15 +16,15 @@
 #include "ordering/pbft/transaction_utils.h"
 #include "ordering/status/checkpoint/check_point_info.h"
 #include "proto/checkpoint_info.pb.h"
-#include "proto/resdb.pb.h"
+#include "proto/xxxdb.pb.h"
 #include "server/server_comm.h"
 #include "statistic/stats.h"
 
-namespace resdb {
+namespace xxxdb {
 
 class TransactionManager {
 public:
-  TransactionManager(const ResDBConfig &config,
+  TransactionManager(const XXXDBConfig &config,
                      std::unique_ptr<TransactionExecutorImpl> data_impl,
                      CheckPointInfo *checkpoint_info, SystemInfo *system_info);
 
@@ -92,7 +92,7 @@ private:
   int SaveCommittedRequest(const RequestWithProof &proof_data);
 
 private:
-  ResDBConfig config_;
+  XXXDBConfig config_;
   uint64_t next_seq_ = 1;
 
   LockFreeQueue<BatchClientResponse> queue_;
@@ -110,4 +110,4 @@ private:
   Stats *global_stats_;
 };
 
-} // namespace resdb
+} // namespace xxxdb

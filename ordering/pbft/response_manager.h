@@ -1,17 +1,17 @@
 #pragma once
 
 #include "common/queue/lock_free_queue.h"
-#include "config/resdb_config.h"
+#include "config/xxxdb_config.h"
 #include "ordering/pbft/lock_free_collector_pool.h"
 #include "ordering/pbft/transaction_utils.h"
-#include "server/resdb_replica_client.h"
+#include "server/xxxdb_replica_client.h"
 #include "statistic/stats.h"
 
-namespace resdb {
+namespace xxxdb {
 
 class ResponseManager {
 public:
-  ResponseManager(const ResDBConfig &config, ResDBReplicaClient *replica_client,
+  ResponseManager(const XXXDBConfig &config, XXXDBReplicaClient *replica_client,
                   SystemInfo *system_info);
 
   ~ResponseManager();
@@ -46,8 +46,8 @@ private:
   std::unique_ptr<Request> GenerateUserRequest();
 
 private:
-  ResDBConfig config_;
-  ResDBReplicaClient *replica_client_;
+  XXXDBConfig config_;
+  XXXDBReplicaClient *replica_client_;
   std::unique_ptr<LockFreeCollectorPool> collector_pool_, context_pool_;
   LockFreeQueue<QueueItem> batch_queue_;
   std::thread user_req_thread_[16];
@@ -66,4 +66,4 @@ private:
   std::atomic<bool> eval_started_;
 };
 
-} // namespace resdb
+} // namespace xxxdb

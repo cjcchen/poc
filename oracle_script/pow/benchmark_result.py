@@ -71,9 +71,9 @@ def get_min_block(config):
             delta = 0
             last = 0
             for s in res:
-                #print("get s:",s.split())
+                print("get s:",s.split())
                 seq = str(s.decode("utf-8").split()[5][5:-1].strip()).split(',')
-                #print("seq:",int(seq[0]),int(seq[1]))
+                print("seq:",int(seq[0]),int(seq[1]))
                 t = str(s.split()[1].strip().decode('utf8'))
                 if(len(t.split(':'))<3):
                     print("!!!!! no data")

@@ -4,7 +4,7 @@
 
 #include "proto/kv_server.pb.h"
 
-namespace resdb {
+namespace xxxdb {
 
 std::unique_ptr<std::string>
 KVServerExecutor::ExecuteData(const std::string &request) {
@@ -40,4 +40,4 @@ std::string KVServerExecutor::Get(const std::string &key) {
   return kv_map_[key];
 }
 
-} // namespace resdb
+} // namespace xxxdb

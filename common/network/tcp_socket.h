@@ -4,7 +4,7 @@
 
 #include "common/network/socket.h"
 
-namespace resdb {
+namespace xxxdb {
 
 // Socket for Tcp Server
 class TcpSocket : public Socket {
@@ -37,4 +37,4 @@ private:
   int socket_fd_;
   int binding_port_ = 0;
 };
-} // namespace resdb
+} // namespace xxxdb

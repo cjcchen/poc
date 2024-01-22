@@ -2,7 +2,7 @@
 
 #include "ordering/poc/proto/pow.pb.h"
 
-namespace resdb {
+namespace xxxdb {
 
 // Calculate the hash value by sha256(sha256(data))
 // and return the binary string.
@@ -27,4 +27,4 @@ bool operator>(const HashValue &h1, const HashValue &h2);
 bool operator>=(const HashValue &h1, const HashValue &h2);
 bool operator==(const HashValue &h1, const HashValue &h2);
 
-} // namespace resdb
+} // namespace xxxdb
