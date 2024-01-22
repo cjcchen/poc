@@ -43,19 +43,19 @@ CertificateInfo GetCertInfo(int64_t node_id) {
 }
 
 class MockConsensusServicePoW : public ConsensusServicePoW {
- public:
-  MockConsensusServicePoW(const ResDBPoCConfig& config)
+public:
+  MockConsensusServicePoW(const ResDBPoCConfig &config)
       : ConsensusServicePoW(config) {}
 
   MOCK_METHOD(std::unique_ptr<BatchClientTransactions>, GetClientTransactions,
               (uint64_t), (override));
-  MOCK_METHOD(int, BroadCastNewBlock, (const Block&), (override));
-  MOCK_METHOD(int, BroadCastShiftMsg, (const SliceInfo&), (override));
-  MOCK_METHOD(void, BroadCast, (const Request&), (override));
+  MOCK_METHOD(int, BroadCastNewBlock, (const Block &), (override));
+  MOCK_METHOD(int, BroadCastShiftMsg, (const SliceInfo &), (override));
+  MOCK_METHOD(void, BroadCast, (const Request &), (override));
 };
 
 class ConsensusServicePoWTest : public Test {
- protected:
+protected:
   ConsensusServicePoWTest()
       : stats_(Stats::GetGlobalStats(/*sleep_seconds = */ 1)),
         bft_config_({GenerateReplicaInfo(1, "127.0.0.1", 1234),
@@ -75,7 +75,7 @@ class ConsensusServicePoWTest : public Test {
     config_.SetDifficulty(1);
   }
 
-  Stats* stats_;
+  Stats *stats_;
   ResDBConfig bft_config_;
   ResDBPoCConfig config_;
 };
@@ -89,7 +89,7 @@ TEST_F(ConsensusServicePoWTest, MineOneBlock) {
       .WillRepeatedly(Invoke([&](uint64_t seq) {
         std::unique_ptr<BatchClientTransactions> batch_client_request =
             std::make_unique<BatchClientTransactions>();
-        ClientTransactions* client_request =
+        ClientTransactions *client_request =
             batch_client_request->add_transactions();
         client_request->set_seq(seq);
         client_request->set_transaction_data("test");
@@ -101,7 +101,7 @@ TEST_F(ConsensusServicePoWTest, MineOneBlock) {
       }));
 
   EXPECT_CALL(service, BroadCastNewBlock)
-      .WillRepeatedly(Invoke([&](const Block& block) {
+      .WillRepeatedly(Invoke([&](const Block &block) {
         std::unique_lock<std::mutex> lck(mtx);
         cv.notify_all();
         return 0;
@@ -127,7 +127,7 @@ TEST_F(ConsensusServicePoWTest, ReceiveCommittedBlock) {
         .WillRepeatedly(Invoke([&](uint64_t seq) {
           std::unique_ptr<BatchClientTransactions> batch_client_request =
               std::make_unique<BatchClientTransactions>();
-          ClientTransactions* client_request =
+          ClientTransactions *client_request =
               batch_client_request->add_transactions();
           client_request->set_seq(seq);
           client_request->set_transaction_data("test");
@@ -138,7 +138,7 @@ TEST_F(ConsensusServicePoWTest, ReceiveCommittedBlock) {
         }));
 
     EXPECT_CALL(service, BroadCastNewBlock)
-        .WillRepeatedly(Invoke([&](const Block& block) {
+        .WillRepeatedly(Invoke([&](const Block &block) {
           new_block = block;
           std::unique_lock<std::mutex> lck(mtx);
           cv.notify_all();
@@ -326,5 +326,5 @@ TEST_F(ConsensusServicePoWTest, ReceiveShiftEarly) {
 }
 */
 
-}  // namespace
-}  // namespace resdb
+} // namespace
+} // namespace resdb

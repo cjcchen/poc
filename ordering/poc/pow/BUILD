@@ -82,8 +82,8 @@ cc_library(
         "//common:comm",
         "//config:resdb_poc_config",
         "//ordering/poc/proto:pow_cc_proto",
+        "//proto:resdb_cc_proto",
         "//statistic:stats",
-	"//proto:resdb_cc_proto",
     ],
 )
 
@@ -106,7 +106,7 @@ cc_library(
         ":miner_manager",
         "//client:resdb_txn_client",
         "//common/queue:lock_free_queue",
-	"//common/utils:utils",
+        "//common/utils",
         "//config:resdb_poc_config",
         "//ordering/poc/proto:pow_cc_proto",
         "//statistic:stats",
@@ -139,8 +139,8 @@ cc_library(
     hdrs = ["consensus_service_pow.h"],
     deps = [
         ":block_manager",
+        ":pow_manager",
         ":transaction_accessor",
-	":pow_manager",
         "//common/queue:blocking_queue",
         "//common/utils",
         "//ordering/poc/proto:pow_cc_proto",
@@ -172,19 +172,18 @@ cc_library(
     ],
 )
 
-
 cc_library(
     name = "pow_manager",
     srcs = ["pow_manager.cpp"],
     hdrs = ["pow_manager.h"],
     deps = [
         ":block_manager",
-	":shift_manager",
-"//server:resdb_replica_client",
+        ":shift_manager",
         ":transaction_accessor",
         "//common/queue:blocking_queue",
         "//common/utils",
         "//ordering/poc/proto:pow_cc_proto",
+        "//server:resdb_replica_client",
     ],
 )
 
@@ -192,10 +191,10 @@ cc_test(
     name = "pow_manager_test",
     srcs = ["pow_manager_test.cpp"],
     deps = [
+        ":mock_transaction_accessor",
         ":pow_manager",
-	":mock_transaction_accessor",
-"//server:mock_resdb_replica_client",
         "//common/test:test_main",
         "//config:resdb_config_utils",
+        "//server:mock_resdb_replica_client",
     ],
 )

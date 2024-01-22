@@ -11,7 +11,7 @@
 
 namespace resdb {
 
-Miner::Miner(const ResDBPoCConfig& config) : config_(config) {
+Miner::Miner(const ResDBPoCConfig &config) : config_(config) {
   // the number of zeros ahead of the binary value.
   difficulty_ = config_.GetDifficulty();
   worker_num_ = config_.GetWokerNum();
@@ -26,7 +26,7 @@ std::vector<std::pair<uint64_t, uint64_t>> Miner::GetMiningSlices() {
 
 int32_t Miner::GetSliceIdx() const { return shift_idx_; }
 
-void Miner::SetTargetValue(const HashValue& target_value) {
+void Miner::SetTargetValue(const HashValue &target_value) {
   target_value_ = target_value;
   LOG(INFO) << " set target value:" << target_value_.DebugString();
 }
@@ -59,22 +59,28 @@ void Miner::SetSliceIdx(int slice_idx) {
   mining_slices_.push_back(std::make_pair(min_slice, max_slice));
 }
 
-absl::Status Miner::Mine(Block* new_block) {
-	if(new_block->header().height() == 10 && new_block->max_seq() - new_block->min_seq() +1<= config_.BatchTransactionNum() && shift_idx_ == 0){
-		LOG(ERROR)<<"skip fake fail";
-		return absl::NotFoundError("solution not found");
-	}
-	if(new_block->header().height() == 30 && new_block->max_seq() - new_block->min_seq() +1<= config_.BatchTransactionNum() && shift_idx_ == 0){
-		LOG(ERROR)<<"skip fake fail";
-		return absl::NotFoundError("solution not found");
-	}
+absl::Status Miner::Mine(Block *new_block) {
+  if (new_block->header().height() == 10 &&
+      new_block->max_seq() - new_block->min_seq() + 1 <=
+          config_.BatchTransactionNum() &&
+      shift_idx_ == 0) {
+    LOG(ERROR) << "skip fake fail";
+    return absl::NotFoundError("solution not found");
+  }
+  if (new_block->header().height() == 30 &&
+      new_block->max_seq() - new_block->min_seq() + 1 <=
+          config_.BatchTransactionNum() &&
+      shift_idx_ == 0) {
+    LOG(ERROR) << "skip fake fail";
+    return absl::NotFoundError("solution not found");
+  }
   LOG(ERROR) << " start mine block slice:" << shift_idx_;
   stop_ = false;
   std::vector<std::pair<uint64_t, uint64_t>> slices = GetMiningSlices();
 
   Block::Header header(new_block->header());
 
-  for (const auto& slice : slices) {
+  for (const auto &slice : slices) {
     uint64_t max_slice = slice.second;
     uint64_t min_slice = slice.first;
 
@@ -114,7 +120,7 @@ absl::Status Miner::Mine(Block* new_block) {
           header, std::make_pair(current_slice_start, 0)));
     }
 
-    for (auto& th : ths) {
+    for (auto &th : ths) {
       th.join();
     }
     if (stop_) {
@@ -139,7 +145,7 @@ void Miner::Terminate() {
 
 // Calculate the hash value: SHA256(SHA256(header))
 // The hash value will be a 32bit integer.
-std::string Miner::CalculatePoWHashDigest(const Block::Header& header) {
+std::string Miner::CalculatePoWHashDigest(const Block::Header &header) {
   std::string str_value;
   str_value += GetHashDigest(header.pre_hash());
   str_value += GetHashDigest(header.merkle_hash());
@@ -148,13 +154,13 @@ std::string Miner::CalculatePoWHashDigest(const Block::Header& header) {
       SignatureVerifier::CalculateHash(str_value));
 }
 
-HashValue Miner::CalculatePoWHash(const Block* new_block) {
+HashValue Miner::CalculatePoWHash(const Block *new_block) {
   std::string digest = CalculatePoWHashDigest(new_block->header());
   return DigestToHash(digest);
 }
 
-bool Miner::IsValidHash(const Block* block) {
+bool Miner::IsValidHash(const Block *block) {
   return CalculatePoWHash(block) == block->hash();
 }
 
-}  // namespace resdb
+} // namespace resdb

@@ -5,8 +5,8 @@
 namespace resdb {
 
 class KeyGenerator {
- public:
+public:
   static SecretKey GeneratorKeys(SignatureInfo::HashType type);
 };
 
-}  // namespace resdb
+} // namespace resdb

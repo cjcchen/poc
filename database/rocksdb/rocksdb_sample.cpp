@@ -22,7 +22,7 @@ using rocksdb::WriteOptions;
 std::string kDBPath = "/tmp/rocksdb_simple_example";
 
 int main() {
-  DB* db;
+  DB *db;
   Options options;
   // Optimize RocksDB. This is the easiest way to get RocksDB to perform well
   options.IncreaseParallelism();

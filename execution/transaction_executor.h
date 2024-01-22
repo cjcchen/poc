@@ -13,14 +13,14 @@ namespace resdb {
 
 // Execute the requests that may contain system information or client requests.
 class TransactionExecutor {
- public:
+public:
   typedef std::function<void(std::unique_ptr<Request>,
                              std::unique_ptr<BatchClientResponse> resp)>
       PostExecuteFunc;
-  typedef std::function<void(Request*)> PreExecuteFunc;
+  typedef std::function<void(Request *)> PreExecuteFunc;
 
-  TransactionExecutor(const ResDBConfig& config, PostExecuteFunc post_exec_func,
-                      SystemInfo* system_info,
+  TransactionExecutor(const ResDBConfig &config, PostExecuteFunc post_exec_func,
+                      SystemInfo *system_info,
                       std::unique_ptr<TransactionExecutorImpl> executor_impl);
   ~TransactionExecutor();
 
@@ -33,9 +33,9 @@ class TransactionExecutor {
   // before Txn) PreExecute func will be called.
   void SetPreExecuteFunc(PreExecuteFunc pre_exec_func);
 
- private:
+private:
   void Execute(std::unique_ptr<Request> request);
-  std::unique_ptr<std::string> DoExecute(const Request& request);
+  std::unique_ptr<std::string> DoExecute(const Request &request);
   void OrderMessage();
   void ExecuteMessage();
 
@@ -46,17 +46,17 @@ class TransactionExecutor {
 
   void UpdateMaxExecutedSeq(uint64_t seq);
 
- private:
+private:
   std::atomic<uint64_t> next_execute_seq_ = 1;
   PreExecuteFunc pre_exec_func_ = nullptr;
   PostExecuteFunc post_exec_func_ = nullptr;
-  SystemInfo* system_info_ = nullptr;
+  SystemInfo *system_info_ = nullptr;
   std::unique_ptr<TransactionExecutorImpl> executor_impl_ = nullptr;
   std::map<uint64_t, std::unique_ptr<Request>> candidates_;
   std::thread ordering_thread_, execute_thread_;
   LockFreeQueue<Request> commit_queue_, execute_queue_;
   std::atomic<bool> stop_;
-  Stats* global_stats_ = nullptr;
+  Stats *global_stats_ = nullptr;
 };
 
-}  // namespace resdb
+} // namespace resdb

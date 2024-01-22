@@ -5,7 +5,7 @@ using resdb::GenerateResDBConfig;
 using resdb::PBFTClient;
 using resdb::ResDBConfig;
 
-int main(int argc, char** argv) {
+int main(int argc, char **argv) {
   if (argc < 3) {
     printf("<config path> data\n");
     return 0;

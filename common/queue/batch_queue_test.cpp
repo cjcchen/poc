@@ -74,6 +74,6 @@ TEST(BatchQueueTest, BatchPerformance) {
   th.join();
 }
 
-}  // namespace
+} // namespace
 
-}  // namespace resdb
+} // namespace resdb

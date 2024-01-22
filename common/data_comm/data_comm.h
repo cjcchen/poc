@@ -11,8 +11,8 @@ struct DataInfo {
       buff = nullptr;
     }
   }
-  void* buff = nullptr;
+  void *buff = nullptr;
   size_t data_len = 0;
 };
 
-}  // namespace resdb
+} // namespace resdb

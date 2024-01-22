@@ -12,8 +12,8 @@
 namespace resdb {
 
 class ConsensusServicePBFT : public ConsensusService {
- public:
-  ConsensusServicePBFT(const ResDBConfig& config,
+public:
+  ConsensusServicePBFT(const ResDBConfig &config,
                        std::unique_ptr<TransactionExecutorImpl> executor);
   virtual ~ConsensusServicePBFT() = default;
 
@@ -23,13 +23,12 @@ class ConsensusServicePBFT : public ConsensusService {
   std::vector<ReplicaInfo> GetReplicas() override;
 
   void Start();
-  void SetupPerformanceDataFunc(
-    std::function<std::string()> func);
+  void SetupPerformanceDataFunc(std::function<std::string()> func);
 
- protected:
-  virtual void AddNewReplica(const ReplicaInfo& info);
+protected:
+  virtual void AddNewReplica(const ReplicaInfo &info);
 
- protected:
+protected:
   std::unique_ptr<SystemInfo> system_info_;
   std::unique_ptr<CheckPoint> checkpoint_;
   std::unique_ptr<TransactionManager> transaction_manager_;
@@ -37,7 +36,7 @@ class ConsensusServicePBFT : public ConsensusService {
   std::unique_ptr<Recovery> recovery_;
   std::unique_ptr<Query> query_;
   std::unique_ptr<ResponseManager> response_manager_;
-  Stats* global_stats_;
+  Stats *global_stats_;
 };
 
-}  // namespace resdb
+} // namespace resdb

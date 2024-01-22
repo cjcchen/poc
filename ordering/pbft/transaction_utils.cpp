@@ -2,7 +2,7 @@
 
 namespace resdb {
 
-std::unique_ptr<Request> NewRequest(Request::Type type, const Request& request,
+std::unique_ptr<Request> NewRequest(Request::Type type, const Request &request,
                                     int sender_id) {
   auto new_request = std::make_unique<Request>(request);
   new_request->set_type(type);
@@ -10,4 +10,4 @@ std::unique_ptr<Request> NewRequest(Request::Type type, const Request& request,
   return new_request;
 }
 
-}  // namespace resdb
+} // namespace resdb

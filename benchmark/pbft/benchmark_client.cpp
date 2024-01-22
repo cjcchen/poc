@@ -6,10 +6,10 @@
 
 namespace resdb {
 
-BenchmarkClient::BenchmarkClient(const ResDBConfig& config)
+BenchmarkClient::BenchmarkClient(const ResDBConfig &config)
     : ResDBUserClient(config) {}
 
-int BenchmarkClient::Set(const std::string& data) {
+int BenchmarkClient::Set(const std::string &data) {
   BenchmarkMessage request;
   request.set_data(data);
   return SendRequest(request);
@@ -17,4 +17,4 @@ int BenchmarkClient::Set(const std::string& data) {
   //  return SendRequest(request, &response);
 }
 
-}  // namespace resdb
+} // namespace resdb

@@ -9,15 +9,15 @@ using resdb::GenerateReplicaInfo;
 using resdb::GenerateResDBConfig;
 using resdb::KeyInfo;
 using resdb::ReadConfig;
-using resdb::Stats;
 using resdb::ReplicaInfo;
 using resdb::ResDBConfig;
 using resdb::ResDBPoCConfig;
 using resdb::ResDBServer;
+using resdb::Stats;
 
 void ShowUsage() { printf("<bft config> <pow config>\n"); }
 
-int main(int argc, char** argv) {
+int main(int argc, char **argv) {
   if (argc < 5) {
     ShowUsage();
     exit(0);
@@ -33,23 +33,22 @@ int main(int argc, char** argv) {
 
   std::unique_ptr<ResDBConfig> pow_config = GenerateResDBConfig(
       pow_config_file, private_key_file, cert_file, std::nullopt,
-      [&](const std::vector<ReplicaInfo>& replicas,
-          const ReplicaInfo& self_info, const KeyInfo& private_key,
-          const CertificateInfo& public_key_cert_info) {
+      [&](const std::vector<ReplicaInfo> &replicas,
+          const ReplicaInfo &self_info, const KeyInfo &private_key,
+          const CertificateInfo &public_key_cert_info) {
         return std::make_unique<ResDBPoCConfig>(
             bft_config, replicas, self_info, private_key, public_key_cert_info);
       });
 
-  LOG(ERROR)<<"elf ip:"<<pow_config->GetSelfInfo().ip();
+  LOG(ERROR) << "elf ip:" << pow_config->GetSelfInfo().ip();
   Stats::InitGlobalPrometheus("0.0.0.0:8091");
-  ResDBPoCConfig* pow_config_ptr =
-      static_cast<ResDBPoCConfig*>(pow_config.get());
+  ResDBPoCConfig *pow_config_ptr =
+      static_cast<ResDBPoCConfig *>(pow_config.get());
 
   pow_config_ptr->SetMaxNonceBit(42);
   pow_config_ptr->SetDifficulty(28);
-  
+
   ResDBServer server(*pow_config_ptr,
                      std::make_unique<ConsensusServicePoW>(*pow_config_ptr));
   server.Run();
 }
-

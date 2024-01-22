@@ -15,7 +15,7 @@ using resdb::ReplicaInfo;
 using resdb::ResDBConfig;
 using resdb::ResDBKVClient;
 
-int main(int argc, char** argv) {
+int main(int argc, char **argv) {
   if (argc < 4) {
     printf("<config path> <cmd>(set/get), key [value]\n");
     return 0;

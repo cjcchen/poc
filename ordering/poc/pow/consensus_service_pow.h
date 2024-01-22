@@ -1,15 +1,15 @@
 #pragma once
 
 #include "config/resdb_poc_config.h"
-#include "ordering/poc/pow/pow_manager.h"
 #include "ordering/poc/pow/miner_manager.h"
+#include "ordering/poc/pow/pow_manager.h"
 #include "server/consensus_service.h"
 
 namespace resdb {
 
 class ConsensusServicePoW : public ConsensusService {
- public:
-  ConsensusServicePoW(const ResDBPoCConfig& config);
+public:
+  ConsensusServicePoW(const ResDBPoCConfig &config);
   virtual ~ConsensusServicePoW();
 
   // Start the service.
@@ -20,10 +20,9 @@ class ConsensusServicePoW : public ConsensusService {
 
   std::vector<ReplicaInfo> GetReplicas() override;
 
-
- protected:
+protected:
   std::unique_ptr<PoWManager> pow_manager_;
   std::unique_ptr<MinerManager> miner_manager_;
 };
 
-}  // namespace resdb
+} // namespace resdb

@@ -5,7 +5,7 @@
 namespace resdb {
 namespace {
 
-std::string TrverseMakeHash(const BatchClientTransactions& transaction,
+std::string TrverseMakeHash(const BatchClientTransactions &transaction,
                             int l_idx, int r_idx) {
   if (l_idx == r_idx) {
     return GetHashValue(transaction.transactions(l_idx).transaction_data());
@@ -17,12 +17,12 @@ std::string TrverseMakeHash(const BatchClientTransactions& transaction,
   return GetHashValue(l_chd + r_chd);
 }
 
-}  // namespace
+} // namespace
 
-HashValue Merkle::MakeHash(const BatchClientTransactions& transaction) {
+HashValue Merkle::MakeHash(const BatchClientTransactions &transaction) {
   std::string root_hash =
       TrverseMakeHash(transaction, 0, transaction.transactions_size() - 1);
   return DigestToHash(root_hash);
 }
 
-}  // namespace resdb
+} // namespace resdb

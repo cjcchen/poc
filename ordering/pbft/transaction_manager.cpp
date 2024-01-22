@@ -5,13 +5,11 @@
 namespace resdb {
 
 TransactionManager::TransactionManager(
-    const ResDBConfig& config,
+    const ResDBConfig &config,
     std::unique_ptr<TransactionExecutorImpl> executor_impl,
-    CheckPointInfo* checkpoint_info, SystemInfo* system_info)
-    : config_(config),
-      queue_("executed"),
-      txn_db_(std::make_unique<TxnMemoryDB>()),
-      system_info_(system_info),
+    CheckPointInfo *checkpoint_info, SystemInfo *system_info)
+    : config_(config), queue_("executed"),
+      txn_db_(std::make_unique<TxnMemoryDB>()), system_info_(system_info),
       checkpoint_info_(checkpoint_info),
       transaction_executor_(std::make_unique<TransactionExecutor>(
           config,
@@ -73,7 +71,7 @@ uint64_t TransactionManager::GetMaxCheckPointRequestSeq() {
 // 1. view is the same as the current view
 // 2. seq is larger or equal than the next execute seq.
 // 3. inside the water mark.
-bool TransactionManager::IsValidMsg(const Request& request) {
+bool TransactionManager::IsValidMsg(const Request &request) {
   if (request.type() == Request::TYPE_RESPONSE) {
     return true;
   }
@@ -93,35 +91,35 @@ bool TransactionManager::IsValidMsg(const Request& request) {
 }
 
 bool TransactionManager::MayConsensusChangeStatus(
-    int type, int received_count, std::atomic<TransactionStatue>* status) {
+    int type, int received_count, std::atomic<TransactionStatue> *status) {
   switch (type) {
-    case Request::TYPE_PRE_PREPARE:
-      if (*status == TransactionStatue::None) {
-        TransactionStatue old_status = TransactionStatue::None;
-        return status->compare_exchange_strong(
-            old_status, TransactionStatue::READY_PREPARE,
-            std::memory_order_acq_rel, std::memory_order_acq_rel);
-      }
-      break;
-    case Request::TYPE_PREPARE:
-      if (*status == TransactionStatue::READY_PREPARE &&
-          config_.GetMinDataReceiveNum() <= received_count) {
-        TransactionStatue old_status = TransactionStatue::READY_PREPARE;
-        return status->compare_exchange_strong(
-            old_status, TransactionStatue::READY_COMMIT,
-            std::memory_order_acq_rel, std::memory_order_acq_rel);
-      }
-      break;
-    case Request::TYPE_COMMIT:
-      if (*status == TransactionStatue::READY_COMMIT &&
-          config_.GetMinDataReceiveNum() <= received_count) {
-        TransactionStatue old_status = TransactionStatue::READY_COMMIT;
-        return status->compare_exchange_strong(
-            old_status, TransactionStatue::READY_EXECUTE,
-            std::memory_order_acq_rel, std::memory_order_acq_rel);
-        return true;
-      }
-      break;
+  case Request::TYPE_PRE_PREPARE:
+    if (*status == TransactionStatue::None) {
+      TransactionStatue old_status = TransactionStatue::None;
+      return status->compare_exchange_strong(
+          old_status, TransactionStatue::READY_PREPARE,
+          std::memory_order_acq_rel, std::memory_order_acq_rel);
+    }
+    break;
+  case Request::TYPE_PREPARE:
+    if (*status == TransactionStatue::READY_PREPARE &&
+        config_.GetMinDataReceiveNum() <= received_count) {
+      TransactionStatue old_status = TransactionStatue::READY_PREPARE;
+      return status->compare_exchange_strong(
+          old_status, TransactionStatue::READY_COMMIT,
+          std::memory_order_acq_rel, std::memory_order_acq_rel);
+    }
+    break;
+  case Request::TYPE_COMMIT:
+    if (*status == TransactionStatue::READY_COMMIT &&
+        config_.GetMinDataReceiveNum() <= received_count) {
+      TransactionStatue old_status = TransactionStatue::READY_COMMIT;
+      return status->compare_exchange_strong(
+          old_status, TransactionStatue::READY_EXECUTE,
+          std::memory_order_acq_rel, std::memory_order_acq_rel);
+      return true;
+    }
+    break;
   }
   return false;
 }
@@ -132,8 +130,9 @@ bool TransactionManager::MayConsensusChangeStatus(
 
 // If there are enough messages and the state is changed after adding the
 // message, return 1, otherwise return 0. Return -2 if the request is not valid.
-CollectorResultCode TransactionManager::AddConsensusMsg(
-    const SignatureInfo& signature, std::unique_ptr<Request> request) {
+CollectorResultCode
+TransactionManager::AddConsensusMsg(const SignatureInfo &signature,
+                                    std::unique_ptr<Request> request) {
   if (request == nullptr || !IsValidMsg(*request)) {
     return CollectorResultCode::INVALID;
   }
@@ -145,9 +144,9 @@ CollectorResultCode TransactionManager::AddConsensusMsg(
 
   int ret = collector_pool_->GetCollector(seq)->AddRequest(
       std::move(request), signature, type == Request::TYPE_PRE_PREPARE,
-      [&](const Request& request, int received_count,
-          TransactionCollector::CollectorDataType* data,
-          std::atomic<TransactionStatue>* status) {
+      [&](const Request &request, int received_count,
+          TransactionCollector::CollectorDataType *data,
+          std::atomic<TransactionStatue> *status) {
         if (MayConsensusChangeStatus(type, received_count, status)) {
           resp_received_count = 1;
         }
@@ -163,15 +162,15 @@ CollectorResultCode TransactionManager::AddConsensusMsg(
 
 // Save the committed request with its 2f+1 proof.
 void TransactionManager::SaveCommittedRequest(
-    const Request& request,
-    TransactionCollector::CollectorDataType* proof_data) {
+    const Request &request,
+    TransactionCollector::CollectorDataType *proof_data) {
   if (!config_.IsCheckPointEnabled()) {
     return;
   }
 }
 
 int TransactionManager::SaveCommittedRequest(
-    const RequestWithProof& proof_data) {
+    const RequestWithProof &proof_data) {
   uint64_t seq = proof_data.seq();
   if (committed_data_.find(seq) != committed_data_.end()) {
     LOG(ERROR) << "seq data:" << seq << "  has been set";
@@ -179,7 +178,7 @@ int TransactionManager::SaveCommittedRequest(
   }
   std::unique_lock<std::mutex> lk(data_mutex_);
   committed_proof_[seq].clear();
-  for (auto& data : proof_data.proofs()) {
+  for (auto &data : proof_data.proofs()) {
     std::unique_ptr<RequestInfo> info = std::make_unique<RequestInfo>();
     info->request = std::make_unique<Request>(data.request());
     info->signature = data.signature();
@@ -200,11 +199,11 @@ RequestSet TransactionManager::GetRequestSet(uint64_t min_seq,
       LOG(ERROR) << "seq :" << i << " doesn't exist";
       continue;
     }
-    RequestWithProof* request = ret.add_requests();
+    RequestWithProof *request = ret.add_requests();
     *request->mutable_request() = committed_data_[i];
     request->set_seq(i);
-    for (const auto& request_info : committed_proof_[i]) {
-      RequestWithProof::RequestData* data = request->add_proofs();
+    for (const auto &request_info : committed_proof_[i]) {
+      RequestWithProof::RequestData *data = request->add_proofs();
       *data->mutable_request() = *request_info->request;
       *data->mutable_signature() = request_info->signature;
     }
@@ -213,13 +212,13 @@ RequestSet TransactionManager::GetRequestSet(uint64_t min_seq,
 }
 
 // Get the transactions that have been execuited.
-Request* TransactionManager::GetRequest(uint64_t seq) {
+Request *TransactionManager::GetRequest(uint64_t seq) {
   return txn_db_->Get(seq);
 }
 
 // Commit the request received from the recovery data with 2f+1 proofs.
 int TransactionManager::CommittedRequestWithProof(
-    const RequestWithProof& request) {
+    const RequestWithProof &request) {
   // Save the proof locally.
   if (SaveCommittedRequest(request) != 0) {
     return -2;
@@ -230,10 +229,10 @@ int TransactionManager::CommittedRequestWithProof(
       std::make_unique<Request>(request.request()));
 }
 
-int TransactionManager::GetReplicaState(ReplicaState* state) {
+int TransactionManager::GetReplicaState(ReplicaState *state) {
   state->set_view(GetCurrentView());
   *state->mutable_replica_info() = config_.GetSelfInfo();
   return 0;
 }
 
-}  // namespace resdb
+} // namespace resdb

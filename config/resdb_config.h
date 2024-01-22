@@ -7,13 +7,13 @@ namespace resdb {
 
 // TODO read from a proto json file.
 class ResDBConfig {
- public:
-  ResDBConfig(const std::vector<ReplicaInfo>& replicas,
-              const ReplicaInfo& self_info);
+public:
+  ResDBConfig(const std::vector<ReplicaInfo> &replicas,
+              const ReplicaInfo &self_info);
 
-  ResDBConfig(const std::vector<ReplicaInfo>& replicas,
-              const ReplicaInfo& self_info, const KeyInfo& private_key,
-              const CertificateInfo& public_key_cert_info);
+  ResDBConfig(const std::vector<ReplicaInfo> &replicas,
+              const ReplicaInfo &self_info, const KeyInfo &private_key,
+              const CertificateInfo &public_key_cert_info);
 
   // Get the private key.
   KeyInfo GetPrivateKey() const;
@@ -22,9 +22,9 @@ class ResDBConfig {
   CertificateInfo GetPublicKeyCertificateInfo() const;
 
   // Each replica infomation, including the binding urls(or ip,port).
-  const std::vector<ReplicaInfo>& GetReplicaInfos() const;
+  const std::vector<ReplicaInfo> &GetReplicaInfos() const;
   // The current replica infomation, including the binding urls(or ip,port).
-  const ReplicaInfo& GetSelfInfo() const;
+  const ReplicaInfo &GetSelfInfo() const;
   // The total number of replicas.
   size_t GetReplicaNum() const;
   // The minimum number of messages that replicas have to receive after jumping
@@ -48,7 +48,7 @@ class ResDBConfig {
 
   // Logging
   std::string GetCheckPointLoggingPath() const;
-  void SetCheckPointLoggingPath(const std::string& path);
+  void SetCheckPointLoggingPath(const std::string &path);
 
   // Checkpoint flag
   void EnableCheckPoint(bool is_enable);
@@ -83,7 +83,7 @@ class ResDBConfig {
   uint32_t GetInputWorkerNum() const;
   uint32_t GetOutputWorkerNum() const;
 
- private:
+private:
   std::vector<ReplicaInfo> replicas_;
   ReplicaInfo self_info_;
   const KeyInfo private_key_;
@@ -105,4 +105,4 @@ class ResDBConfig {
   uint32_t output_worker_num_ = 8;
 };
 
-}  // namespace resdb
+} // namespace resdb

@@ -27,7 +27,8 @@ uint64_t get_server_clock() {
 }
 
 uint64_t get_sys_clock() {
-  if (TIME_ENABLE) return get_server_clock();
+  if (TIME_ENABLE)
+    return get_server_clock();
   return 0;
 }
 
@@ -38,4 +39,4 @@ uint64_t get_current_time() {
   return static_cast<uint64_t>(tv.tv_sec) * 1000000000ll + tv.tv_usec;
 }
 
-}  // namespace resdb
+} // namespace resdb

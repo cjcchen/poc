@@ -5,10 +5,9 @@
 
 namespace resdb {
 
-CheckPoint::CheckPoint(const ResDBConfig& config,
-                       ResDBReplicaClient* replica_client)
-    : config_(config),
-      replica_client_(replica_client),
+CheckPoint::CheckPoint(const ResDBConfig &config,
+                       ResDBReplicaClient *replica_client)
+    : config_(config), replica_client_(replica_client),
       checkpoint_info_(std::make_unique<CheckPointInfo>(config)),
       checkpoint_collector_(std::make_unique<CheckPointCollector>(
           config, checkpoint_info_.get())),
@@ -25,7 +24,7 @@ CheckPoint::~CheckPoint() {
   }
 }
 
-CheckPointInfo* CheckPoint::GetCheckPointInfo() {
+CheckPointInfo *CheckPoint::GetCheckPointInfo() {
   if (!config_.IsCheckPointEnabled()) {
     return nullptr;
   }
@@ -59,4 +58,4 @@ void CheckPoint::UpdateCheckPointStatus() {
   return;
 }
 
-}  // namespace resdb
+} // namespace resdb

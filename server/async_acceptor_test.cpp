@@ -15,7 +15,7 @@ TEST(AsyncAcceptorTest, RecvMessage) {
   std::future<bool> bc_done = bc.get_future();
   AsyncAcceptor acceptor(
       "127.0.0.1", 1234, 1,
-      [&](const char* buff, size_t data_len) { bc.set_value(true); });
+      [&](const char *buff, size_t data_len) { bc.set_value(true); });
 
   acceptor.StartAccept();
 
@@ -32,7 +32,7 @@ TEST(AsyncAcceptorTest, RecvMessageAndClose) {
   std::future<bool> bc_done = bc.get_future();
   AsyncAcceptor acceptor(
       "127.0.0.1", 1234, 1,
-      [&](const char* buff, size_t data_len) { bc.set_value(true); });
+      [&](const char *buff, size_t data_len) { bc.set_value(true); });
 
   acceptor.StartAccept();
 
@@ -50,9 +50,10 @@ TEST(AsyncAcceptorTest, MultiAcceptor) {
   std::future<bool> bc_done = bc.get_future();
   int a = 0;
   AsyncAcceptor acceptor("127.0.0.1", 1234, 2,
-                         [&](const char* buff, size_t data_len) {
+                         [&](const char *buff, size_t data_len) {
                            a++;
-                           if (a == 3) bc.set_value(true);
+                           if (a == 3)
+                             bc.set_value(true);
                          });
 
   acceptor.StartAccept();
@@ -72,7 +73,7 @@ TEST(AsyncAcceptorTest, MultiAcceptorError) {
   std::promise<bool> bc;
   std::future<bool> bc_done = bc.get_future();
   AsyncAcceptor acceptor("127.0.0.1", 1234, 2,
-                         [&](const char* buff, size_t data_len) {});
+                         [&](const char *buff, size_t data_len) {});
 
   acceptor.StartAccept();
 
@@ -90,7 +91,7 @@ TEST(AsyncAcceptorTest, RecvClose) {
   std::future<bool> bc_done = bc.get_future();
   AsyncAcceptor acceptor(
       "127.0.0.1", 1234, 1,
-      [&](const char* buff, size_t data_len) { bc.set_value(true); });
+      [&](const char *buff, size_t data_len) { bc.set_value(true); });
 
   acceptor.StartAccept();
 
@@ -111,6 +112,6 @@ TEST(AsyncAcceptorTest, RecvClose) {
   bc_done.get();
 }
 
-}  // namespace
+} // namespace
 
-}  // namespace resdb
+} // namespace resdb

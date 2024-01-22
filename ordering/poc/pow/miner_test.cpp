@@ -19,7 +19,7 @@ using ::testing::Pair;
 using ::testing::Test;
 
 class MinerTest : public Test {
- public:
+public:
   ResDBPoCConfig GetConfig(int idx) {
     ResDBConfig bft_config({GenerateReplicaInfo(1, "127.0.0.1", 1234),
                             GenerateReplicaInfo(2, "127.0.0.1", 1235),
@@ -166,5 +166,5 @@ TEST_F(MinerTest, HashNotValid) {
   EXPECT_FALSE(miner.IsValidHash(&block));
 }
 
-}  // namespace
-}  // namespace resdb
+} // namespace
+} // namespace resdb

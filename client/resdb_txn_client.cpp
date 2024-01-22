@@ -7,13 +7,12 @@
 
 namespace resdb {
 
-ResDBTxnClient::ResDBTxnClient(const ResDBConfig& config)
-    : config_(config),
-      replicas_(config.GetReplicaInfos()),
+ResDBTxnClient::ResDBTxnClient(const ResDBConfig &config)
+    : config_(config), replicas_(config.GetReplicaInfos()),
       recv_timeout_(1) /*1s*/ {}
 
-std::unique_ptr<ResDBClient> ResDBTxnClient::GetResDBClient(
-    const std::string& ip, int port) {
+std::unique_ptr<ResDBClient>
+ResDBTxnClient::GetResDBClient(const std::string &ip, int port) {
   return std::make_unique<ResDBClient>(ip, port);
 }
 
@@ -31,14 +30,14 @@ ResDBTxnClient::GetTxn(uint64_t min_seq, uint64_t max_seq) {
   std::condition_variable resp_cv;
   bool success = false;
   std::map<std::string, int> recv_count;
-  for (const auto& replica : replicas_) {
+  for (const auto &replica : replicas_) {
     std::unique_ptr<ResDBClient> client =
         GetResDBClient(replica.ip(), replica.port());
-    ResDBClient* client_ptr = client.get();
+    ResDBClient *client_ptr = client.get();
     clients.push_back(std::move(client));
 
     ths.push_back(std::thread(
-        [&](ResDBClient* client) {
+        [&](ResDBClient *client) {
           std::string response_str;
           int ret = client->SendRequest(request, Request::TYPE_QUERY);
           if (ret) {
@@ -66,13 +65,13 @@ ResDBTxnClient::GetTxn(uint64_t min_seq, uint64_t max_seq) {
     std::unique_lock<std::mutex> lck(mtx);
     resp_cv.wait_for(lck, std::chrono::seconds(recv_timeout_));
     // Time out or done, close all the client.
-    for (auto& client : clients) {
+    for (auto &client : clients) {
       client->Close();
     }
   }
 
   // wait for all theads done.
-  for (auto& th : ths) {
+  for (auto &th : ths) {
     if (th.joinable()) {
       th.join();
     }
@@ -88,10 +87,10 @@ ResDBTxnClient::GetTxn(uint64_t min_seq, uint64_t max_seq) {
     LOG(ERROR) << "parse fail len:" << final_str.size();
     return absl::InternalError("recv data fail.");
   }
-  for (auto& transaction : resp.transactions()) {
+  for (auto &transaction : resp.transactions()) {
     txn_resp.push_back(std::make_pair(transaction.seq(), transaction.data()));
   }
   return txn_resp;
 }
 
-}  // namespace resdb
+} // namespace resdb

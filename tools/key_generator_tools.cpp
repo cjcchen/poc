@@ -7,7 +7,7 @@
 
 using namespace resdb;
 
-void WriteKey(const KeyInfo& key, const std::string& file_name) {
+void WriteKey(const KeyInfo &key, const std::string &file_name) {
   std::string str;
   assert(key.SerializeToString(&str));
 
@@ -21,7 +21,7 @@ void WriteKey(const KeyInfo& key, const std::string& file_name) {
   close(fd);
 }
 
-int main(int argc, char** argv) {
+int main(int argc, char **argv) {
   std::string type = "ED25519";
   std::string path = "./";
   if (argc < 2) {

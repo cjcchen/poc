@@ -1,6 +1,6 @@
 package(default_visibility = ["//visibility:public"])
 
-load("@rules_foreign_cc//foreign_cc:defs.bzl", "configure_make", "make", "cmake")
+load("@rules_foreign_cc//foreign_cc:defs.bzl", "cmake", "configure_make", "make")
 
 cc_library(
     name = "rocksdb",
@@ -55,7 +55,6 @@ cc_library(
         "@com_google_leveldb//:leveldb",
     ],
 )
-
 
 cc_library(
     name = "cryptopp_lib",

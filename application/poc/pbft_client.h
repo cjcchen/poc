@@ -6,10 +6,10 @@ namespace resdb {
 
 // PBFTClient to send data to the pbft cluster.
 class PBFTClient : public ResDBUserClient {
- public:
-  PBFTClient(const ResDBConfig& config);
+public:
+  PBFTClient(const ResDBConfig &config);
 
-  int Set(const std::string& data);
+  int Set(const std::string &data);
 };
 
-}  // namespace resdb
+} // namespace resdb

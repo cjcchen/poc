@@ -72,5 +72,5 @@ TEST(MinerUtilsTest, DigestString) {
             "039411d480d5867a111f06aaf9e5cba7fd5ebd730a54962d5752f74dc49b0898");
 }
 
-}  // namespace
-}  // namespace resdb
+} // namespace
+} // namespace resdb

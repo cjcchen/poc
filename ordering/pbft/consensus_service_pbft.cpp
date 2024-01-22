@@ -7,7 +7,7 @@
 namespace resdb {
 
 ConsensusServicePBFT::ConsensusServicePBFT(
-    const ResDBConfig& config,
+    const ResDBConfig &config,
     std::unique_ptr<TransactionExecutorImpl> executor)
     : ConsensusService(config),
       system_info_(std::make_unique<SystemInfo>(config)),
@@ -39,37 +39,37 @@ int ConsensusServicePBFT::ConsensusCommit(std::unique_ptr<Context> context,
   // LOG(ERROR) << "recv impl type:" << request->type() << " "
   //        << "sender id:" << request->sender_id();
   switch (request->type()) {
-    case Request::TYPE_CLIENT_REQUEST:
-      return response_manager_->StartEval();
-    case Request::TYPE_RESPONSE:
-      return response_manager_->ProcessResponseMsg(std::move(context),
-                                                   std::move(request));
-    case Request::TYPE_NEW_TXNS:
-      return commitment_->ProcessNewRequest(std::move(context),
-                                            std::move(request));
-    case Request::TYPE_PRE_PREPARE:
-      return commitment_->ProcessProposeMsg(std::move(context),
-                                            std::move(request));
-    case Request::TYPE_PREPARE:
-      return commitment_->ProcessPrepareMsg(std::move(context),
-                                            std::move(request));
-    case Request::TYPE_COMMIT:
-      return commitment_->ProcessCommitMsg(std::move(context),
-                                           std::move(request));
-    case Request::TYPE_RECOVERY_DATA:
-      return recovery_->ProcessRecoveryData(std::move(context),
-                                            std::move(request));
-    case Request::TYPE_RECOVERY_DATA_RESP:
-      return recovery_->ProcessRecoveryDataResp(std::move(context),
-                                                std::move(request));
-    case Request::TYPE_CHECKPOINT:
-      return checkpoint_->ProcessCheckPoint(std::move(context),
-                                            std::move(request));
-    case Request::TYPE_QUERY:
-      return query_->ProcessQuery(std::move(context), std::move(request));
-    case Request::TYPE_REPLICA_STATE:
-      return query_->ProcessGetReplicaState(std::move(context),
-                                            std::move(request));
+  case Request::TYPE_CLIENT_REQUEST:
+    return response_manager_->StartEval();
+  case Request::TYPE_RESPONSE:
+    return response_manager_->ProcessResponseMsg(std::move(context),
+                                                 std::move(request));
+  case Request::TYPE_NEW_TXNS:
+    return commitment_->ProcessNewRequest(std::move(context),
+                                          std::move(request));
+  case Request::TYPE_PRE_PREPARE:
+    return commitment_->ProcessProposeMsg(std::move(context),
+                                          std::move(request));
+  case Request::TYPE_PREPARE:
+    return commitment_->ProcessPrepareMsg(std::move(context),
+                                          std::move(request));
+  case Request::TYPE_COMMIT:
+    return commitment_->ProcessCommitMsg(std::move(context),
+                                         std::move(request));
+  case Request::TYPE_RECOVERY_DATA:
+    return recovery_->ProcessRecoveryData(std::move(context),
+                                          std::move(request));
+  case Request::TYPE_RECOVERY_DATA_RESP:
+    return recovery_->ProcessRecoveryDataResp(std::move(context),
+                                              std::move(request));
+  case Request::TYPE_CHECKPOINT:
+    return checkpoint_->ProcessCheckPoint(std::move(context),
+                                          std::move(request));
+  case Request::TYPE_QUERY:
+    return query_->ProcessQuery(std::move(context), std::move(request));
+  case Request::TYPE_REPLICA_STATE:
+    return query_->ProcessGetReplicaState(std::move(context),
+                                          std::move(request));
   }
   return 0;
 }
@@ -78,8 +78,8 @@ void ConsensusServicePBFT::SetupPerformanceDataFunc(
     std::function<std::string()> func) {
   response_manager_->SetDataFunc(func);
 }
-void ConsensusServicePBFT::AddNewReplica(const ReplicaInfo& info) {
+void ConsensusServicePBFT::AddNewReplica(const ReplicaInfo &info) {
   recovery_->AddNewReplica(info);
 }
 
-}  // namespace resdb
+} // namespace resdb

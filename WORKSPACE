@@ -211,7 +211,6 @@ http_archive(
     ],
 )
 
-
 http_archive(
     name = "com_github_jupp0r_prometheus_cpp",
     sha256 = "281b6d9a26da35375c9958954e03616d71ea28d57ec193b0e75c3e10ff3da55d",
@@ -223,11 +222,9 @@ load("@com_github_jupp0r_prometheus_cpp//bazel:repositories.bzl", "prometheus_cp
 
 prometheus_cpp_repositories()
 
-
 http_archive(
     name = "com_github_influxdb_cxx",
     build_file_content = all_content,
     strip_prefix = "influxdb-cxx-0.5.1",
-    url = "https://github.com/awegrzyn/influxdb-cxx/archive/refs/tags/v0.5.1.zip"
+    url = "https://github.com/awegrzyn/influxdb-cxx/archive/refs/tags/v0.5.1.zip",
 )
-

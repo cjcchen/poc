@@ -20,8 +20,8 @@ const std::string test_dir =
     std::string(getenv("TEST_SRCDIR")) + "/__main__/test/";
 
 class ResDBTestClient : public ResDBUserClient {
- public:
-  ResDBTestClient(const ResDBConfig& config) : ResDBUserClient(config) {}
+public:
+  ResDBTestClient(const ResDBConfig &config) : ResDBUserClient(config) {}
 
   int Set(int seq) {
     TestRequest request;
@@ -32,12 +32,12 @@ class ResDBTestClient : public ResDBUserClient {
 };
 
 class ResDBTestExecutor : public TransactionExecutorImpl {
- public:
-  ResDBTestExecutor(const ResDBConfig& config) : config_(config) {}
+public:
+  ResDBTestExecutor(const ResDBConfig &config) : config_(config) {}
   std::vector<int> GetSeqs() { return seqs_; }
 
- protected:
-  std::unique_ptr<std::string> ExecuteData(const std::string& request) {
+protected:
+  std::unique_ptr<std::string> ExecuteData(const std::string &request) {
     TestRequest test_request;
     // TestResponse test_response;
     if (!test_request.ParseFromString(request)) {
@@ -53,7 +53,7 @@ class ResDBTestExecutor : public TransactionExecutorImpl {
 };
 
 class ResDBTest : public Test {
- public:
+public:
   void StartServer() {}
 
   void StartOneServer(int server_id) {
@@ -65,11 +65,11 @@ class ResDBTest : public Test {
         config,
         std::make_unique<ConsensusServicePBFT>(config, std::move(executor))));
     server_thread_.push_back(std::thread(
-        [&](ResDBServer* server) { server->Run(); }, server_.back().get()));
+        [&](ResDBServer *server) { server->Run(); }, server_.back().get()));
   }
 
   void WaitAllServerStarted() {
-    for (auto& server : server_) {
+    for (auto &server : server_) {
       while (true) {
         std::unique_lock<std::mutex> lk(mutex_);
         cv_.wait_for(lk, std::chrono::microseconds(1000),
@@ -90,10 +90,10 @@ class ResDBTest : public Test {
   }
 
   void Stop() {
-    for (auto& server : server_) {
+    for (auto &server : server_) {
       server->Stop();
     }
-    for (auto& th : server_thread_) {
+    for (auto &th : server_thread_) {
       th.join();
     }
     server_.clear();
@@ -111,16 +111,16 @@ class ResDBTest : public Test {
 
   std::string GetConfiFile() { return test_dir + "test_data/server.config"; }
 
-  ResDBConfig GetConfig(
-      int id, std::optional<ReplicaInfo> replica_info = std::nullopt) {
+  ResDBConfig
+  GetConfig(int id, std::optional<ReplicaInfo> replica_info = std::nullopt) {
     return *GenerateResDBConfig(GetConfiFile(), GetPrivateKey(id),
                                 GetCertFile(id), replica_info);
   }
 
- protected:
+protected:
   std::mutex mutex_;
   std::condition_variable cv_;
-  std::vector<ResDBTestExecutor*> executors_;
+  std::vector<ResDBTestExecutor *> executors_;
   std::vector<std::unique_ptr<ResDBServer>> server_;
   std::vector<std::thread> server_thread_;
 };
@@ -145,4 +145,4 @@ TEST_F(ResDBTest, TestPBFTService) {
   Stop();
 }
 
-}  // namespace resdb
+} // namespace resdb

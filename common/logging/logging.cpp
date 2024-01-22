@@ -52,4 +52,4 @@ int Logging::Read(google::protobuf::Message *info) {
   return 0;
 }
 
-}  // namespace resdb
+} // namespace resdb

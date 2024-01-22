@@ -4,12 +4,12 @@
 
 namespace resdb {
 
-PBFTClient::PBFTClient(const ResDBConfig& config) : ResDBUserClient(config) {}
+PBFTClient::PBFTClient(const ResDBConfig &config) : ResDBUserClient(config) {}
 
-int PBFTClient::Set(const std::string& data) {
+int PBFTClient::Set(const std::string &data) {
   Transaction txn;
   txn.set_data(data);
   return SendRequest(txn);
 }
 
-}  // namespace resdb
+} // namespace resdb

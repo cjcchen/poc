@@ -42,5 +42,5 @@ TEST(MerkleTest, GetHashFromThreeTxn) {
             "1cee75f552290940e8f7b195b5e573fafe3db67eadcea19a76bcecd1df94d8cd");
 }
 
-}  // namespace
-}  // namespace resdb
+} // namespace
+} // namespace resdb

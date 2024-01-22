@@ -8,25 +8,25 @@
 namespace resdb {
 
 class CheckPoint {
- public:
-  CheckPoint(const ResDBConfig& config, ResDBReplicaClient* replica_client);
+public:
+  CheckPoint(const ResDBConfig &config, ResDBReplicaClient *replica_client);
   virtual ~CheckPoint();
 
   virtual int ProcessCheckPoint(std::unique_ptr<Context> context,
                                 std::unique_ptr<Request> request);
 
-  CheckPointInfo* GetCheckPointInfo();
+  CheckPointInfo *GetCheckPointInfo();
 
- private:
+private:
   void UpdateCheckPointStatus();
 
- protected:
+protected:
   ResDBConfig config_;
-  ResDBReplicaClient* replica_client_;
+  ResDBReplicaClient *replica_client_;
   std::unique_ptr<CheckPointInfo> checkpoint_info_;
   std::unique_ptr<CheckPointCollector> checkpoint_collector_;
   std::thread checkpoint_thread_;
   std::atomic<bool> stop_;
 };
 
-}  // namespace resdb
+} // namespace resdb

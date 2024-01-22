@@ -28,7 +28,7 @@ KeyInfo GetKeyInfo(SecretKey key) {
 
 class SignatureVerifyPTest
     : public ::testing::TestWithParam<SignatureInfo::HashType> {
- public:
+public:
   SignatureVerifyPTest() {
     admin_key_ = KeyGenerator ::GeneratorKeys(SignatureInfo::RSA);
     admin_verifier_ = std::make_unique<SignatureVerifier>(
@@ -60,7 +60,7 @@ class SignatureVerifyPTest
     return cert_key;
   }
 
- private:
+private:
   SecretKey admin_key_;
   std::unique_ptr<SignatureVerifier> admin_verifier_;
 };
@@ -135,6 +135,6 @@ INSTANTIATE_TEST_SUITE_P(SignatureVerifyPTest, SignatureVerifyPTest,
                                            SignatureInfo::ED25519,
                                            SignatureInfo::CMAC_AES));
 
-}  // namespace
+} // namespace
 
-}  // namespace resdb
+} // namespace resdb

@@ -13,16 +13,16 @@ namespace resdb {
 
 namespace {
 
-int RecvInternal(int fd, void* buf, size_t len) {
+int RecvInternal(int fd, void *buf, size_t len) {
   size_t pos = 0;
   while (len > 0) {
-    int ret = recv(fd, (char*)buf + pos, len, 0);
+    int ret = recv(fd, (char *)buf + pos, len, 0);
     if (ret <= 0) {
-	    if(ret<0){
-      // LOG(ERROR) << "recv data fail, fd =" << fd << " error " <<
-       //strerror(errno)
+      if (ret < 0) {
+        // LOG(ERROR) << "recv data fail, fd =" << fd << " error " <<
+        // strerror(errno)
         //        << " ret:" << ret;
-	    }
+      }
       return ret;
     }
     pos += ret;
@@ -31,13 +31,13 @@ int RecvInternal(int fd, void* buf, size_t len) {
   return pos;
 }
 
-int SendInternal(int fd, const void* buf, size_t len) {
+int SendInternal(int fd, const void *buf, size_t len) {
   if (fd < 0) {
     return -2;
   }
   size_t pos = 0;
   while (pos < len) {
-    int ret = send(fd, (char*)buf + pos, len - pos, 0);
+    int ret = send(fd, (char *)buf + pos, len - pos, 0);
     if (ret < 0) {
       LOG(ERROR) << "send data fail, fd =" << fd << " error "
                  << strerror(errno);
@@ -48,7 +48,7 @@ int SendInternal(int fd, const void* buf, size_t len) {
   return pos;
 }
 
-}  // namespace
+} // namespace
 
 TcpSocket::TcpSocket() : socket_fd_(-1) { InitSocket(); }
 
@@ -77,7 +77,7 @@ int TcpSocket::InitSocket() {
   return 0;
 }
 
-int TcpSocket::Listen(const std::string& ip, int port) {
+int TcpSocket::Listen(const std::string &ip, int port) {
   int on = 1;
   if (setsockopt(socket_fd_, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on)) != 0) {
     LOG(ERROR) << "set TcpSocket opt fail, error" << strerror(errno);
@@ -90,7 +90,7 @@ int TcpSocket::Listen(const std::string& ip, int port) {
   servaddr.sin_addr.s_addr = inet_addr(ip.data());
   servaddr.sin_port = htons(port);
 
-  if (bind(socket_fd_, (struct sockaddr*)&servaddr, sizeof(servaddr)) == -1) {
+  if (bind(socket_fd_, (struct sockaddr *)&servaddr, sizeof(servaddr)) == -1) {
     LOG(ERROR) << "bind TcpSocket error: " << strerror(errno)
                << "(errno: " << errno << ")";
     return -1;
@@ -104,7 +104,7 @@ int TcpSocket::Listen(const std::string& ip, int port) {
   if (port == 0) {
     struct sockaddr_in localaddr;
     socklen_t len = sizeof(localaddr);
-    int ret = getsockname(socket_fd_, (struct sockaddr*)&localaddr, &len);
+    int ret = getsockname(socket_fd_, (struct sockaddr *)&localaddr, &len);
     if (ret != 0) {
       LOG(ERROR) << "get binding port fail:" << strerror(errno);
     } else {
@@ -120,7 +120,7 @@ int TcpSocket::GetBindingPort() { return binding_port_; }
 
 std::unique_ptr<Socket> TcpSocket::Accept() {
   int conn_fd = 0;
-  if ((conn_fd = accept(socket_fd_, (struct sockaddr*)NULL, NULL)) == -1) {
+  if ((conn_fd = accept(socket_fd_, (struct sockaddr *)NULL, NULL)) == -1) {
     // LOG(ERROR) << "accept:" << socket_fd_
     //         << " TcpSocket error: " << strerror(errno) << "(errno: " <<
     //         errno
@@ -130,7 +130,7 @@ std::unique_ptr<Socket> TcpSocket::Accept() {
   return std::make_unique<TcpSocket>(conn_fd);
 }
 
-int TcpSocket::Connect(const std::string& ip, int port) {
+int TcpSocket::Connect(const std::string &ip, int port) {
   if (socket_fd_ < 0) {
     LOG(ERROR) << "socket fd invalid:" << socket_fd_;
     return -1;
@@ -141,7 +141,7 @@ int TcpSocket::Connect(const std::string& ip, int port) {
   servaddr.sin_addr.s_addr = inet_addr(ip.data());
   servaddr.sin_port = htons(port);
 
-  if (connect(socket_fd_, (struct sockaddr*)&servaddr, sizeof(servaddr)) < 0) {
+  if (connect(socket_fd_, (struct sockaddr *)&servaddr, sizeof(servaddr)) < 0) {
     LOG(ERROR) << "fd:" << socket_fd_ << " connect ip:" << ip
                << " port:" << port << " error: " << strerror(errno)
                << "(errno: " << errno << ")";
@@ -154,10 +154,10 @@ int TcpSocket::Connect(const std::string& ip, int port) {
 
 int TcpSocket::SetAsync(bool is_open) {
   unsigned long ul = is_open;
-  return ioctl(socket_fd_, FIONBIO, (unsigned long*)&ul);
+  return ioctl(socket_fd_, FIONBIO, (unsigned long *)&ul);
 }
 
-int TcpSocket::Send(const std::string& data) {
+int TcpSocket::Send(const std::string &data) {
   size_t data_size = data.size();
   size_t send_ret = SendInternal(socket_fd_, &data_size, sizeof(data_size));
   if (send_ret != sizeof(data_size)) {
@@ -182,7 +182,7 @@ int TcpSocket::Send(const std::string& data) {
   return 0;
 }
 
-int TcpSocket::Recv(void** buf, size_t* len) {
+int TcpSocket::Recv(void **buf, size_t *len) {
   int ret = RecvInternal(socket_fd_, len, sizeof(size_t));
   if (ret <= 0) {
     return ret;
@@ -200,7 +200,7 @@ void TcpSocket::SetRecvTimeout(int64_t microseconds) {
     return;
   }
   struct timeval timeout = {microseconds / 1000000, microseconds % 1000000};
-  if (setsockopt(socket_fd_, SOL_SOCKET, SO_RCVTIMEO, (char*)&timeout,
+  if (setsockopt(socket_fd_, SOL_SOCKET, SO_RCVTIMEO, (char *)&timeout,
                  sizeof(struct timeval)) != 0) {
     LOG(ERROR) << "set recv timeout:" << microseconds
                << " failed:" << strerror(errno);
@@ -209,10 +209,10 @@ void TcpSocket::SetRecvTimeout(int64_t microseconds) {
 
 void TcpSocket::SetSendTimeout(int64_t microseconds) {
   struct timeval timeout = {microseconds / 1000000, microseconds % 1000000};
-  if (setsockopt(socket_fd_, SOL_SOCKET, SO_SNDTIMEO, (char*)&timeout,
+  if (setsockopt(socket_fd_, SOL_SOCKET, SO_SNDTIMEO, (char *)&timeout,
                  sizeof(struct timeval)) != 0) {
     LOG(ERROR) << "set second timeout failed:" << strerror(errno);
   }
 }
 
-}  // namespace resdb
+} // namespace resdb

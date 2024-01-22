@@ -23,10 +23,10 @@
 namespace resdb {
 
 class TransactionManager {
- public:
-  TransactionManager(const ResDBConfig& config,
+public:
+  TransactionManager(const ResDBConfig &config,
                      std::unique_ptr<TransactionExecutorImpl> data_impl,
-                     CheckPointInfo* checkpoint_info, SystemInfo* system_info);
+                     CheckPointInfo *checkpoint_info, SystemInfo *system_info);
 
   absl::StatusOr<uint64_t> AssignNextSeq();
 
@@ -41,7 +41,7 @@ class TransactionManager {
   // If there are enough messages and the state is changed after adding the
   // message, return 1, otherwise return 0. Return -2 if the request is not
   // valid.
-  CollectorResultCode AddConsensusMsg(const SignatureInfo& signature,
+  CollectorResultCode AddConsensusMsg(const SignatureInfo &signature,
                                       std::unique_ptr<Request> request);
 
   // Obtain the request that has been executed from Executor.
@@ -54,12 +54,12 @@ class TransactionManager {
   RequestSet GetRequestSet(uint64_t min_seq, uint64_t max_seq);
 
   // Get the transactions that have been execuited.
-  Request* GetRequest(uint64_t seq);
+  Request *GetRequest(uint64_t seq);
 
   // =============  Recovery ==================
   // Commit the request which contains 2f+1 proofs to recover the commit
   // message gap.
-  int CommittedRequestWithProof(const RequestWithProof& request);
+  int CommittedRequestWithProof(const RequestWithProof &request);
 
   // =============  System information ========
   // Obtain the current replica list.
@@ -79,26 +79,26 @@ class TransactionManager {
   CheckPointData GetCheckPointData();
 
   // Replica State
-  int GetReplicaState(ReplicaState* state);
+  int GetReplicaState(ReplicaState *state);
   std::unique_ptr<Context> FetchClientContext(uint64_t seq);
 
- private:
-  bool IsValidMsg(const Request& request);
+private:
+  bool IsValidMsg(const Request &request);
 
   bool MayConsensusChangeStatus(int type, int received_count,
-                                std::atomic<TransactionStatue>* status);
-  void SaveCommittedRequest(const Request& request,
-                            TransactionCollector::CollectorDataType* data);
-  int SaveCommittedRequest(const RequestWithProof& proof_data);
+                                std::atomic<TransactionStatue> *status);
+  void SaveCommittedRequest(const Request &request,
+                            TransactionCollector::CollectorDataType *data);
+  int SaveCommittedRequest(const RequestWithProof &proof_data);
 
- private:
+private:
   ResDBConfig config_;
   uint64_t next_seq_ = 1;
 
   LockFreeQueue<BatchClientResponse> queue_;
   std::unique_ptr<TxnMemoryDB> txn_db_;
-  SystemInfo* system_info_;
-  CheckPointInfo* checkpoint_info_;
+  SystemInfo *system_info_;
+  CheckPointInfo *checkpoint_info_;
   std::unique_ptr<TransactionExecutor> transaction_executor_;
   std::map<uint64_t, std::vector<std::unique_ptr<RequestInfo>>>
       committed_proof_;
@@ -107,7 +107,7 @@ class TransactionManager {
   std::mutex data_mutex_, seq_mutex_;
   std::unique_ptr<LockFreeCollectorPool> collector_pool_;
 
-  Stats* global_stats_;
+  Stats *global_stats_;
 };
 
-}  // namespace resdb
+} // namespace resdb

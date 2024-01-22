@@ -9,24 +9,23 @@
 
 namespace resdb {
 
-template <typename T>
-class BlockingQueue {
- public:
+template <typename T> class BlockingQueue {
+public:
   BlockingQueue() = default;
-  BlockingQueue(const std::string& name) : name_(name) {}
-  void Push(T&& data) {
+  BlockingQueue(const std::string &name) : name_(name) {}
+  void Push(T &&data) {
     std::lock_guard<std::mutex> lk(mutex_);
     queue_.push(std::move(data));
     cv_.notify_all();
   }
 
-  void Push(T& data) {
+  void Push(T &data) {
     std::lock_guard<std::mutex> lk(mutex_);
     queue_.push(std::move(data));
     cv_.notify_all();
   }
 
-  absl::StatusOr<T*> Front() {
+  absl::StatusOr<T *> Front() {
     std::unique_lock<std::mutex> lk(mutex_);
     if (queue_.empty()) {
       return nullptr;
@@ -75,13 +74,13 @@ class BlockingQueue {
     return resp;
   }
 
- private:
+private:
   std::string name_;
   std::condition_variable cv_;
   std::mutex mutex_;
   //  std::queue<T> queue_ GUARDED_BY(mutex_);
   std::queue<T> queue_;
-  int64_t timeout_ms_ = 500;  // microsecond for timeout.
+  int64_t timeout_ms_ = 500; // microsecond for timeout.
 };
 
-}  // namespace resdb
+} // namespace resdb

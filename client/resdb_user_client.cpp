@@ -4,23 +4,22 @@
 
 namespace resdb {
 
-ResDBUserClient::ResDBUserClient(const ResDBConfig& config)
-    : ResDBClient("", 0),
-      config_(config),
+ResDBUserClient::ResDBUserClient(const ResDBConfig &config)
+    : ResDBClient("", 0), config_(config),
       timeout_ms_(
-          config.GetClientTimeoutMs()),  // default 2s for process timeout
+          config.GetClientTimeoutMs()), // default 2s for process timeout
       is_check_signature_(true) {
   socket_->SetRecvTimeout(timeout_ms_);
 }
 
 void ResDBUserClient::DisableSignatureCheck() { is_check_signature_ = false; }
 
-absl::StatusOr<std::string> ResDBUserClient::GetResponseData(
-    const Response& response) {
+absl::StatusOr<std::string>
+ResDBUserClient::GetResponseData(const Response &response) {
   std::string hash_;
   std::set<int64_t> hash_counter;
   std::string resp_str;
-  for (const auto& each_resp : response.resp()) {
+  for (const auto &each_resp : response.resp()) {
     // Check signature
     std::string hash = SignatureVerifier::CalculateHash(each_resp.data());
 
@@ -44,15 +43,15 @@ absl::StatusOr<std::string> ResDBUserClient::GetResponseData(
   return absl::InvalidArgumentError("data not enough");
 }
 
-int ResDBUserClient::SendRequest(const google::protobuf::Message& message,
+int ResDBUserClient::SendRequest(const google::protobuf::Message &message,
                                  Request::Type type) {
   // Use the replica obtained from the server.
   ResDBClient::SetDestReplicaInfo(config_.GetReplicaInfos()[0]);
   return ResDBClient::SendRequest(message, type, false);
 }
 
-int ResDBUserClient::SendRequest(const google::protobuf::Message& message,
-                                 google::protobuf::Message* response,
+int ResDBUserClient::SendRequest(const google::protobuf::Message &message,
+                                 google::protobuf::Message *response,
                                  Request::Type type) {
   ResDBClient::SetDestReplicaInfo(config_.GetReplicaInfos()[0]);
   int ret = ResDBClient::SendRequest(message, type, true);
@@ -70,4 +69,4 @@ int ResDBUserClient::SendRequest(const google::protobuf::Message& message,
   return -1;
 }
 
-}  // namespace resdb
+} // namespace resdb

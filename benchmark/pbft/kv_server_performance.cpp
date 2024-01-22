@@ -40,7 +40,7 @@ std::string GetRandomKey() {
   return std::to_string(num1) + std::to_string(num2);
 }
 
-int main(int argc, char** argv) {
+int main(int argc, char **argv) {
   if (argc < 3) {
     ShowUsage();
     exit(0);
@@ -49,9 +49,9 @@ int main(int argc, char** argv) {
   // google::InitGoogleLogging(argv[0]);
   // FLAGS_minloglevel = google::GLOG_WARNING;
 
-  char* config_file = argv[1];
-  char* private_key_file = argv[2];
-  char* cert_file = argv[3];
+  char *config_file = argv[1];
+  char *private_key_file = argv[2];
+  char *cert_file = argv[3];
 
   if (argc >= 5) {
     auto monitor_port = Stats::GetGlobalStats(5);

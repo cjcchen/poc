@@ -10,9 +10,9 @@
 namespace resdb {
 
 class Commitment {
- public:
-  Commitment(const ResDBConfig& config, TransactionManager* transaction_manager,
-             ResDBReplicaClient* replica_client, SignatureVerifier* verifier);
+public:
+  Commitment(const ResDBConfig &config, TransactionManager *transaction_manager,
+             ResDBReplicaClient *replica_client, SignatureVerifier *verifier);
   virtual ~Commitment();
 
   virtual int ProcessNewRequest(std::unique_ptr<Context> context,
@@ -25,18 +25,18 @@ class Commitment {
   virtual int ProcessCommitMsg(std::unique_ptr<Context> context,
                                std::unique_ptr<Request> request);
 
- protected:
+protected:
   virtual int PostProcessExecutedMsg();
 
- protected:
+protected:
   ResDBConfig config_;
-  TransactionManager* transaction_manager_;
+  TransactionManager *transaction_manager_;
   std::thread executed_thread_;
   std::atomic<bool> stop_;
-  ResDBReplicaClient* replica_client_;
+  ResDBReplicaClient *replica_client_;
 
-  SignatureVerifier* verifier_;
-  Stats* global_stats_;
+  SignatureVerifier *verifier_;
+  Stats *global_stats_;
 };
 
-}  // namespace resdb
+} // namespace resdb

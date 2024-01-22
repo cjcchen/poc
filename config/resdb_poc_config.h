@@ -6,13 +6,13 @@ namespace resdb {
 
 // TODO read from a proto json file.
 class ResDBPoCConfig : public ResDBConfig {
- public:
-  ResDBPoCConfig(const ResDBConfig& bft_config,
-                 const std::vector<ReplicaInfo>& replicas,
-                 const ReplicaInfo& self_info, const KeyInfo& private_key,
-                 const CertificateInfo& public_key_cert_info);
+public:
+  ResDBPoCConfig(const ResDBConfig &bft_config,
+                 const std::vector<ReplicaInfo> &replicas,
+                 const ReplicaInfo &self_info, const KeyInfo &private_key,
+                 const CertificateInfo &public_key_cert_info);
 
-  const ResDBConfig* GetBFTConfig() const;
+  const ResDBConfig *GetBFTConfig() const;
 
   void SetMaxNonceBit(uint32_t bit);
   uint32_t GetMaxNonceBit() const;
@@ -26,7 +26,7 @@ class ResDBPoCConfig : public ResDBConfig {
 
   // BFT cluster.
   std::vector<ReplicaInfo> GetBFTReplicas();
-  void SetBFTReplicas(const std::vector<ReplicaInfo>& replicas);
+  void SetBFTReplicas(const std::vector<ReplicaInfo> &replicas);
 
   // Batch
   uint32_t BatchTransactionNum() const;
@@ -35,10 +35,10 @@ class ResDBPoCConfig : public ResDBConfig {
   uint32_t GetWokerNum();
   void SetWorkerNum(uint32_t worker_num);
 
-  uint32_t GetMiningTime() const { return mining_time_ms_;}
-  void SetMiningTime(uint32_t time_ms) {mining_time_ms_ = time_ms;}
+  uint32_t GetMiningTime() const { return mining_time_ms_; }
+  void SetMiningTime(uint32_t time_ms) { mining_time_ms_ = time_ms; }
 
- private:
+private:
   uint32_t difficulty_ = 0;
   uint32_t max_nonce_bit_ = 0;
   uint32_t target_value_ = 0;
@@ -49,4 +49,4 @@ class ResDBPoCConfig : public ResDBConfig {
   ResDBConfig bft_config_;
 };
 
-}  // namespace resdb
+} // namespace resdb

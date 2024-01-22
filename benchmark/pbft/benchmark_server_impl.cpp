@@ -7,8 +7,8 @@
 namespace resdb {
 
 BenchmarkServerImpl::BenchmarkServerImpl() {}
-std::unique_ptr<std::string> BenchmarkServerImpl::ExecuteData(
-    const std::string& request) {
+std::unique_ptr<std::string>
+BenchmarkServerImpl::ExecuteData(const std::string &request) {
   BenchmarkResponse response;
   response.set_data(std::string('b', 17));
   std::unique_ptr<std::string> resp = std::make_unique<std::string>();
@@ -16,4 +16,4 @@ std::unique_ptr<std::string> BenchmarkServerImpl::ExecuteData(
   return resp;
 }
 
-}  // namespace resdb
+} // namespace resdb

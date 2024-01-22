@@ -8,7 +8,7 @@
 
 using namespace resdb;
 
-void WriteKey(const std::string& key, const std::string& file_name) {
+void WriteKey(const std::string &key, const std::string &file_name) {
   printf("save key to path %s\n", file_name.c_str());
   int fd = open(file_name.c_str(), O_WRONLY | O_CREAT | O_TRUNC, 0666);
   if (fd < 0) {
@@ -20,7 +20,7 @@ void WriteKey(const std::string& key, const std::string& file_name) {
   close(fd);
 }
 
-KeyInfo ReadKey(const std::string& file_name) {
+KeyInfo ReadKey(const std::string &file_name) {
   int fd = open(file_name.c_str(), O_RDONLY, 0666);
   if (fd < 0) {
     printf("open file %s fail %s\n", file_name.c_str(), strerror(errno));
@@ -43,9 +43,9 @@ KeyInfo ReadKey(const std::string& file_name) {
   return key;
 }
 
-CertificateInfo GenerateCertificateInfo(const KeyInfo& admin_pub_key,
-                                        const KeyInfo& pri_key,
-                                        const KeyInfo& pub_key,
+CertificateInfo GenerateCertificateInfo(const KeyInfo &admin_pub_key,
+                                        const KeyInfo &pri_key,
+                                        const KeyInfo &pub_key,
                                         int64_t node_id) {
   CertificateInfo info;
   info.set_node_id(node_id);
@@ -53,7 +53,7 @@ CertificateInfo GenerateCertificateInfo(const KeyInfo& admin_pub_key,
   return info;
 }
 
-int main(int argc, char** argv) {
+int main(int argc, char **argv) {
   std::string path = "./";
   std::string admin_pri_key_path, admin_pub_key_path;
   std::string node_pub_key_path;
@@ -62,10 +62,9 @@ int main(int argc, char** argv) {
   int port = 0;
   int64_t node_id = 0;
   if (argc < 9) {
-    printf(
-        "<save path> <administor private key path> <adminisotr public key "
-        "path> <node public key path> <node id> <ip> <port> "
-        "<type>(client/server)\n");
+    printf("<save path> <administor private key path> <adminisotr public key "
+           "path> <node public key path> <node id> <ip> <port> "
+           "<type>(client/server)\n");
     exit(0);
   } else {
     path = argv[1];

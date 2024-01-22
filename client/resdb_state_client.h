@@ -10,19 +10,19 @@ namespace resdb {
 // ResDBStateClient used to obtain the server state of each replica in ResDB.
 // The addresses of each replica are provided from the config.
 class ResDBStateClient {
- public:
-  ResDBStateClient(const ResDBConfig& config);
+public:
+  ResDBStateClient(const ResDBConfig &config);
   virtual ~ResDBStateClient() = default;
 
   // Obtain ReplicaState of each replica.
   absl::StatusOr<std::vector<ReplicaState>> GetReplicaStates();
 
- protected:
-  virtual std::unique_ptr<ResDBClient> GetResDBClient(const std::string& ip,
+protected:
+  virtual std::unique_ptr<ResDBClient> GetResDBClient(const std::string &ip,
                                                       int port);
 
- private:
+private:
   ResDBConfig config_;
 };
 
-}  // namespace resdb
+} // namespace resdb

@@ -8,15 +8,12 @@
 
 namespace resdb {
 
-Recovery::Recovery(const ResDBConfig& config,
-                   TransactionManager* transaction_manager,
-                   ResDBReplicaClient* replica_client,
-                   SignatureVerifier* verifier)
-    : config_(config),
-      transaction_manager_(transaction_manager),
-      replica_client_(replica_client),
-      verifier_(verifier),
-      stop_(false) {
+Recovery::Recovery(const ResDBConfig &config,
+                   TransactionManager *transaction_manager,
+                   ResDBReplicaClient *replica_client,
+                   SignatureVerifier *verifier)
+    : config_(config), transaction_manager_(transaction_manager),
+      replica_client_(replica_client), verifier_(verifier), stop_(false) {
   if (config_.IsCheckPointEnabled()) {
     healthy_thread_ = std::thread(&Recovery::HealthCheck, this);
   }
@@ -73,7 +70,7 @@ int Recovery::ProcessRecoveryDataResp(std::unique_ptr<Context> context,
   }
   LOG(ERROR) << "receive recovery data size:" << data.requests_size();
 
-  for (const RequestWithProof& recovery_request : data.requests()) {
+  for (const RequestWithProof &recovery_request : data.requests()) {
     // should contain 2f+1 distinct responses.
     if (recovery_request.proofs_size() != config_.GetMinDataReceiveNum()) {
       break;
@@ -81,13 +78,13 @@ int Recovery::ProcessRecoveryDataResp(std::unique_ptr<Context> context,
 
     bool valid = true;
     std::set<int32_t> senders;
-    const Request& request = recovery_request.request();
+    const Request &request = recovery_request.request();
     if (request.seq() != recovery_request.seq()) {
       LOG(ERROR) << "seq not match, request seq:" << request.seq()
                  << "  recovery seq:" << recovery_request.seq();
       break;
     }
-    for (const RequestWithProof::RequestData& sub_request :
+    for (const RequestWithProof::RequestData &sub_request :
          recovery_request.proofs()) {
       int32_t sender = sub_request.request().sender_id();
       // should from distinct replicas.
@@ -117,7 +114,7 @@ int Recovery::ProcessRecoveryDataResp(std::unique_ptr<Context> context,
   return 0;
 }
 
-void Recovery::AddNewReplica(const ReplicaInfo& info) {
+void Recovery::AddNewReplica(const ReplicaInfo &info) {
   if (!IsPrimary()) {
     return;
   }
@@ -190,4 +187,4 @@ void Recovery::HealthCheck() {
   }
 }
 
-}  // namespace resdb
+} // namespace resdb

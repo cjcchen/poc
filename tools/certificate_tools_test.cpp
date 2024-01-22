@@ -7,7 +7,7 @@
 
 using namespace resdb;
 
-CertificateInfo ReadData(const std::string& file_name) {
+CertificateInfo ReadData(const std::string &file_name) {
   int fd = open(file_name.c_str(), O_RDONLY, 0666);
   if (fd < 0) {
     printf("open file %s fail %s\n", file_name.c_str(), strerror(errno));
@@ -30,7 +30,7 @@ CertificateInfo ReadData(const std::string& file_name) {
   return info;
 }
 
-KeyInfo ReadKey(const std::string& file_name) {
+KeyInfo ReadKey(const std::string &file_name) {
   int fd = open(file_name.c_str(), O_RDONLY, 0666);
   if (fd < 0) {
     printf("open file %s fail %s\n", file_name.c_str(), strerror(errno));
@@ -53,7 +53,7 @@ KeyInfo ReadKey(const std::string& file_name) {
   return key;
 }
 
-int main(int argc, char** argv) {
+int main(int argc, char **argv) {
   std::string cert_path, private_key_path;
   if (argc < 2) {
     printf("<private key path> <cert path>\n");

@@ -6,8 +6,8 @@
 
 namespace resdb {
 
-std::unique_ptr<std::string> KVServerExecutor::ExecuteData(
-    const std::string& request) {
+std::unique_ptr<std::string>
+KVServerExecutor::ExecuteData(const std::string &request) {
   KVRequest kv_request;
   KVResponse kv_response;
 
@@ -30,14 +30,14 @@ std::unique_ptr<std::string> KVServerExecutor::ExecuteData(
   return resp_str;
 }
 
-void KVServerExecutor::Set(const std::string& key, const std::string& value) {
+void KVServerExecutor::Set(const std::string &key, const std::string &value) {
   LOG(ERROR) << "set value:" << key << " " << value;
   kv_map_[key] = value;
 }
 
-std::string KVServerExecutor::Get(const std::string& key) {
+std::string KVServerExecutor::Get(const std::string &key) {
   LOG(ERROR) << "get value:" << key << " " << kv_map_[key];
   return kv_map_[key];
 }
 
-}  // namespace resdb
+} // namespace resdb

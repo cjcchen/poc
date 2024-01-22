@@ -33,7 +33,7 @@
 namespace resdb {
 
 ConsensusManagerPBFT::ConsensusManagerPBFT(
-    const ResDBConfig& config, std::unique_ptr<TransactionManager> executor,
+    const ResDBConfig &config, std::unique_ptr<TransactionManager> executor,
     std::unique_ptr<CustomQuery> query_executor)
     : ConsensusManager(config),
       system_info_(std::make_unique<SystemInfo>(config)),
@@ -70,7 +70,7 @@ ConsensusManagerPBFT::ConsensusManagerPBFT(
   view_change_manager_->SetDuplicateManager(commitment_->GetDuplicateManager());
 
   recovery_->ReadLogs(
-      [&](const SystemInfoData& data) {
+      [&](const SystemInfoData &data) {
         system_info_->SetCurrentView(data.view());
         system_info_->SetPrimary(data.primary_id());
       },
@@ -154,12 +154,12 @@ int ConsensusManagerPBFT::ConsensusCommit(std::unique_ptr<Context> context,
     view_change_manager_->MayStart();
     if (view_change_manager_->IsInViewChange()) {
       switch (request->type()) {
-        case Request::TYPE_NEW_TXNS:
-        case Request::TYPE_PRE_PREPARE:
-        case Request::TYPE_PREPARE:
-        case Request::TYPE_COMMIT:
-          AddPendingRequest(std::move(context), std::move(request));
-          return 0;
+      case Request::TYPE_NEW_TXNS:
+      case Request::TYPE_PRE_PREPARE:
+      case Request::TYPE_PREPARE:
+      case Request::TYPE_COMMIT:
+        AddPendingRequest(std::move(context), std::move(request));
+        return 0;
       }
     } else {
       while (true) {
@@ -195,65 +195,65 @@ int ConsensusManagerPBFT::InternalConsensusCommit(
   //         << "sender id:" << request->sender_id()<<" seq:"<<request->seq();
 
   switch (request->type()) {
-    case Request::TYPE_CLIENT_REQUEST:
-      if (config_.IsPerformanceRunning()) {
-        return performance_manager_->StartEval();
-      }
-      return response_manager_->NewUserRequest(std::move(context),
-                                               std::move(request));
-    case Request::TYPE_RESPONSE:
-      if (config_.IsPerformanceRunning()) {
-        return performance_manager_->ProcessResponseMsg(std::move(context),
-                                                        std::move(request));
-      }
-      return response_manager_->ProcessResponseMsg(std::move(context),
-                                                   std::move(request));
-    case Request::TYPE_NEW_TXNS: {
-      uint64_t proxy_id = request->proxy_id();
-      std::string hash = request->hash();
-      int ret = commitment_->ProcessNewRequest(std::move(context),
-                                               std::move(request));
-      if (ret == -3) {
-        std::pair<std::unique_ptr<Context>, std::unique_ptr<Request>>
-            request_complained;
-        {
-          std::lock_guard<std::mutex> lk(commitment_->rc_mutex_);
-
-          request_complained =
-              std::move(commitment_->request_complained_.front());
-          commitment_->request_complained_.pop();
-        }
-        AddComplainedRequest(std::move(request_complained.first),
-                             std::move(request_complained.second));
-        view_change_manager_->AddComplaintTimer(proxy_id, hash);
-      }
-      return ret;
+  case Request::TYPE_CLIENT_REQUEST:
+    if (config_.IsPerformanceRunning()) {
+      return performance_manager_->StartEval();
     }
-    case Request::TYPE_PRE_PREPARE:
-      return commitment_->ProcessProposeMsg(std::move(context),
-                                            std::move(request));
-    case Request::TYPE_PREPARE:
-      return commitment_->ProcessPrepareMsg(std::move(context),
-                                            std::move(request));
-    case Request::TYPE_COMMIT:
-      return commitment_->ProcessCommitMsg(std::move(context),
-                                           std::move(request));
-    case Request::TYPE_CHECKPOINT:
-      return checkpoint_manager_->ProcessCheckPoint(std::move(context),
-                                                    std::move(request));
-    case Request::TYPE_VIEWCHANGE:
-      return view_change_manager_->ProcessViewChange(std::move(context),
-                                                     std::move(request));
-    case Request::TYPE_NEWVIEW:
-      return view_change_manager_->ProcessNewView(std::move(context),
+    return response_manager_->NewUserRequest(std::move(context),
+                                             std::move(request));
+  case Request::TYPE_RESPONSE:
+    if (config_.IsPerformanceRunning()) {
+      return performance_manager_->ProcessResponseMsg(std::move(context),
+                                                      std::move(request));
+    }
+    return response_manager_->ProcessResponseMsg(std::move(context),
+                                                 std::move(request));
+  case Request::TYPE_NEW_TXNS: {
+    uint64_t proxy_id = request->proxy_id();
+    std::string hash = request->hash();
+    int ret =
+        commitment_->ProcessNewRequest(std::move(context), std::move(request));
+    if (ret == -3) {
+      std::pair<std::unique_ptr<Context>, std::unique_ptr<Request>>
+          request_complained;
+      {
+        std::lock_guard<std::mutex> lk(commitment_->rc_mutex_);
+
+        request_complained =
+            std::move(commitment_->request_complained_.front());
+        commitment_->request_complained_.pop();
+      }
+      AddComplainedRequest(std::move(request_complained.first),
+                           std::move(request_complained.second));
+      view_change_manager_->AddComplaintTimer(proxy_id, hash);
+    }
+    return ret;
+  }
+  case Request::TYPE_PRE_PREPARE:
+    return commitment_->ProcessProposeMsg(std::move(context),
+                                          std::move(request));
+  case Request::TYPE_PREPARE:
+    return commitment_->ProcessPrepareMsg(std::move(context),
+                                          std::move(request));
+  case Request::TYPE_COMMIT:
+    return commitment_->ProcessCommitMsg(std::move(context),
+                                         std::move(request));
+  case Request::TYPE_CHECKPOINT:
+    return checkpoint_manager_->ProcessCheckPoint(std::move(context),
                                                   std::move(request));
-    case Request::TYPE_QUERY:
-      return query_->ProcessQuery(std::move(context), std::move(request));
-    case Request::TYPE_REPLICA_STATE:
-      return query_->ProcessGetReplicaState(std::move(context),
-                                            std::move(request));
-    case Request::TYPE_CUSTOM_QUERY:
-      return query_->ProcessCustomQuery(std::move(context), std::move(request));
+  case Request::TYPE_VIEWCHANGE:
+    return view_change_manager_->ProcessViewChange(std::move(context),
+                                                   std::move(request));
+  case Request::TYPE_NEWVIEW:
+    return view_change_manager_->ProcessNewView(std::move(context),
+                                                std::move(request));
+  case Request::TYPE_QUERY:
+    return query_->ProcessQuery(std::move(context), std::move(request));
+  case Request::TYPE_REPLICA_STATE:
+    return query_->ProcessGetReplicaState(std::move(context),
+                                          std::move(request));
+  case Request::TYPE_CUSTOM_QUERY:
+    return query_->ProcessCustomQuery(std::move(context), std::move(request));
   }
   return 0;
 }
@@ -264,8 +264,8 @@ void ConsensusManagerPBFT::SetupPerformanceDataFunc(
 }
 
 void ConsensusManagerPBFT::SetPreVerifyFunc(
-    std::function<bool(const Request&)> func) {
+    std::function<bool(const Request &)> func) {
   commitment_->SetPreVerifyFunc(func);
 }
 
-}  // namespace resdb
+} // namespace resdb

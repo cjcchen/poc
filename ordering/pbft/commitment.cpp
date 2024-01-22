@@ -8,15 +8,12 @@
 
 namespace resdb {
 
-Commitment::Commitment(const ResDBConfig& config,
-                       TransactionManager* transaction_manager,
-                       ResDBReplicaClient* replica_client,
-                       SignatureVerifier* verifier)
-    : config_(config),
-      transaction_manager_(transaction_manager),
-      stop_(false),
-      replica_client_(replica_client),
-      verifier_(verifier) {
+Commitment::Commitment(const ResDBConfig &config,
+                       TransactionManager *transaction_manager,
+                       ResDBReplicaClient *replica_client,
+                       SignatureVerifier *verifier)
+    : config_(config), transaction_manager_(transaction_manager), stop_(false),
+      replica_client_(replica_client), verifier_(verifier) {
   executed_thread_ = std::thread(&Commitment::PostProcessExecutedMsg, this);
   global_stats_ = Stats::GetGlobalStats();
 }
@@ -134,4 +131,4 @@ int Commitment::PostProcessExecutedMsg() {
   return 0;
 }
 
-}  // namespace resdb
+} // namespace resdb

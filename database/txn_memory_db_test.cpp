@@ -41,6 +41,6 @@ TEST(TxnMemoryDBTest, GetSecondValue) {
   EXPECT_THAT(db.Get(1), Pointee(EqualsProto(request)));
 }
 
-}  // namespace
+} // namespace
 
-}  // namespace resdb
+} // namespace resdb

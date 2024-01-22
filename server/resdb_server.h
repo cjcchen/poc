@@ -20,9 +20,9 @@ struct QueueItem {
 // ResDBService to process.
 // service will be running in a multi-thread module.
 class ResDBServer {
- public:
+public:
   // While running ResDBServer, it will lisenten to ip:port.
-  ResDBServer(const ResDBConfig& config, std::unique_ptr<ResDBService> service);
+  ResDBServer(const ResDBConfig &config, std::unique_ptr<ResDBService> service);
   virtual ~ResDBServer();
 
   // Run ResDBServer as background.
@@ -31,21 +31,21 @@ class ResDBServer {
   // Whether the service is ready to process the request.
   bool ServiceIsReady() const;
 
- private:
+private:
   void Process();
   void Process(std::unique_ptr<QueueItem> client_socket);
   bool IsRunning();
   void InputProcess();
-  void AcceptorHandler(const char* buffer, size_t data_len);
+  void AcceptorHandler(const char *buffer, size_t data_len);
 
- private:
+private:
   std::unique_ptr<Socket> socket_;
   std::unique_ptr<ResDBService> service_;
   bool is_running = false;
   LockFreeQueue<QueueItem> input_queue_, resp_queue_;
   std::unique_ptr<AsyncAcceptor> async_acceptor_;
   ResDBConfig config_;
-  Stats* global_stats_;
+  Stats *global_stats_;
 };
 
-}  // namespace resdb
+} // namespace resdb

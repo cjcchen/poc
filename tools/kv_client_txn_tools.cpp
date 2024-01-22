@@ -11,7 +11,7 @@ using resdb::Request;
 using resdb::ResDBConfig;
 using resdb::ResDBTxnClient;
 
-int main(int argc, char** argv) {
+int main(int argc, char **argv) {
   if (argc < 2) {
     printf("<config path> <min_seq> <max_seq>\n");
     return 0;
@@ -36,11 +36,11 @@ int main(int argc, char** argv) {
     LOG(ERROR) << "get replica state fail";
     exit(1);
   }
-  for (auto& txn : *resp) {
+  for (auto &txn : *resp) {
     BatchClientRequest request;
     KVRequest kv_request;
     if (request.ParseFromString(txn.second)) {
-      for (auto& sub_req : request.client_requests()) {
+      for (auto &sub_req : request.client_requests()) {
         kv_request.ParseFromString(sub_req.request().data());
         printf("data {\nseq: %lu\n%s}\n", txn.first,
                kv_request.DebugString().c_str());

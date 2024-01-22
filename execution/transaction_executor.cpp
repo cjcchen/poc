@@ -5,15 +5,12 @@
 namespace resdb {
 
 TransactionExecutor::TransactionExecutor(
-    const ResDBConfig& config, PostExecuteFunc post_exec_func,
-    SystemInfo* system_info,
+    const ResDBConfig &config, PostExecuteFunc post_exec_func,
+    SystemInfo *system_info,
     std::unique_ptr<TransactionExecutorImpl> executor_impl)
-    : post_exec_func_(post_exec_func),
-      system_info_(system_info),
-      executor_impl_(std::move(executor_impl)),
-      commit_queue_("order"),
-      execute_queue_("execute"),
-      stop_(false) {
+    : post_exec_func_(post_exec_func), system_info_(system_info),
+      executor_impl_(std::move(executor_impl)), commit_queue_("order"),
+      execute_queue_("execute"), stop_(false) {
   global_stats_ = Stats::GetGlobalStats();
   ordering_thread_ = std::thread(&TransactionExecutor::OrderMessage, this);
   execute_thread_ = std::thread(&TransactionExecutor::ExecuteMessage, this);
@@ -107,11 +104,12 @@ void TransactionExecutor::Execute(std::unique_ptr<Request> request) {
   }
 
   // LOG(ERROR) << " get request batch size:"
-  //        << batch_request.client_requests_size()<<" cur seq:"<<request->seq();
+  //        << batch_request.client_requests_size()<<" cur
+  //        seq:"<<request->seq();
   std::unique_ptr<BatchClientResponse> batch_response =
       std::make_unique<BatchClientResponse>();
 
-  for (auto& sub_request : batch_request.client_requests()) {
+  for (auto &sub_request : batch_request.client_requests()) {
     std::unique_ptr<std::string> response = DoExecute(sub_request.request());
     batch_response->add_response()->swap(*response);
   }
@@ -125,8 +123,8 @@ void TransactionExecutor::Execute(std::unique_ptr<Request> request) {
   global_stats_->IncExecuteDone();
 }
 
-std::unique_ptr<std::string> TransactionExecutor::DoExecute(
-    const Request& request) {
+std::unique_ptr<std::string>
+TransactionExecutor::DoExecute(const Request &request) {
   // Execute the request on user size, then send the response back to the
   // client.
   std::unique_ptr<std::string> response = nullptr;
@@ -145,4 +143,4 @@ std::unique_ptr<std::string> TransactionExecutor::DoExecute(
   return response;
 }
 
-}  // namespace resdb
+} // namespace resdb

@@ -72,38 +72,38 @@ SecretKey CmacGenerateHexKey(unsigned int key_size) {
   // int keySize = 16 ; // AES::DEFAULT_KEYLENGTH
   CryptoPP::SecByteBlock key(key_size);
   prng.GenerateBlock(
-      key.data(), key.size());  // Key is a SecByteBlock that contains the key.
+      key.data(), key.size()); // Key is a SecByteBlock that contains the key.
 
   CryptoPP::StringSource ss(key.data(), key.size(), true,
                             new CryptoPP::HexEncoder(new CryptoPP::StringSink(
-                                private_key))  // HexEncoder
-  );                                           // StringSource
+                                private_key)) // HexEncoder
+  );                                          // StringSource
   key_pair.set_private_key(private_key);
   key_pair.set_public_key(private_key);
   return key_pair;
 }
 
-}  // namespace
+} // namespace
 
 SecretKey KeyGenerator::GeneratorKeys(SignatureInfo::HashType type) {
   SecretKey key;
   switch (type) {
-    case SignatureInfo::RSA:
-      key = RsaGenerateHexKeyPair(3072);
-      break;
-    case SignatureInfo::ED25519: {
-      key = ED25519GenerateKeys();
-      break;
-    }
-    case SignatureInfo::CMAC_AES: {
-      key = CmacGenerateHexKey(16);
-      break;
-    }
-    default:
-      break;
+  case SignatureInfo::RSA:
+    key = RsaGenerateHexKeyPair(3072);
+    break;
+  case SignatureInfo::ED25519: {
+    key = ED25519GenerateKeys();
+    break;
+  }
+  case SignatureInfo::CMAC_AES: {
+    key = CmacGenerateHexKey(16);
+    break;
+  }
+  default:
+    break;
   }
   key.set_hash_type(type);
   return key;
 }
 
-}  // namespace resdb
+} // namespace resdb

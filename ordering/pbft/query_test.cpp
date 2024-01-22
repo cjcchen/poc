@@ -24,7 +24,7 @@ using ::testing::Return;
 using ::testing::Test;
 
 class QueryTest : public Test {
- public:
+public:
   QueryTest()
       : global_stats_(Stats::GetGlobalStats(1)),
         config_({GenerateReplicaInfo(1, "127.0.0.1", 1234),
@@ -86,7 +86,7 @@ class QueryTest : public Test {
 
     EXPECT_CALL(replica_client_, SendMessage(_, 1))
         .WillOnce(Invoke(
-            [&](const google::protobuf::Message& request, int64_t node_id) {
+            [&](const google::protobuf::Message &request, int64_t node_id) {
               done.set_value(true);
               return 0;
             }));
@@ -103,8 +103,8 @@ class QueryTest : public Test {
     done_future.get();
   }
 
- protected:
-  Stats* global_stats_;
+protected:
+  Stats *global_stats_;
   ResDBConfig config_;
   SystemInfo system_info_;
   TransactionManager transaction_manager_;
@@ -161,6 +161,6 @@ TEST_F(QueryTest, QueryTxn) {
   EXPECT_EQ(ret, 0);
 }
 
-}  // namespace
+} // namespace
 
-}  // namespace resdb
+} // namespace resdb

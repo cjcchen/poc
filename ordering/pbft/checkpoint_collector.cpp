@@ -4,13 +4,13 @@
 
 namespace resdb {
 
-CheckPointCollector::CheckPointCollector(const ResDBConfig& config,
-                                         CheckPointInfo* checkpoint_info)
+CheckPointCollector::CheckPointCollector(const ResDBConfig &config,
+                                         CheckPointInfo *checkpoint_info)
     : config_(config), checkpoint_info_(checkpoint_info) {}
 
 void CheckPointCollector::MayNewCollector(
-    std::map<uint64_t, std::unique_ptr<TransactionCollector>>* collector,
-    uint64_t seq, std::shared_mutex* collector_mutex) {
+    std::map<uint64_t, std::unique_ptr<TransactionCollector>> *collector,
+    uint64_t seq, std::shared_mutex *collector_mutex) {
   {
     std::shared_lock<std::shared_mutex> lock(*collector_mutex);
     if (collector->find(seq) != collector->end()) {
@@ -25,23 +25,24 @@ void CheckPointCollector::MayNewCollector(
 }
 
 bool CheckPointCollector::MayConsensusChangeStatus(
-    int type, int received_count, std::atomic<TransactionStatue>* status) {
+    int type, int received_count, std::atomic<TransactionStatue> *status) {
   switch (type) {
-    case Request::TYPE_CHECKPOINT:
-      // if receive 2f+1 checkpoint, update stable checkpoint
-      if (*status == TransactionStatue::None &&
-          config_.GetMinDataReceiveNum() <= received_count) {
-        *status = TransactionStatue::READY_EXECUTE;
-        return true;
-      }
-      break;
+  case Request::TYPE_CHECKPOINT:
+    // if receive 2f+1 checkpoint, update stable checkpoint
+    if (*status == TransactionStatue::None &&
+        config_.GetMinDataReceiveNum() <= received_count) {
+      *status = TransactionStatue::READY_EXECUTE;
+      return true;
+    }
+    break;
   }
   return false;
 }
 
 // TODO merge code.
-CollectorResultCode CheckPointCollector::AddCheckPointMsg(
-    const SignatureInfo& signature, std::unique_ptr<Request> request) {
+CollectorResultCode
+CheckPointCollector::AddCheckPointMsg(const SignatureInfo &signature,
+                                      std::unique_ptr<Request> request) {
   if (request == nullptr) {
     return CollectorResultCode::INVALID;
   }
@@ -58,14 +59,14 @@ CollectorResultCode CheckPointCollector::AddCheckPointMsg(
   std::shared_lock<std::shared_mutex> lock(checkpoint_mutex_);
   int ret = checkpoint_message_[seq]->AddRequest(
       std::move(request), signature, false,
-      [&](const Request& request, int received_count,
-          const TransactionCollector::CollectorDataType* data_set,
-          std::atomic<TransactionStatue>* status) {
+      [&](const Request &request, int received_count,
+          const TransactionCollector::CollectorDataType *data_set,
+          std::atomic<TransactionStatue> *status) {
         if (MayConsensusChangeStatus(type, received_count, status)) {
           success = true;
 
           std::vector<CheckPointData> datas;
-          for (const auto& it : *data_set) {
+          for (const auto &it : *data_set) {
             if (it->request == nullptr) {
               LOG(ERROR) << "request is empty, data invalid";
               return;
@@ -85,4 +86,4 @@ CollectorResultCode CheckPointCollector::AddCheckPointMsg(
   return CollectorResultCode::INVALID;
 }
 
-}  // namespace resdb
+} // namespace resdb

@@ -5,17 +5,15 @@
 #include "common/utils/utils.h"
 
 namespace resdb {
-ResponseManager::ResponseManager(const ResDBConfig& config,
-                                 ResDBReplicaClient* replica_client,
-                                 SystemInfo* system_info)
-    : config_(config),
-      replica_client_(replica_client),
+ResponseManager::ResponseManager(const ResDBConfig &config,
+                                 ResDBReplicaClient *replica_client,
+                                 SystemInfo *system_info)
+    : config_(config), replica_client_(replica_client),
       collector_pool_(std::make_unique<LockFreeCollectorPool>(
           "response", config_.GetMaxProcessTxn(), nullptr)),
       context_pool_(std::make_unique<LockFreeCollectorPool>(
           "context", config_.GetMaxProcessTxn(), nullptr)),
-      batch_queue_("client request"),
-      system_info_(system_info) {
+      batch_queue_("client request"), system_info_(system_info) {
   stop_ = false;
   eval_started_ = false;
   eval_ready_future_ = eval_ready_promise_.get_future();
@@ -30,7 +28,7 @@ ResponseManager::ResponseManager(const ResDBConfig& config,
   }
 
   global_stats_ = Stats::GetGlobalStats();
-  send_num_=0;
+  send_num_ = 0;
   total_num_ = 0;
 }
 
@@ -41,7 +39,6 @@ ResponseManager::~ResponseManager() {
       user_req_thread_[i].join();
     }
   }
-
 }
 
 // use system info
@@ -54,7 +51,7 @@ std::unique_ptr<Request> ResponseManager::GenerateUserRequest() {
 }
 
 void ResponseManager::SetDataFunc(std::function<std::string()> func) {
-  LOG(ERROR)<<"set data func";
+  LOG(ERROR) << "set data func";
   data_func_ = std::move(func);
 }
 
@@ -72,8 +69,8 @@ int ResponseManager::StartEval() {
     if (i == 20000) {
       eval_ready_promise_.set_value(true);
     }
-    if(i%10000 == 0){
-      LOG(ERROR)<<"data done:"<<i;
+    if (i % 10000 == 0) {
+      LOG(ERROR) << "data done:" << i;
     }
   }
   LOG(WARNING) << "start eval done";
@@ -100,8 +97,8 @@ int ResponseManager::ProcessResponseMsg(std::unique_ptr<Context> context,
   // The callback will be triggered if it received f+1 messages.
   CollectorResultCode ret =
       AddResponseMsg(context->signature, std::move(request),
-                     [&](const Request& request,
-                         const TransactionCollector::CollectorDataType*) {
+                     [&](const Request &request,
+                         const TransactionCollector::CollectorDataType *) {
                        response = std::make_unique<Request>(request);
                        return;
                      });
@@ -118,26 +115,26 @@ int ResponseManager::ProcessResponseMsg(std::unique_ptr<Context> context,
 }
 
 bool ResponseManager::MayConsensusChangeStatus(
-    int type, int received_count, std::atomic<TransactionStatue>* status) {
+    int type, int received_count, std::atomic<TransactionStatue> *status) {
   switch (type) {
-    case Request::TYPE_RESPONSE:
-      // if receive f+1 response results, ack to the client.
-      if (*status == TransactionStatue::None &&
-          config_.GetMinClientReceiveNum() <= received_count) {
-        TransactionStatue old_status = TransactionStatue::None;
-        return status->compare_exchange_strong(
-            old_status, TransactionStatue::EXECUTED, std::memory_order_acq_rel,
-            std::memory_order_acq_rel);
-      }
-      break;
+  case Request::TYPE_RESPONSE:
+    // if receive f+1 response results, ack to the client.
+    if (*status == TransactionStatue::None &&
+        config_.GetMinClientReceiveNum() <= received_count) {
+      TransactionStatue old_status = TransactionStatue::None;
+      return status->compare_exchange_strong(
+          old_status, TransactionStatue::EXECUTED, std::memory_order_acq_rel,
+          std::memory_order_acq_rel);
+    }
+    break;
   }
   return false;
 }
 
 CollectorResultCode ResponseManager::AddResponseMsg(
-    const SignatureInfo& signature, std::unique_ptr<Request> request,
-    std::function<void(const Request&,
-                       const TransactionCollector::CollectorDataType*)>
+    const SignatureInfo &signature, std::unique_ptr<Request> request,
+    std::function<void(const Request &,
+                       const TransactionCollector::CollectorDataType *)>
         response_call_back) {
   if (request == nullptr) {
     return CollectorResultCode::INVALID;
@@ -148,9 +145,9 @@ CollectorResultCode ResponseManager::AddResponseMsg(
   int resp_received_count = 0;
   int ret = collector_pool_->GetCollector(seq)->AddRequest(
       std::move(request), signature, false,
-      [&](const Request& request, int received_count,
-          TransactionCollector::CollectorDataType* data,
-          std::atomic<TransactionStatue>* status) {
+      [&](const Request &request, int received_count,
+          TransactionCollector::CollectorDataType *data,
+          std::atomic<TransactionStatue> *status) {
         if (MayConsensusChangeStatus(type, received_count, status)) {
           resp_received_count = 1;
           response_call_back(request, data);
@@ -167,10 +164,10 @@ CollectorResultCode ResponseManager::AddResponseMsg(
 }
 
 void ResponseManager::SendResponseToClient(
-    const BatchClientResponse& batch_response) {
+    const BatchClientResponse &batch_response) {
   uint64_t create_time = batch_response.createtime();
   uint64_t local_id = batch_response.local_id();
-  //LOG(ERROR) << " send to client";
+  // LOG(ERROR) << " send to client";
   if (create_time > 0) {
     uint64_t run_time = get_sys_clock() - create_time;
     global_stats_->AddLatency(run_time);
@@ -178,9 +175,7 @@ void ResponseManager::SendResponseToClient(
     LOG(ERROR) << "seq:" << local_id << " no resp";
   }
 
-
   send_num_--;
-
 }
 
 // =================== request ========================
@@ -189,7 +184,7 @@ int ResponseManager::BatchProposeMsg() {
              << " batch num:" << config_.ClientBatchNum();
   std::vector<std::unique_ptr<QueueItem>> batch_req;
   eval_ready_future_.get();
-  LOG(ERROR)<<"start max txn:"<<config_.GetMaxProcessTxn();
+  LOG(ERROR) << "start max txn:" << config_.GetMaxProcessTxn();
   while (!stop_) {
     if (send_num_ >= config_.GetMaxProcessTxn()) {
       usleep(100000);
@@ -214,7 +209,7 @@ int ResponseManager::BatchProposeMsg() {
 }
 
 int ResponseManager::DoBatch(
-    const std::vector<std::unique_ptr<QueueItem>>& batch_req) {
+    const std::vector<std::unique_ptr<QueueItem>> &batch_req) {
   auto new_request =
       NewRequest(Request::TYPE_NEW_TXNS, Request(), config_.GetSelfInfo().id());
   if (new_request == nullptr) {
@@ -222,7 +217,7 @@ int ResponseManager::DoBatch(
   }
   BatchClientRequest batch_request;
   for (size_t i = 0; i < batch_req.size(); ++i) {
-    BatchClientRequest::ClientRequest* req =
+    BatchClientRequest::ClientRequest *req =
         batch_request.add_client_requests();
     req->mutable_request()->Swap(batch_req[i]->client_request.get());
     req->set_id(i);
@@ -246,4 +241,4 @@ int ResponseManager::DoBatch(
   return 0;
 }
 
-}  // namespace resdb
+} // namespace resdb

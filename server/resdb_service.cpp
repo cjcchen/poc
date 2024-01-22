@@ -16,4 +16,4 @@ void ResDBService::SetRunning(bool is_running) { is_running_ = is_running; }
 void ResDBService::Start() { SetRunning(true); }
 void ResDBService::Stop() { SetRunning(false); }
 
-}  // namespace resdb
+} // namespace resdb

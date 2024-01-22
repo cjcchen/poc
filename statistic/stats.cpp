@@ -10,19 +10,17 @@ std::mutex g_mutex;
 
 std::unique_ptr<PrometheusHandler> g_prometheus;
 
-Stats* Stats::GetGlobalStats(int seconds) {
+Stats *Stats::GetGlobalStats(int seconds) {
   std::unique_lock<std::mutex> lk(g_mutex);
   static Stats stats(seconds);
   return &stats;
 }
 
-PrometheusHandler* Stats::GetGlobalPrometheus() {
-	return g_prometheus.get();
-}
+PrometheusHandler *Stats::GetGlobalPrometheus() { return g_prometheus.get(); }
 
-void Stats::InitGlobalPrometheus(const std::string& prometheus_address) {
-	LOG(ERROR)<<"promethes address:"<<prometheus_address;
-	//g_prometheus = std::make_unique<PrometheusHandler>(prometheus_address);
+void Stats::InitGlobalPrometheus(const std::string &prometheus_address) {
+  LOG(ERROR) << "promethes address:" << prometheus_address;
+  // g_prometheus = std::make_unique<PrometheusHandler>(prometheus_address);
 }
 
 Stats::Stats(int sleep_time) {
@@ -46,8 +44,8 @@ Stats::Stats(int sleep_time) {
   broad_cast_msg_ = 0;
   send_broad_cast_msg_ = 0;
 
-	global_thread_ =
-       std::thread(&Stats::MonitorGlobal, this);  // pass by reference
+  global_thread_ =
+      std::thread(&Stats::MonitorGlobal, this); // pass by reference
 }
 
 void Stats::Stop() { stop_ = true; }
@@ -224,4 +222,4 @@ void Stats::AddLatency(uint64_t run_time) {
   run_req_run_time_ += run_time;
 }
 
-}  // namespace resdb
+} // namespace resdb

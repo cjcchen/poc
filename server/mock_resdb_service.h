@@ -7,7 +7,7 @@
 namespace resdb {
 
 class MockResDBService : public ResDBService {
- public:
+public:
   MOCK_METHOD(bool, IsRunning, (), (const override));
   MOCK_METHOD(void, SetRunning, (bool), (override));
   MOCK_METHOD(int, Process,
@@ -15,4 +15,4 @@ class MockResDBService : public ResDBService {
               (override));
 };
 
-}  // namespace resdb
+} // namespace resdb

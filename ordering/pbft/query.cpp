@@ -6,7 +6,7 @@
 
 namespace resdb {
 
-Query::Query(const ResDBConfig& config, TransactionManager* transaction_manager)
+Query::Query(const ResDBConfig &config, TransactionManager *transaction_manager)
     : config_(config), transaction_manager_(transaction_manager) {}
 
 Query::~Query() {}
@@ -34,22 +34,22 @@ int Query::ProcessQuery(std::unique_ptr<Context> context,
     LOG(ERROR) << "parse data fail";
     return -2;
   }
-  //LOG(ERROR) << "request:" << query.DebugString();
+  // LOG(ERROR) << "request:" << query.DebugString();
 
   QueryResponse response;
 
   for (uint64_t i = query.min_seq(); i <= query.max_seq(); ++i) {
-    Request* ret_request = transaction_manager_->GetRequest(i);
+    Request *ret_request = transaction_manager_->GetRequest(i);
     if (ret_request == nullptr) {
       break;
     }
-    Request* txn = response.add_transactions();
+    Request *txn = response.add_transactions();
     txn->set_data(ret_request->data());
     txn->set_seq(ret_request->seq());
   }
 
   if (context != nullptr && context->client != nullptr) {
-    //LOG(ERROR) << "send response:" << response.DebugString();
+    // LOG(ERROR) << "send response:" << response.DebugString();
     int ret = context->client->SendRawMessage(response);
     if (ret) {
       LOG(ERROR) << "send resp fail ret:" << ret;
@@ -58,4 +58,4 @@ int Query::ProcessQuery(std::unique_ptr<Context> context,
   return 0;
 }
 
-}  // namespace resdb
+} // namespace resdb

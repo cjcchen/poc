@@ -6,10 +6,10 @@ namespace resdb {
 
 // BenchmarkClient to send data to the pbft cluster.
 class BenchmarkClient : public ResDBUserClient {
- public:
-  BenchmarkClient(const ResDBConfig& config);
+public:
+  BenchmarkClient(const ResDBConfig &config);
 
-  int Set(const std::string& data);
+  int Set(const std::string &data);
 };
 
-}  // namespace resdb
+} // namespace resdb

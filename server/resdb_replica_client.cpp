@@ -10,12 +10,10 @@ namespace resdb {
 
 constexpr int BROADCAST_BATCH_NUM = 50;
 
-ResDBReplicaClient::ResDBReplicaClient(const std::vector<ReplicaInfo>& replicas,
-                                       SignatureVerifier* verifier,
+ResDBReplicaClient::ResDBReplicaClient(const std::vector<ReplicaInfo> &replicas,
+                                       SignatureVerifier *verifier,
                                        bool is_use_long_conn, int epoll_num)
-    : replicas_(replicas),
-      verifier_(verifier),
-      is_running_(false),
+    : replicas_(replicas), verifier_(verifier), is_running_(false),
       batch_queue_("bc_batch", BROADCAST_BATCH_NUM),
       is_use_long_conn_(is_use_long_conn) {
   global_stats_ = Stats::GetGlobalStats();
@@ -35,13 +33,13 @@ ResDBReplicaClient::~ResDBReplicaClient() {
     broadcast_thread_.join();
   }
   if (is_use_long_conn_) {
-    for (auto& cli : client_pools_) {
+    for (auto &cli : client_pools_) {
       cli.second.reset();
     }
     worker_.reset();
     worker_ = nullptr;
     io_service_.stop();
-    for (auto& worker_th : worker_threads_) {
+    for (auto &worker_th : worker_threads_) {
       if (worker_th.joinable()) {
         worker_th.join();
       }
@@ -49,8 +47,8 @@ ResDBReplicaClient::~ResDBReplicaClient() {
   }
 }
 
-bool ResDBReplicaClient::IsInPool(const ReplicaInfo& replica_info) {
-  for (auto& replica : replicas_) {
+bool ResDBReplicaClient::IsInPool(const ReplicaInfo &replica_info) {
+  for (auto &replica : replicas_) {
     if (replica_info.ip() == replica.ip() &&
         replica_info.port() == replica.port()) {
       return true;
@@ -62,7 +60,7 @@ bool ResDBReplicaClient::IsInPool(const ReplicaInfo& replica_info) {
 bool ResDBReplicaClient::IsRunning() const { return is_running_; }
 
 void ResDBReplicaClient::UpdateClientReplicas(
-    const std::vector<ReplicaInfo>& replicas) {
+    const std::vector<ReplicaInfo> &replicas) {
   clients_ = replicas;
 }
 
@@ -70,9 +68,9 @@ std::vector<ReplicaInfo> ResDBReplicaClient::GetClientReplicas() {
   return clients_;
 }
 
-int ResDBReplicaClient::SendHeartBeat(const HeartBeatInfo& hb_info) {
+int ResDBReplicaClient::SendHeartBeat(const HeartBeatInfo &hb_info) {
   int ret = 0;
-  for (const auto& replica : replicas_) {
+  for (const auto &replica : replicas_) {
     ResDBClient client(replica.ip(), replica.port());
     if (client.SendRequest(hb_info, Request::TYPE_HEART_BEAT) == 0) {
       ret++;
@@ -91,7 +89,7 @@ void ResDBReplicaClient::StartBroadcastInBackGround() {
         continue;
       }
       BroadcastData broadcast_data;
-      for (auto& queue_item : batch_req) {
+      for (auto &queue_item : batch_req) {
         broadcast_data.add_data()->swap(queue_item->data);
       }
 
@@ -104,7 +102,7 @@ void ResDBReplicaClient::StartBroadcastInBackGround() {
   });
 }
 
-int ResDBReplicaClient::SendMessage(const google::protobuf::Message& message) {
+int ResDBReplicaClient::SendMessage(const google::protobuf::Message &message) {
   global_stats_->BroadCastMsg();
   if (is_use_long_conn_) {
     auto item = std::make_unique<QueueItem>();
@@ -117,8 +115,8 @@ int ResDBReplicaClient::SendMessage(const google::protobuf::Message& message) {
   }
 }
 
-int ResDBReplicaClient::SendMessage(const google::protobuf::Message& message,
-                                    const ReplicaInfo& replica_info) {
+int ResDBReplicaClient::SendMessage(const google::protobuf::Message &message,
+                                    const ReplicaInfo &replica_info) {
   if (is_use_long_conn_) {
     std::string data = ResDBClient::GetRawMessageString(message, verifier_);
     BroadcastData broadcast_data;
@@ -130,13 +128,13 @@ int ResDBReplicaClient::SendMessage(const google::protobuf::Message& message,
 }
 
 int ResDBReplicaClient::SendMessageFromPool(
-    const google::protobuf::Message& message,
-    const std::vector<ReplicaInfo>& replicas) {
+    const google::protobuf::Message &message,
+    const std::vector<ReplicaInfo> &replicas) {
   int ret = 0;
   std::string data;
   message.SerializeToString(&data);
   global_stats_->SendBroadCastMsgPerRep();
-  for (const auto& replica : replicas) {
+  for (const auto &replica : replicas) {
     auto client = GetClientFromPool(replica.ip(), replica.port());
     if (client == nullptr) {
       continue;
@@ -151,10 +149,10 @@ int ResDBReplicaClient::SendMessageFromPool(
 }
 
 int ResDBReplicaClient::SendMessageInternal(
-    const google::protobuf::Message& message,
-    const std::vector<ReplicaInfo>& replicas) {
+    const google::protobuf::Message &message,
+    const std::vector<ReplicaInfo> &replicas) {
   int ret = 0;
-  for (const auto& replica : replicas) {
+  for (const auto &replica : replicas) {
     auto client = GetClient(replica.ip(), replica.port());
     if (client == nullptr) {
       continue;
@@ -169,7 +167,7 @@ int ResDBReplicaClient::SendMessageInternal(
   return ret;
 }
 
-AsyncReplicaClient* ResDBReplicaClient::GetClientFromPool(const std::string& ip,
+AsyncReplicaClient *ResDBReplicaClient::GetClientFromPool(const std::string &ip,
                                                           int port) {
   if (client_pools_.find(std::make_pair(ip, port)) == client_pools_.end()) {
     auto client = std::make_unique<AsyncReplicaClient>(
@@ -179,29 +177,29 @@ AsyncReplicaClient* ResDBReplicaClient::GetClientFromPool(const std::string& ip,
   return client_pools_[std::make_pair(ip, port)].get();
 }
 
-std::unique_ptr<ResDBClient> ResDBReplicaClient::GetClient(
-    const std::string& ip, int port) {
+std::unique_ptr<ResDBClient>
+ResDBReplicaClient::GetClient(const std::string &ip, int port) {
   return std::make_unique<ResDBClient>(ip, port);
 }
 
-void ResDBReplicaClient::BroadCast(const google::protobuf::Message& message) {
+void ResDBReplicaClient::BroadCast(const google::protobuf::Message &message) {
   int ret = SendMessage(message);
   if (ret < 0) {
     LOG(ERROR) << "broadcast request fail:";
   }
 }
 
-void ResDBReplicaClient::SendMessage(const google::protobuf::Message& message,
+void ResDBReplicaClient::SendMessage(const google::protobuf::Message &message,
                                      int64_t node_id) {
   ReplicaInfo target_replica;
-  for (const auto& replica : replicas_) {
+  for (const auto &replica : replicas_) {
     if (replica.id() == node_id) {
       target_replica = replica;
       break;
     }
   }
   if (target_replica.ip().empty()) {
-    for (const auto& replica : GetClientReplicas()) {
+    for (const auto &replica : GetClientReplicas()) {
       if (replica.id() == node_id) {
         target_replica = replica;
         break;
@@ -220,4 +218,4 @@ void ResDBReplicaClient::SendMessage(const google::protobuf::Message& message,
   }
 }
 
-}  // namespace resdb
+} // namespace resdb

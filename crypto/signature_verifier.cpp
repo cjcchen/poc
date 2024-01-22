@@ -19,8 +19,8 @@ namespace resdb {
 namespace {
 
 // ================== for verify ====================================
-bool RsaVerifyString(const std::string& message, const std::string& public_key,
-                     const std::string& signature) {
+bool RsaVerifyString(const std::string &message, const std::string &public_key,
+                     const std::string &signature) {
   // decode and load public key (using pipeline)
   CryptoPP::RSA::PublicKey rsa_public_key;
   rsa_public_key.Load(
@@ -41,14 +41,14 @@ bool RsaVerifyString(const std::string& message, const std::string& public_key,
       decoded_signature + message, true,
       new CryptoPP::SignatureVerificationFilter(
           verifier,
-          new CryptoPP::ArraySink((CryptoPP::byte*)&result, sizeof(result))));
+          new CryptoPP::ArraySink((CryptoPP::byte *)&result, sizeof(result))));
 
   return result;
 }
 
-bool ED25519verifyString(const std::string& message,
-                         const std::string& public_key,
-                         const std::string& signature) {
+bool ED25519verifyString(const std::string &message,
+                         const std::string &public_key,
+                         const std::string &signature) {
   CryptoPP::byte byteKey[CryptoPP::ed25519PrivateKey::PUBLIC_KEYLENGTH];
   if (public_key.size() != CryptoPP::ed25519PrivateKey::PUBLIC_KEYLENGTH) {
     LOG(ERROR) << "public key len invalid:" << public_key.size();
@@ -62,7 +62,7 @@ bool ED25519verifyString(const std::string& message,
       signature + message, true,
       new CryptoPP::SignatureVerificationFilter(
           verifier,
-          new CryptoPP::ArraySink((CryptoPP::byte*)&valid, sizeof(valid))));
+          new CryptoPP::ArraySink((CryptoPP::byte *)&valid, sizeof(valid))));
   if (!valid) {
     LOG(ERROR) << "signature invalid. signature len:" << signature.size()
                << " message len:" << message.size();
@@ -71,8 +71,8 @@ bool ED25519verifyString(const std::string& message,
 }
 
 // ================== for sign ====================================
-std::string RsaSignString(const std::string& private_key,
-                          const std::string& message) {
+std::string RsaSignString(const std::string &private_key,
+                          const std::string &message) {
   // decode and load private key (using pipeline)
   CryptoPP::RSA::PrivateKey rsa_private_key;
   rsa_private_key.Load(
@@ -92,12 +92,12 @@ std::string RsaSignString(const std::string& private_key,
   return signature;
 }
 
-bool CmacVerifyString(const std::string& message, const std::string& public_key,
-                      const std::string& signature) {
+bool CmacVerifyString(const std::string &message, const std::string &public_key,
+                      const std::string &signature) {
   bool res = false;
   // KEY TRANSFORMATION
   // https://stackoverflow.com/questions/26145776/string-to-secbyteblock-conversion
-  CryptoPP::SecByteBlock privKey((const unsigned char*)(public_key.data()),
+  CryptoPP::SecByteBlock privKey((const unsigned char *)(public_key.data()),
                                  public_key.size());
   CryptoPP::CMAC<CryptoPP::AES> cmac(privKey.data(), privKey.size());
   const int flags = CryptoPP::HashVerificationFilter::HASH_AT_END |
@@ -107,13 +107,13 @@ bool CmacVerifyString(const std::string& message, const std::string& public_key,
   CryptoPP::StringSource ss3(
       message + signature, true,
       new CryptoPP::HashVerificationFilter(
-          cmac, new CryptoPP::ArraySink((CryptoPP::byte*)&res, sizeof(res)),
-          flags));  // StringSource
+          cmac, new CryptoPP::ArraySink((CryptoPP::byte *)&res, sizeof(res)),
+          flags)); // StringSource
   return res;
 }
 
-std::string ED25519signString(const std::string& message,
-                              CryptoPP::ed25519::Signer* signer) {
+std::string ED25519signString(const std::string &message,
+                              CryptoPP::ed25519::Signer *signer) {
   CryptoPP::AutoSeededRandomPool prng;
   std::string signature;
   CryptoPP::StringSource(
@@ -125,15 +125,15 @@ std::string ED25519signString(const std::string& message,
 
 // CMAC-AES Signature generator
 // Return a token, mac, to verify the a message.
-std::string CmacSignString(const std::string& private_key,
-                           const std::string& message) {
+std::string CmacSignString(const std::string &private_key,
+                           const std::string &message) {
   std::string mac = "";
 
   // KEY TRANSFORMATION.
   // https://stackoverflow.com/questions/26145776/string-to-secbyteblock-conversion
 
   CryptoPP::SecByteBlock mac_private_key(
-      (const unsigned char*)(private_key.data()), private_key.size());
+      (const unsigned char *)(private_key.data()), private_key.size());
 
   CryptoPP::CMAC<CryptoPP::AES> cmac(mac_private_key.data(),
                                      mac_private_key.size());
@@ -144,10 +144,10 @@ std::string CmacSignString(const std::string& private_key,
   return mac;
 }
 
-}  // namespace
+} // namespace
 
-SignatureVerifier::SignatureVerifier(const KeyInfo& private_key,
-                                     const CertificateInfo& certificate_info) {
+SignatureVerifier::SignatureVerifier(const KeyInfo &private_key,
+                                     const CertificateInfo &certificate_info) {
   private_key_ = private_key;
   if (private_key_.key().empty()) {
     LOG(ERROR) << "private invalid";
@@ -167,7 +167,7 @@ SignatureVerifier::SignatureVerifier(const KeyInfo& private_key,
   }
 }
 
-bool SignatureVerifier::AddPublicKey(const CertificateKey& public_key,
+bool SignatureVerifier::AddPublicKey(const CertificateKey &public_key,
                                      bool need_verify) {
   std::unique_lock<std::shared_mutex> lk(mutex_);
   if (need_verify &&
@@ -204,37 +204,37 @@ size_t SignatureVerifier::GetPublicKeysSize() const {
 }
 
 // Funtion to calculate hash of a string.
-std::string SignatureVerifier::CalculateHash(const std::string& str) {
-  CryptoPP::byte const* pData = (CryptoPP::byte*)str.data();
+std::string SignatureVerifier::CalculateHash(const std::string &str) {
+  CryptoPP::byte const *pData = (CryptoPP::byte *)str.data();
   unsigned int nDataLen = str.size();
   CryptoPP::byte aDigest[CryptoPP::SHA256::DIGESTSIZE];
 
   CryptoPP::SHA256().CalculateDigest(aDigest, pData, nDataLen);
-  return std::string((char*)aDigest, CryptoPP::SHA256::DIGESTSIZE);
+  return std::string((char *)aDigest, CryptoPP::SHA256::DIGESTSIZE);
 }
 
-absl::StatusOr<SignatureInfo> SignatureVerifier::SignMessage(
-    const std::string& message) {
+absl::StatusOr<SignatureInfo>
+SignatureVerifier::SignMessage(const std::string &message) {
   SignatureInfo info;
   info.set_node_id(node_id_);
   switch (private_key_.hash_type()) {
-    case SignatureInfo::RSA:
-      info.set_signature(RsaSignString(private_key_.key(), message));
-      break;
-    case SignatureInfo::ED25519:
-      info.set_signature(ED25519signString(message, signer_.get()));
-      break;
-    case SignatureInfo::CMAC_AES:
-      info.set_signature(CmacSignString(private_key_.key(), message));
-      break;
-    default:
-      break;
+  case SignatureInfo::RSA:
+    info.set_signature(RsaSignString(private_key_.key(), message));
+    break;
+  case SignatureInfo::ED25519:
+    info.set_signature(ED25519signString(message, signer_.get()));
+    break;
+  case SignatureInfo::CMAC_AES:
+    info.set_signature(CmacSignString(private_key_.key(), message));
+    break;
+  default:
+    break;
   }
   return info;
 }
 
-bool SignatureVerifier::VerifyMessage(const google::protobuf::Message& message,
-                                      const SignatureInfo& sign) {
+bool SignatureVerifier::VerifyMessage(const google::protobuf::Message &message,
+                                      const SignatureInfo &sign) {
   std::string str;
   if (!message.SerializeToString(&str)) {
     return false;
@@ -242,8 +242,8 @@ bool SignatureVerifier::VerifyMessage(const google::protobuf::Message& message,
   return VerifyMessage(str, sign);
 }
 
-bool SignatureVerifier::VerifyMessage(const std::string& message,
-                                      const SignatureInfo& info) {
+bool SignatureVerifier::VerifyMessage(const std::string &message,
+                                      const SignatureInfo &info) {
   if (info.signature().empty()) {
     LOG(ERROR) << " signature is empty";
     return false;
@@ -256,8 +256,8 @@ bool SignatureVerifier::VerifyMessage(const std::string& message,
   return VerifyMessage(message, *public_key, info.signature());
 }
 
-absl::StatusOr<SignatureInfo> SignatureVerifier::SignCertificateKeyInfo(
-    const CertificateKeyInfo& info) {
+absl::StatusOr<SignatureInfo>
+SignatureVerifier::SignCertificateKeyInfo(const CertificateKeyInfo &info) {
   std::string str;
   if (!info.SerializeToString(&str)) {
     return absl::InvalidArgumentError("Serialize fail");
@@ -265,8 +265,8 @@ absl::StatusOr<SignatureInfo> SignatureVerifier::SignCertificateKeyInfo(
   return SignatureVerifier::SignMessage(str);
 }
 
-bool SignatureVerifier::VerifyKey(const CertificateKeyInfo& info,
-                                  const SignatureInfo& sign) {
+bool SignatureVerifier::VerifyKey(const CertificateKeyInfo &info,
+                                  const SignatureInfo &sign) {
   std::string str;
   if (!info.SerializeToString(&str)) {
     return false;
@@ -274,9 +274,9 @@ bool SignatureVerifier::VerifyKey(const CertificateKeyInfo& info,
   return VerifyMessage(str, admin_public_key_, sign.signature());
 }
 
-bool SignatureVerifier::VerifyMessage(const std::string& message,
-                                      const KeyInfo& public_key,
-                                      const std::string& signature) {
+bool SignatureVerifier::VerifyMessage(const std::string &message,
+                                      const KeyInfo &public_key,
+                                      const std::string &signature) {
   if (public_key.key().empty() || signature.empty()) {
     LOG(ERROR) << "public is empty, size(" << public_key.key().size()
                << ") or signature is empty, size(" << signature.size() << ")";
@@ -287,15 +287,15 @@ bool SignatureVerifier::VerifyMessage(const std::string& message,
   //         << " sig size:" << signature.size()
   //        << " msg size:" << message.size();
   switch (public_key.hash_type()) {
-    case SignatureInfo::RSA:
-      return RsaVerifyString(message, public_key.key(), signature);
-    case SignatureInfo::ED25519:
-      return ED25519verifyString(message, public_key.key(), signature);
-    case SignatureInfo::CMAC_AES:
-      return CmacVerifyString(message, public_key.key(), signature);
-    default:
-      return true;
+  case SignatureInfo::RSA:
+    return RsaVerifyString(message, public_key.key(), signature);
+  case SignatureInfo::ED25519:
+    return ED25519verifyString(message, public_key.key(), signature);
+  case SignatureInfo::CMAC_AES:
+    return CmacVerifyString(message, public_key.key(), signature);
+  default:
+    return true;
   }
 }
 
-}  // namespace resdb
+} // namespace resdb

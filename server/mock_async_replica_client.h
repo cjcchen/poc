@@ -7,10 +7,10 @@
 namespace resdb {
 
 class MockAsyncReplicaClient : public AsyncReplicaClient {
- public:
+public:
   MockAsyncReplicaClient(boost::asio::io_service *io_service)
       : AsyncReplicaClient(io_service, "127.0.0.1", 0) {}
   MOCK_METHOD(int, SendMessage, (const std::string &), (override));
 };
 
-}  // namespace resdb
+} // namespace resdb

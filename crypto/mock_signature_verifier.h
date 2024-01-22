@@ -5,10 +5,10 @@
 namespace resdb {
 
 class MockSignatureVerifier : public SignatureVerifier {
- public:
+public:
   MockSignatureVerifier() : SignatureVerifier(KeyInfo(), CertificateInfo()) {}
-  MOCK_METHOD(absl::StatusOr<SignatureInfo>, SignMessage, (const std::string&),
+  MOCK_METHOD(absl::StatusOr<SignatureInfo>, SignMessage, (const std::string &),
               (override));
 };
 
-}  // namespace resdb
+} // namespace resdb

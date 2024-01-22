@@ -2,18 +2,18 @@
 
 namespace resdb {
 
-ResDBPoCConfig::ResDBPoCConfig(const ResDBConfig& bft_config,
-                               const std::vector<ReplicaInfo>& replicas,
-                               const ReplicaInfo& self_info,
-                               const KeyInfo& private_key,
-                               const CertificateInfo& public_key_cert_info)
+ResDBPoCConfig::ResDBPoCConfig(const ResDBConfig &bft_config,
+                               const std::vector<ReplicaInfo> &replicas,
+                               const ReplicaInfo &self_info,
+                               const KeyInfo &private_key,
+                               const CertificateInfo &public_key_cert_info)
     : ResDBConfig(replicas, self_info, private_key, public_key_cert_info),
       bft_config_(bft_config) {
   SetHeartBeatEnabled(false);
   SetSignatureVerifierEnabled(false);
 }
 
-const ResDBConfig* ResDBPoCConfig::GetBFTConfig() const { return &bft_config_; }
+const ResDBConfig *ResDBPoCConfig::GetBFTConfig() const { return &bft_config_; }
 
 void ResDBPoCConfig::SetMaxNonceBit(uint32_t bit) { max_nonce_bit_ = bit; }
 
@@ -35,7 +35,7 @@ std::vector<ReplicaInfo> ResDBPoCConfig::GetBFTReplicas() {
   return bft_replicas_;
 }
 
-void ResDBPoCConfig::SetBFTReplicas(const std::vector<ReplicaInfo>& replicas) {
+void ResDBPoCConfig::SetBFTReplicas(const std::vector<ReplicaInfo> &replicas) {
   bft_replicas_ = replicas;
 }
 
@@ -52,4 +52,4 @@ void ResDBPoCConfig::SetWorkerNum(uint32_t worker_num) {
   worker_num_ = worker_num;
 }
 
-}  // namespace resdb
+} // namespace resdb

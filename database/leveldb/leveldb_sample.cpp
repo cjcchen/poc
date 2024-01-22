@@ -6,9 +6,9 @@
 
 #include "leveldb/db.h"
 
-int main(int argc, char** argv) {
+int main(int argc, char **argv) {
   // Set up database connection information and open database
-  leveldb::DB* db;
+  leveldb::DB *db;
   leveldb::Options options;
   options.create_if_missing = true;
 
@@ -33,7 +33,7 @@ int main(int argc, char** argv) {
   }
 
   // Iterate over each item in the database and print them
-  leveldb::Iterator* it = db->NewIterator(leveldb::ReadOptions());
+  leveldb::Iterator *it = db->NewIterator(leveldb::ReadOptions());
 
   for (it->SeekToFirst(); it->Valid(); it->Next()) {
     LOG(ERROR) << " iterator key:" << it->key().ToString()

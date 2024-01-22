@@ -9,15 +9,15 @@
 namespace resdb {
 
 class BenchmarkServerImpl : public TransactionExecutorImpl {
- public:
+public:
   BenchmarkServerImpl();
   virtual ~BenchmarkServerImpl() = default;
 
-  std::unique_ptr<std::string> ExecuteData(const std::string& request) override;
+  std::unique_ptr<std::string> ExecuteData(const std::string &request) override;
 
- private:
+private:
   std::thread thread_;
   std::promise<bool> begin_;
 };
 
-}  // namespace resdb
+} // namespace resdb

@@ -6,11 +6,10 @@ using resdb::PBFTClient;
 using resdb::ReplicaInfo;
 using resdb::ResDBConfig;
 
-int main(int argc, char** argv) {
+int main(int argc, char **argv) {
   if (argc < 5) {
-    printf(
-        "<config path> <private key path> <cert_file> <data_size> <request "
-        "num> <thread num> <client_ip>\n");
+    printf("<config path> <private key path> <cert_file> <data_size> <request "
+           "num> <thread num> <client_ip>\n");
     return 0;
   }
   std::string config_file = argv[1];

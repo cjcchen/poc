@@ -7,11 +7,11 @@
 
 namespace resdb {
 
-ResDBStateClient::ResDBStateClient(const ResDBConfig& config)
+ResDBStateClient::ResDBStateClient(const ResDBConfig &config)
     : config_(config) {}
 
-std::unique_ptr<ResDBClient> ResDBStateClient::GetResDBClient(
-    const std::string& ip, int port) {
+std::unique_ptr<ResDBClient>
+ResDBStateClient::GetResDBClient(const std::string &ip, int port) {
   return std::make_unique<ResDBClient>(ip, port);
 }
 
@@ -22,14 +22,14 @@ absl::StatusOr<std::vector<ReplicaState>> ResDBStateClient::GetReplicaStates() {
   std::vector<std::future<std::unique_ptr<ReplicaState>>> resp_future;
   std::vector<ReplicaState> resp;
 
-  for (const auto& replica : config_.GetReplicaInfos()) {
+  for (const auto &replica : config_.GetReplicaInfos()) {
     std::promise<std::unique_ptr<ReplicaState>> state_prom;
     resp_future.push_back(state_prom.get_future());
     ths.push_back(std::thread(
         [&](std::promise<std::unique_ptr<ReplicaState>> state_prom) {
           std::unique_ptr<ResDBClient> client =
               GetResDBClient(replica.ip(), replica.port());
-          client->SetRecvTimeout(1000000);  // 1s for recv timeout.
+          client->SetRecvTimeout(1000000); // 1s for recv timeout.
 
           int ret = client->SendRequest(request, Request::TYPE_REPLICA_STATE);
           if (ret) {
@@ -50,7 +50,7 @@ absl::StatusOr<std::vector<ReplicaState>> ResDBStateClient::GetReplicaStates() {
         std::move(state_prom)));
   }
 
-  for (auto& future : resp_future) {
+  for (auto &future : resp_future) {
     auto state = future.get();
     if (state == nullptr) {
       continue;
@@ -58,10 +58,10 @@ absl::StatusOr<std::vector<ReplicaState>> ResDBStateClient::GetReplicaStates() {
     resp.push_back(*state);
   }
 
-  for (auto& th : ths) {
+  for (auto &th : ths) {
     th.join();
   }
   return resp;
 }
 
-}  // namespace resdb
+} // namespace resdb

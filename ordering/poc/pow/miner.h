@@ -12,26 +12,26 @@ namespace resdb {
 // (SHA256(SHA256(header))) is less than a target value which is
 // defined from the config and can be reset later.
 class Miner {
- public:
-  Miner(const ResDBPoCConfig& config);
+public:
+  Miner(const ResDBPoCConfig &config);
 
   std::vector<std::pair<uint64_t, uint64_t>> GetMiningSlices();
 
-  absl::Status Mine(Block* new_block);
+  absl::Status Mine(Block *new_block);
   void Terminate();
-  bool IsValidHash(const Block* block);
+  bool IsValidHash(const Block *block);
 
   // Obtain the shift idx.
   int32_t GetSliceIdx() const;
   void SetSliceIdx(int slice_idx);
 
-  void SetTargetValue(const HashValue& target_value);
+  void SetTargetValue(const HashValue &target_value);
 
- private:
-  std::string CalculatePoWHashDigest(const Block::Header& header);
-  HashValue CalculatePoWHash(const Block* new_block);
+private:
+  std::string CalculatePoWHashDigest(const Block::Header &header);
+  HashValue CalculatePoWHash(const Block *new_block);
 
- private:
+private:
   ResDBPoCConfig config_;
   HashValue target_value_;
   int shift_idx_ = 0;
@@ -41,4 +41,4 @@ class Miner {
   uint32_t worker_num_ = 16;
 };
 
-}  // namespace resdb
+} // namespace resdb

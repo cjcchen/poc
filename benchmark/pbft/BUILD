@@ -19,8 +19,8 @@ cc_binary(
         "//application/utils:server_factory",
         "//config:resdb_config_utils",
         "//ordering/pbft:consensus_service_pbft",
+        "//proto:kv_server_cc_proto",
         "//server:resdb_server",
-      "//proto:kv_server_cc_proto"
     ],
 )
 

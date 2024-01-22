@@ -31,7 +31,7 @@ TEST(TransactionExecutorTest, ExecuteOne) {
   auto mock_executor = std::make_unique<MockTransactionExecutorImpl>();
 
   EXPECT_CALL(*mock_executor, ExecuteData)
-      .WillOnce(Invoke([&](const std::string& input) {
+      .WillOnce(Invoke([&](const std::string &input) {
         EXPECT_EQ(input, "execute_1");
         done.set_value(true);
         return nullptr;
@@ -69,7 +69,7 @@ TEST(TransactionExecutorTest, MaxPendingExecuteSeq) {
       },
       &system_info, nullptr);
 
-  executor.SetPreExecuteFunc([&](Request* request) {
+  executor.SetPreExecuteFunc([&](Request *request) {
     std::unique_lock<std::mutex> lk(mutex);
     cv.notify_one();
     call_num++;
@@ -105,11 +105,11 @@ TEST(TransactionExecutorTest, ExecuteOutofOrder) {
   auto mock_executor = std::make_unique<MockTransactionExecutorImpl>();
 
   EXPECT_CALL(*mock_executor, ExecuteData)
-      .WillOnce(Invoke([&](const std::string& input) {
+      .WillOnce(Invoke([&](const std::string &input) {
         EXPECT_EQ(input, "execute_1");
         return nullptr;
       }))
-      .WillOnce(Invoke([&](const std::string& input) {
+      .WillOnce(Invoke([&](const std::string &input) {
         EXPECT_EQ(input, "execute_2");
         done.set_value(true);
         return nullptr;
@@ -153,7 +153,7 @@ TEST(TransactionExecutorTest, CallBack) {
   auto mock_executor = std::make_unique<MockTransactionExecutorImpl>();
 
   EXPECT_CALL(*mock_executor, ExecuteData)
-      .WillOnce(Invoke([&](const std::string& input) {
+      .WillOnce(Invoke([&](const std::string &input) {
         EXPECT_EQ(input, "execute_1");
         return nullptr;
       }));
@@ -172,6 +172,6 @@ TEST(TransactionExecutorTest, CallBack) {
   done_future.get();
 }
 
-}  // namespace
+} // namespace
 
-}  // namespace resdb
+} // namespace resdb

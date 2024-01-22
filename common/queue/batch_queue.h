@@ -7,18 +7,17 @@
 
 namespace resdb {
 
-template <typename T>
-class BatchQueue {
+template <typename T> class BatchQueue {
   struct BatchQueueItem {
     std::vector<T> list;
   };
 
- public:
+public:
   int num = 0;
   BatchQueue() = default;
-  BatchQueue(const std::string& name, int batch_size)
+  BatchQueue(const std::string &name, int batch_size)
       : name_(name), batch_size_(batch_size) {}
-  void Push(T&& data) {
+  void Push(T &&data) {
     std::lock_guard<std::mutex> lk(mutex_);
     if (queue_.empty() || queue_.back()->list.size() >= batch_size_) {
       queue_.push_back(std::make_unique<BatchQueueItem>());
@@ -39,15 +38,14 @@ class BatchQueue {
           return !queue_.empty() && queue_.front()->list.size() >= batch_size_;
         });
       }
-      if(name_ == "bc_batch"){
-	      if (queue_.empty() ){
-		      return std::vector<T>();
-	      }
-      }
-      else {
-	      if (queue_.empty() || queue_.front()->list.size() < batch_size_) {
-		      return std::vector<T>();
-	      }
+      if (name_ == "bc_batch") {
+        if (queue_.empty()) {
+          return std::vector<T>();
+        }
+      } else {
+        if (queue_.empty() || queue_.front()->list.size() < batch_size_) {
+          return std::vector<T>();
+        }
       }
       item = std::move(queue_.front());
       queue_.pop_front();
@@ -55,7 +53,7 @@ class BatchQueue {
     return std::move(item->list);
   }
 
- private:
+private:
   std::string name_;
   std::condition_variable cv_;
   std::mutex mutex_;
@@ -64,4 +62,4 @@ class BatchQueue {
   size_t batch_size_;
 };
 
-}  // namespace resdb
+} // namespace resdb

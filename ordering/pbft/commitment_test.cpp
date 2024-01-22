@@ -22,9 +22,9 @@ using ::testing::Return;
 using ::testing::Test;
 
 class CommitmentTest : public Test {
- public:
+public:
   CommitmentTest()
-      :  // just set the monitor time to 1 second to return early.
+      : // just set the monitor time to 1 second to return early.
         global_stats_(Stats::GetGlobalStats(1)),
         config_({GenerateReplicaInfo(1, "127.0.0.1", 1234),
                  GenerateReplicaInfo(2, "127.0.0.1", 1235),
@@ -86,8 +86,8 @@ class CommitmentTest : public Test {
                                          std::make_unique<Request>(request));
   }
 
- protected:
-  Stats* global_stats_;
+protected:
+  Stats *global_stats_;
   ResDBConfig config_;
   SystemInfo system_info_;
   MockResDBReplicaClient replica_client_;
@@ -209,7 +209,7 @@ TEST_F(CommitmentTest, ProcessPrepareMsgProposeMsgDelay) {
 }
 
 TEST_F(CommitmentTest, ProcessCommitMsg) {
-  EXPECT_CALL(replica_client_, BroadCast).Times(2);  // 1 propose + 1 prepare
+  EXPECT_CALL(replica_client_, BroadCast).Times(2); // 1 propose + 1 prepare
 
   EXPECT_EQ(AddProposeMsg(1), 0);
 
@@ -223,7 +223,7 @@ TEST_F(CommitmentTest, ProcessCommitMsg) {
 }
 
 TEST_F(CommitmentTest, ProcessCommitMsgProposeDelay) {
-  EXPECT_CALL(replica_client_, BroadCast).Times(2);  // 1 propose + 1 prepare
+  EXPECT_CALL(replica_client_, BroadCast).Times(2); // 1 propose + 1 prepare
 
   EXPECT_EQ(AddPrepareMsg(2), 0);
   EXPECT_EQ(AddPrepareMsg(3), 0);
@@ -238,7 +238,7 @@ TEST_F(CommitmentTest, ProcessCommitMsgProposeDelay) {
 }
 
 TEST_F(CommitmentTest, ProcessCommitMsgWithDuplicated) {
-  EXPECT_CALL(replica_client_, BroadCast).Times(2);  // 1 propose + 1 prepare
+  EXPECT_CALL(replica_client_, BroadCast).Times(2); // 1 propose + 1 prepare
 
   EXPECT_EQ(AddProposeMsg(1), 0);
   EXPECT_EQ(AddProposeMsg(1), -2);
@@ -277,7 +277,7 @@ TEST_F(CommitmentTest, ProcessCommitMsgWithResponse) {
 
   EXPECT_CALL(replica_client_, SendMessage(EqualsProto(resp_request), 1))
       .WillOnce(Invoke(
-          [&](const google::protobuf::Message& request, int64_t node_id) {
+          [&](const google::protobuf::Message &request, int64_t node_id) {
             done.set_value(true);
             return 0;
           }));
@@ -294,6 +294,6 @@ TEST_F(CommitmentTest, ProcessCommitMsgWithResponse) {
   done_future.get();
 }
 
-}  // namespace
+} // namespace
 
-}  // namespace resdb
+} // namespace resdb

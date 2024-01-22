@@ -72,4 +72,4 @@ TEST(TcpSocket, SendAfterClose) {
   svr_thead.join();
 }
 
-}  // namespace resdb
+} // namespace resdb

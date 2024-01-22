@@ -6,9 +6,9 @@
 namespace resdb {
 
 std::unique_ptr<ResDBServer> ServerFactory::CreateResDBServer(
-    char* config_file, char* private_key_file, char* cert_file,
-    std::unique_ptr<TransactionExecutorImpl> executor, char* logging_dir,
-    std::function<void(ResDBConfig* config)> config_handler) {
+    char *config_file, char *private_key_file, char *cert_file,
+    std::unique_ptr<TransactionExecutorImpl> executor, char *logging_dir,
+    std::function<void(ResDBConfig *config)> config_handler) {
   std::unique_ptr<ResDBConfig> config =
       GenerateResDBConfig(config_file, private_key_file, cert_file);
 
@@ -20,13 +20,14 @@ std::unique_ptr<ResDBServer> ServerFactory::CreateResDBServer(
       std::make_unique<ConsensusServicePBFT>(*config, std::move(executor)));
 }
 
-std::unique_ptr<ResDBServer> GenerateResDBServer(
-    char* config_file, char* private_key_file, char* cert_file,
-    std::unique_ptr<TransactionExecutorImpl> executor, char* logging_dir,
-    std::function<void(ResDBConfig* config)> config_handler) {
+std::unique_ptr<ResDBServer>
+GenerateResDBServer(char *config_file, char *private_key_file, char *cert_file,
+                    std::unique_ptr<TransactionExecutorImpl> executor,
+                    char *logging_dir,
+                    std::function<void(ResDBConfig *config)> config_handler) {
   return ServerFactory().CreateResDBServer(config_file, private_key_file,
                                            cert_file, std::move(executor),
                                            logging_dir, config_handler);
 }
 
-}  // namespace resdb
+} // namespace resdb

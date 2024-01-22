@@ -65,4 +65,4 @@ TEST(Logging, log) {
   }
 }
 
-}  // namespace resdb
+} // namespace resdb

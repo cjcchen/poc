@@ -8,9 +8,9 @@
 namespace resdb {
 
 class Recovery {
- public:
-  Recovery(const ResDBConfig& config, TransactionManager* transaction_manager,
-           ResDBReplicaClient* replica_client, SignatureVerifier* verifier);
+public:
+  Recovery(const ResDBConfig &config, TransactionManager *transaction_manager,
+           ResDBReplicaClient *replica_client, SignatureVerifier *verifier);
   virtual ~Recovery();
 
   virtual int ProcessRecoveryDataResp(std::unique_ptr<Context> context,
@@ -19,19 +19,19 @@ class Recovery {
   virtual int ProcessRecoveryData(std::unique_ptr<Context> context,
                                   std::unique_ptr<Request> request);
 
-  virtual void AddNewReplica(const ReplicaInfo& info);
+  virtual void AddNewReplica(const ReplicaInfo &info);
 
- private:
+private:
   void HealthCheck();
   bool IsPrimary();
 
- protected:
+protected:
   ResDBConfig config_;
-  TransactionManager* transaction_manager_;
+  TransactionManager *transaction_manager_;
   std::thread healthy_thread_;
-  ResDBReplicaClient* replica_client_;
-  SignatureVerifier* verifier_;
+  ResDBReplicaClient *replica_client_;
+  SignatureVerifier *verifier_;
   std::atomic<bool> stop_;
 };
 
-}  // namespace resdb
+} // namespace resdb

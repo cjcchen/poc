@@ -5,10 +5,10 @@
 namespace resdb {
 
 class TransactionExecutorImpl {
- public:
+public:
   TransactionExecutorImpl() = default;
   virtual ~TransactionExecutorImpl() = default;
 
-  virtual std::unique_ptr<std::string> ExecuteData(const std::string& request);
+  virtual std::unique_ptr<std::string> ExecuteData(const std::string &request);
 };
-}  // namespace resdb
+} // namespace resdb

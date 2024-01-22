@@ -14,8 +14,8 @@ using ::testing::ElementsAre;
 using ::testing::Invoke;
 using ::testing::Test;
 
-void AddReplicaToList(const std::string& ip, int port,
-                      std::vector<ReplicaInfo>* replica) {
+void AddReplicaToList(const std::string &ip, int port,
+                      std::vector<ReplicaInfo> *replica) {
   ReplicaInfo info;
   info.set_ip(ip);
   info.set_port(port);
@@ -23,15 +23,15 @@ void AddReplicaToList(const std::string& ip, int port,
 }
 
 class MockResDBStateClient : public ResDBStateClient {
- public:
-  MockResDBStateClient(const ResDBConfig& config) : ResDBStateClient(config) {}
+public:
+  MockResDBStateClient(const ResDBConfig &config) : ResDBStateClient(config) {}
 
   MOCK_METHOD(std::unique_ptr<ResDBClient>, GetResDBClient,
-              (const std::string&, int), (override));
+              (const std::string &, int), (override));
 };
 
 class StateClientTest : public Test {
- public:
+public:
   StateClientTest() {
     self_info_.set_ip("127.0.0.1");
     self_info_.set_port(1234);
@@ -47,7 +47,7 @@ class StateClientTest : public Test {
                                             CertificateInfo());
   }
 
- protected:
+protected:
   ReplicaInfo self_info_;
   std::vector<ReplicaInfo> replicas_;
   std::unique_ptr<ResDBConfig> config_;
@@ -66,11 +66,12 @@ TEST_F(StateClientTest, GetAllReplicaState) {
   std::atomic<int> idx = 0;
   EXPECT_CALL(client, GetResDBClient)
       .Times(4)
-      .WillRepeatedly(Invoke([&](const std::string& ip, int port) {
+      .WillRepeatedly(Invoke([&](const std::string &ip, int port) {
         auto client = std::make_unique<MockResDBClient>(ip, port);
         EXPECT_CALL(*client, RecvRawMessage)
-            .WillRepeatedly(Invoke([&](google::protobuf::Message* message) {
-              *reinterpret_cast<ReplicaState*>(message) = replica_states[idx++];
+            .WillRepeatedly(Invoke([&](google::protobuf::Message *message) {
+              *reinterpret_cast<ReplicaState *>(message) =
+                  replica_states[idx++];
               return 0;
             }));
         return client;
@@ -78,10 +79,10 @@ TEST_F(StateClientTest, GetAllReplicaState) {
   auto ret = client.GetReplicaStates();
   EXPECT_TRUE(ret.ok());
   std::set<int> results;
-  for (auto& state : *ret) {
+  for (auto &state : *ret) {
     auto it =
         std::find_if(replica_states.begin(), replica_states.end(),
-                     [&](const ReplicaState& cur_state) {
+                     [&](const ReplicaState &cur_state) {
                        return MessageDifferencer::Equals(cur_state, state);
                      });
     EXPECT_TRUE(it != replica_states.end());
@@ -104,13 +105,13 @@ TEST_F(StateClientTest, GetAllReplicaStateButOneFail) {
   std::atomic<int> idx = 0;
   EXPECT_CALL(client, GetResDBClient)
       .Times(4)
-      .WillRepeatedly(Invoke([&](const std::string& ip, int port) {
+      .WillRepeatedly(Invoke([&](const std::string &ip, int port) {
         auto client = std::make_unique<MockResDBClient>(ip, port);
         EXPECT_CALL(*client, RecvRawMessage)
-            .WillRepeatedly(Invoke([&](google::protobuf::Message* message) {
+            .WillRepeatedly(Invoke([&](google::protobuf::Message *message) {
               std::unique_lock<std::mutex> lk(mutex);
               if (idx < 3) {
-                *reinterpret_cast<ReplicaState*>(message) =
+                *reinterpret_cast<ReplicaState *>(message) =
                     replica_states[idx++];
                 return 0;
               } else {
@@ -122,10 +123,10 @@ TEST_F(StateClientTest, GetAllReplicaStateButOneFail) {
   auto ret = client.GetReplicaStates();
   EXPECT_TRUE(ret.ok());
   std::set<int> results;
-  for (auto& state : *ret) {
+  for (auto &state : *ret) {
     auto it =
         std::find_if(replica_states.begin(), replica_states.end(),
-                     [&](const ReplicaState& cur_state) {
+                     [&](const ReplicaState &cur_state) {
                        return MessageDifferencer::Equals(cur_state, state);
                      });
     EXPECT_TRUE(it != replica_states.end());
@@ -134,6 +135,6 @@ TEST_F(StateClientTest, GetAllReplicaStateButOneFail) {
   EXPECT_EQ(results.size(), 3);
 }
 
-}  // namespace
+} // namespace
 
-}  // namespace resdb
+} // namespace resdb

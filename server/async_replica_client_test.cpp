@@ -125,7 +125,8 @@ TEST(AsyncReplicaClientTest, Reconnect) {
       EXPECT_EQ(std::string(buf, len), "test");
       client_socket->Close();
       free(buf);
-      if (j == 0) bc2.set_value(true);
+      if (j == 0)
+        bc2.set_value(true);
     }
     bc1.set_value(true);
   });
@@ -137,7 +138,8 @@ TEST(AsyncReplicaClientTest, Reconnect) {
   AsyncReplicaClient client(&io_service, "127.0.0.1", 1234);
   for (int i = 0; i < 2; ++i) {
     EXPECT_EQ(client.SendMessage("test"), 0);
-    if (i == 0) bc2_done.get();
+    if (i == 0)
+      bc2_done.get();
   }
   bc1_done.get();
   delete work;
@@ -146,6 +148,6 @@ TEST(AsyncReplicaClientTest, Reconnect) {
   t.join();
 }
 
-}  // namespace
+} // namespace
 
-}  // namespace resdb
+} // namespace resdb

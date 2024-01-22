@@ -5,14 +5,14 @@
 namespace resdb {
 
 class MinerManager {
- public:
-  MinerManager(const ResDBPoCConfig& config);
+public:
+  MinerManager(const ResDBPoCConfig &config);
 
   std::vector<ReplicaInfo> GetReplicas();
 
- private:
+private:
   ResDBPoCConfig config_;
   std::vector<ReplicaInfo> replicas_;
 };
 
-}  // namespace resdb
+} // namespace resdb

@@ -17,8 +17,8 @@ namespace resdb {
 // like PBFT to commit.
 // It also handles the public key information exchanged from others.
 class ConsensusService : public ResDBService {
- public:
-  ConsensusService(const ResDBConfig& config);
+public:
+  ConsensusService(const ResDBConfig &config);
   virtual ~ConsensusService();
 
   // Process a request receied from ResDBServer.
@@ -33,13 +33,13 @@ class ConsensusService : public ResDBService {
   // Should be called by the instance or test.
   void Start();
 
- protected:
+protected:
   // BroadCast will generate signatures whiling sending data to other replicas.
-  virtual void BroadCast(const Request& request);
-  virtual void SendMessage(const google::protobuf::Message& message,
+  virtual void BroadCast(const Request &request);
+  virtual void SendMessage(const google::protobuf::Message &message,
                            int64_t node_id);
-  virtual void SendMessage(const google::protobuf::Message& message,
-                           const ReplicaInfo& client_info);
+  virtual void SendMessage(const google::protobuf::Message &message,
+                           const ReplicaInfo &client_info);
 
   virtual int Dispatch(std::unique_ptr<Context> context,
                        std::unique_ptr<Request> request);
@@ -53,25 +53,26 @@ class ConsensusService : public ResDBService {
                        std::unique_ptr<Request> request);
   // =======================================================
 
-  virtual std::unique_ptr<ResDBReplicaClient> GetReplicaClient(
-      const std::vector<ReplicaInfo>& replicas, bool is_use_long_conn = false);
+  virtual std::unique_ptr<ResDBReplicaClient>
+  GetReplicaClient(const std::vector<ReplicaInfo> &replicas,
+                   bool is_use_long_conn = false);
 
   virtual std::vector<ReplicaInfo> GetReplicas() = 0;
   virtual std::vector<ReplicaInfo> GetClientReplicas();
-  virtual void AddNewReplica(const ReplicaInfo& info);
-  void AddNewClient(const ReplicaInfo& info);
+  virtual void AddNewReplica(const ReplicaInfo &info);
+  void AddNewClient(const ReplicaInfo &info);
 
-  ResDBReplicaClient* GetBroadCastClient();
+  ResDBReplicaClient *GetBroadCastClient();
   // Update broad cast client to reflush the replica list.
   void UpdateBroadCastClient();
 
-  SignatureVerifier* GetSignatureVerifier();
+  SignatureVerifier *GetSignatureVerifier();
 
- private:
+private:
   void HeartBeat();
   void BroadCastThread();
 
- protected:
+protected:
   ResDBConfig config_;
   std::unique_ptr<SignatureVerifier> verifier_;
   struct QueueItem {
@@ -79,12 +80,12 @@ class ConsensusService : public ResDBService {
     std::vector<ReplicaInfo> replicas;
   };
 
- private:
+private:
   std::thread heartbeat_thread_;
   std::atomic<bool> is_ready_ = false;
   std::unique_ptr<ResDBReplicaClient> bc_client_;
   std::vector<ReplicaInfo> clients_;
-  Stats* global_stats_;
+  Stats *global_stats_;
 };
 
-}  // namespace resdb
+} // namespace resdb

@@ -24,8 +24,8 @@ bool TransactionCollector::HasClientContextList(uint64_t seq) const {
   return !context_list_.empty();
 }
 
-std::vector<std::unique_ptr<Context>> TransactionCollector::FetchContextList(
-    uint64_t seq) {
+std::vector<std::unique_ptr<Context>>
+TransactionCollector::FetchContextList(uint64_t seq) {
   if (seq != seq_) {
     return std::vector<std::unique_ptr<Context>>();
   }
@@ -33,10 +33,10 @@ std::vector<std::unique_ptr<Context>> TransactionCollector::FetchContextList(
 }
 
 int TransactionCollector::AddRequest(
-    std::unique_ptr<Request> request, const SignatureInfo& signature,
+    std::unique_ptr<Request> request, const SignatureInfo &signature,
     bool is_main_request,
-    std::function<void(const Request&, int received_count, CollectorDataType*,
-                       std::atomic<TransactionStatue>* status)>
+    std::function<void(const Request &, int received_count, CollectorDataType *,
+                       std::atomic<TransactionStatue> *status)>
         call_back) {
   if (request == nullptr) {
     return -2;
@@ -80,7 +80,7 @@ int TransactionCollector::AddRequest(
     if (need_data_collection_) {
       auto request_info = std::make_unique<RequestInfo>();
       request_info->signature = signature;
-      Request* raw_request = request.get();
+      Request *raw_request = request.get();
       request_info->request = std::move(request);
 
       std::unique_lock<std::mutex> lk(mutex_);
@@ -90,7 +90,7 @@ int TransactionCollector::AddRequest(
       }
       senders_[type][sender_id] = 1;
       data_[type][hash].push_back(std::move(request_info));
-      auto& it = data_[type][hash];
+      auto &it = data_[type][hash];
       call_back(*raw_request, senders_[type].count(), &it, &status_);
     } else {
       senders_[type][sender_id] = 1;
@@ -125,4 +125,4 @@ int TransactionCollector::Commit() {
   return 0;
 }
 
-}  // namespace resdb
+} // namespace resdb

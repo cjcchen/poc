@@ -11,8 +11,8 @@ namespace {
 using ::testing::Test;
 
 class KVServerImplTest : public Test {
- public:
-  int Set(const std::string& key, const std::string& value) {
+public:
+  int Set(const std::string &key, const std::string &value) {
     KVRequest request;
     request.set_cmd(KVRequest::SET);
     request.set_key(key);
@@ -26,7 +26,7 @@ class KVServerImplTest : public Test {
     return 0;
   }
 
-  std::string Get(const std::string& key) {
+  std::string Get(const std::string &key) {
     KVRequest request;
     request.set_cmd(KVRequest::GET);
     request.set_key(key);
@@ -46,7 +46,7 @@ class KVServerImplTest : public Test {
     return kv_response.value();
   }
 
- private:
+private:
   KVServerImpl impl_;
 };
 
@@ -57,6 +57,6 @@ TEST_F(KVServerImplTest, SetValue) {
 
 TEST_F(KVServerImplTest, GetValue) { EXPECT_EQ(Get("test_key"), ""); }
 
-}  // namespace
+} // namespace
 
-}  // namespace resdb
+} // namespace resdb

@@ -23,11 +23,10 @@ struct RequestInfo {
   SignatureInfo signature;
 };
 
-template <typename T>
-class AtomicUniquePtr {
- public:
+template <typename T> class AtomicUniquePtr {
+public:
   AtomicUniquePtr() : v_(0) {}
-  bool Set(std::unique_ptr<T>& new_ptr) {
+  bool Set(std::unique_ptr<T> &new_ptr) {
     int old_v = 0;
     bool res = v_.compare_exchange_strong(old_v, 1, std::memory_order_acq_rel,
                                           std::memory_order_acq_rel);
@@ -39,7 +38,7 @@ class AtomicUniquePtr {
     return true;
   }
 
-  T* Reference() {
+  T *Reference() {
     int v = v_.load(std::memory_order_acq_rel);
     if (v <= 1) {
       return nullptr;
@@ -47,18 +46,16 @@ class AtomicUniquePtr {
     return ptr_.get();
   }
 
- private:
+private:
   std::unique_ptr<T> ptr_;
   std::atomic<int> v_;
 };
 
 class TransactionCollector {
- public:
-  TransactionCollector(uint64_t seq, TransactionExecutor* executor,
+public:
+  TransactionCollector(uint64_t seq, TransactionExecutor *executor,
                        bool need_data_collection = false)
-      : seq_(seq),
-        executor_(executor),
-        status_(TransactionStatue::None),
+      : seq_(seq), executor_(executor), status_(TransactionStatue::None),
         need_data_collection_(need_data_collection) {}
 
   ~TransactionCollector() = default;
@@ -75,20 +72,20 @@ class TransactionCollector {
   // Add a message and count by its hash value.
   // After it is done call_back will be triggered.
   int AddRequest(std::unique_ptr<Request> request,
-                 const SignatureInfo& signature, bool is_main_request,
-                 std::function<void(const Request&, int received_count,
-                                    CollectorDataType* data,
-                                    std::atomic<TransactionStatue>* status)>
+                 const SignatureInfo &signature, bool is_main_request,
+                 std::function<void(const Request &, int received_count,
+                                    CollectorDataType *data,
+                                    std::atomic<TransactionStatue> *status)>
                      call_back);
 
   uint64_t Seq();
 
- private:
+private:
   int Commit();
 
- private:
+private:
   uint64_t seq_;
-  TransactionExecutor* executor_;
+  TransactionExecutor *executor_;
   std::atomic<bool> is_committed_ = false;
   std::vector<std::unique_ptr<Context>> context_list_;
   std::map<std::string, std::list<std::unique_ptr<RequestInfo>>>
@@ -100,4 +97,4 @@ class TransactionCollector {
   std::mutex mutex_;
 };
 
-}  // namespace resdb
+} // namespace resdb

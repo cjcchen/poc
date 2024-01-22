@@ -9,20 +9,20 @@
 namespace resdb {
 
 class AsyncReplicaClient {
- public:
-  AsyncReplicaClient(boost::asio::io_service* io_service, const std::string& ip,
+public:
+  AsyncReplicaClient(boost::asio::io_service *io_service, const std::string &ip,
                      int port, bool is_use_long_conn = false);
   virtual ~AsyncReplicaClient();
 
-  virtual int SendMessage(const std::string& data);
+  virtual int SendMessage(const std::string &data);
 
- private:
+private:
   void ReConnect();
   void OnSendNewMessage();
   void OnSendMessage();
   void OnSend();
 
- private:
+private:
   LockFreeQueue<std::string> queue_;
   std::unique_ptr<ResDBClient> client_;
   boost::asio::ip::tcp::socket socket_;
@@ -32,12 +32,12 @@ class AsyncReplicaClient {
   // ===== for async send =====
   std::unique_ptr<std::string> pending_data_;
 
-  size_t data_size_ = 0;          // the size of the data needed to be sent.
-  size_t sending_data_idx_ = 0;   // the current pos to be sent in data_ptr.
-  size_t sending_data_size_ = 0;  // the size needed to be sent.
-  const char* sending_data_ptr_ = nullptr;  // point to the data.
+  size_t data_size_ = 0;         // the size of the data needed to be sent.
+  size_t sending_data_idx_ = 0;  // the current pos to be sent in data_ptr.
+  size_t sending_data_size_ = 0; // the size needed to be sent.
+  const char *sending_data_ptr_ = nullptr; // point to the data.
 
-  int status_ = 0;  // sending status.
+  int status_ = 0; // sending status.
 };
 
-}  // namespace resdb
+} // namespace resdb

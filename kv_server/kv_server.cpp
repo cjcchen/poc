@@ -10,16 +10,16 @@ void ShowUsage() {
   printf("<config> <private_key> <cert_file> [logging_dir]\n");
 }
 
-int main(int argc, char** argv) {
+int main(int argc, char **argv) {
   if (argc < 3) {
     ShowUsage();
     exit(0);
   }
 
-  char* config_file = argv[1];
-  char* private_key_file = argv[2];
-  char* cert_file = argv[3];
-  char* logging_dir = nullptr;
+  char *config_file = argv[1];
+  char *private_key_file = argv[2];
+  char *cert_file = argv[3];
+  char *logging_dir = nullptr;
   if (argc >= 5) {
     logging_dir = argv[4];
   }

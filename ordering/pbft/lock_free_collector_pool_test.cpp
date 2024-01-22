@@ -12,19 +12,19 @@ namespace {
 using ::testing::Test;
 
 class CollectorPoolTest : public Test {
- public:
-  int AddRequest(LockFreeCollectorPool* pool, uint64_t seq) {
+public:
+  int AddRequest(LockFreeCollectorPool *pool, uint64_t seq) {
     Request request;
     request.set_seq(seq);
 
-    TransactionCollector* collector = pool->GetCollector(seq);
+    TransactionCollector *collector = pool->GetCollector(seq);
     if (collector == nullptr) {
       return 1;
     }
     return collector->AddRequest(
         std::make_unique<Request>(request), SignatureInfo(), false,
-        [](const Request&, int, TransactionCollector::CollectorDataType*,
-           std::atomic<TransactionStatue>*) {});
+        [](const Request &, int, TransactionCollector::CollectorDataType *,
+           std::atomic<TransactionStatue> *) {});
   }
 };
 
@@ -40,6 +40,6 @@ TEST_F(CollectorPoolTest, AddRequest) {
   EXPECT_EQ(AddRequest(&pool, 16), 0);
 }
 
-}  // namespace
+} // namespace
 
-}  // namespace resdb
+} // namespace resdb

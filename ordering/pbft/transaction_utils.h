@@ -9,7 +9,7 @@ enum CollectorResultCode {
   STATE_CHANGED = 1,
 };
 
-std::unique_ptr<Request> NewRequest(Request::Type type, const Request& request,
+std::unique_ptr<Request> NewRequest(Request::Type type, const Request &request,
                                     int sender_id);
 
-}  // namespace resdb
+} // namespace resdb

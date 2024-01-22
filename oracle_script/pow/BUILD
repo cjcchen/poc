@@ -18,7 +18,6 @@ py_binary(
     ],
 )
 
-
 py_binary(
     name = "run_cli",
     srcs = ["run_cli.py"],

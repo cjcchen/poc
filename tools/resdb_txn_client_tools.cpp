@@ -8,7 +8,7 @@ using resdb::ReplicaInfo;
 using resdb::ResDBConfig;
 using resdb::ResDBTxnClient;
 
-int main(int argc, char** argv) {
+int main(int argc, char **argv) {
   if (argc < 6) {
     printf(
         "<config path> <private key path> <cert_file> <min_seq> <max_seq>\n");
@@ -33,7 +33,7 @@ int main(int argc, char** argv) {
     LOG(ERROR) << "get replica state fail";
     exit(1);
   }
-  for (auto& txn : *resp) {
+  for (auto &txn : *resp) {
     LOG(ERROR) << "seq:" << txn.first << " txn:" << txn.second;
   }
 }

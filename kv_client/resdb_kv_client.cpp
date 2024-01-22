@@ -6,10 +6,10 @@
 
 namespace resdb {
 
-ResDBKVClient::ResDBKVClient(const ResDBConfig& config)
+ResDBKVClient::ResDBKVClient(const ResDBConfig &config)
     : ResDBUserClient(config) {}
 
-int ResDBKVClient::Set(const std::string& key, const std::string& data) {
+int ResDBKVClient::Set(const std::string &key, const std::string &data) {
   KVRequest request;
   request.set_cmd(KVRequest::SET);
   request.set_key(key);
@@ -17,7 +17,7 @@ int ResDBKVClient::Set(const std::string& key, const std::string& data) {
   return SendRequest(request);
 }
 
-std::unique_ptr<std::string> ResDBKVClient::Get(const std::string& key) {
+std::unique_ptr<std::string> ResDBKVClient::Get(const std::string &key) {
   KVRequest request;
   request.set_cmd(KVRequest::GET);
   request.set_key(key);
@@ -30,4 +30,4 @@ std::unique_ptr<std::string> ResDBKVClient::Get(const std::string& key) {
   return std::make_unique<std::string>(response.value());
 }
 
-}  // namespace resdb
+} // namespace resdb

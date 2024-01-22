@@ -5,7 +5,7 @@ cc_library(
     srcs = ["stats.cpp"],
     hdrs = ["stats.h"],
     deps = [
-	":prometheus_handler",
+        ":prometheus_handler",
         "//common:comm",
         "//common/utils",
     ],
@@ -23,7 +23,10 @@ cc_library(
 
 cc_library(
     name = "influxdb_handler",
-    srcs = ["influxdb_handler.cpp", "infludb.hpp"],
+    srcs = [
+        "infludb.hpp",
+        "influxdb_handler.cpp",
+    ],
     hdrs = ["influxdb_handler.h"],
     deps = [
         "//common:comm",

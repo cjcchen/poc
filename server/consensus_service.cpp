@@ -9,9 +9,9 @@ namespace resdb {
 
 namespace {
 
-bool ReplicaExisted(const ReplicaInfo& replica_info,
-                    const std::vector<ReplicaInfo>& replicas) {
-  for (auto& rep : replicas) {
+bool ReplicaExisted(const ReplicaInfo &replica_info,
+                    const std::vector<ReplicaInfo> &replicas) {
+  for (auto &rep : replicas) {
     if (rep.id() == replica_info.id()) {
       return true;
     }
@@ -19,9 +19,9 @@ bool ReplicaExisted(const ReplicaInfo& replica_info,
   return false;
 }
 
-}  // namespace
+} // namespace
 
-ConsensusService::ConsensusService(const ResDBConfig& config)
+ConsensusService::ConsensusService(const ResDBConfig &config)
     : config_(config), global_stats_(Stats::GetGlobalStats()) {
   if (config_.SignatureVerifierEnabled()) {
     verifier_ = std::make_unique<SignatureVerifier>(
@@ -39,11 +39,11 @@ void ConsensusService::UpdateBroadCastClient() {
   bc_client_ = GetReplicaClient(GetReplicas(), true);
 }
 
-ResDBReplicaClient* ConsensusService::GetBroadCastClient() {
+ResDBReplicaClient *ConsensusService::GetBroadCastClient() {
   return bc_client_.get();
 }
 
-SignatureVerifier* ConsensusService::GetSignatureVerifier() {
+SignatureVerifier *ConsensusService::GetSignatureVerifier() {
   return verifier_ == nullptr ? nullptr : verifier_.get();
 }
 
@@ -60,7 +60,7 @@ void ConsensusService::Start() {
   ResDBService::Start();
   if (config_.HeartBeatEnabled() && verifier_) {
     heartbeat_thread_ =
-        std::thread(&ConsensusService::HeartBeat, this);  // pass by reference
+        std::thread(&ConsensusService::HeartBeat, this); // pass by reference
   }
 }
 
@@ -76,10 +76,10 @@ void ConsensusService::HeartBeat() {
     std::vector<ReplicaInfo> replicas = GetReplicas();
     std::vector<ReplicaInfo> client_replicas = GetClientReplicas();
     HeartBeatInfo hb_info;
-    for (const auto& key : keys) {
+    for (const auto &key : keys) {
       *hb_info.add_public_keys() = key;
     }
-    for (auto& client_rep : client_replicas) {
+    for (auto &client_rep : client_replicas) {
       replicas.push_back(client_rep);
     }
     auto client = GetReplicaClient(replicas);
@@ -178,7 +178,7 @@ int ConsensusService::ProcessHeartBeat(std::unique_ptr<Context> context,
 
   int replica_num = 0;
   // Update the public keys received from others.
-  for (const auto& public_key : hb_info.public_keys()) {
+  for (const auto &public_key : hb_info.public_keys()) {
     if (verifier_ && !verifier_->AddPublicKey(public_key)) {
       LOG(ERROR) << "set public key fail from:"
                  << public_key.public_key_info().node_id();
@@ -222,18 +222,18 @@ std::vector<ReplicaInfo> ConsensusService::GetClientReplicas() {
   return clients_;
 }
 
-void ConsensusService::BroadCast(const Request& request) {
+void ConsensusService::BroadCast(const Request &request) {
   int ret = bc_client_->SendMessage(request);
   if (ret < 0) {
     LOG(ERROR) << "broadcast request fail:";
   }
 }
 
-void ConsensusService::SendMessage(const google::protobuf::Message& message,
+void ConsensusService::SendMessage(const google::protobuf::Message &message,
                                    int64_t node_id) {
   std::vector<ReplicaInfo> replicas = GetReplicas();
   ReplicaInfo target_replica;
-  for (const auto& replica : replicas) {
+  for (const auto &replica : replicas) {
     if (replica.id() == node_id) {
       target_replica = replica;
       break;
@@ -250,8 +250,8 @@ void ConsensusService::SendMessage(const google::protobuf::Message& message,
   }
 }
 
-void ConsensusService::SendMessage(const google::protobuf::Message& message,
-                                   const ReplicaInfo& client_info) {
+void ConsensusService::SendMessage(const google::protobuf::Message &message,
+                                   const ReplicaInfo &client_info) {
   auto client = GetReplicaClient({client_info});
   if (client == nullptr) {
     return;
@@ -262,18 +262,19 @@ void ConsensusService::SendMessage(const google::protobuf::Message& message,
   }
 }
 
-std::unique_ptr<ResDBReplicaClient> ConsensusService::GetReplicaClient(
-    const std::vector<ReplicaInfo>& replicas, bool is_use_long_conn) {
+std::unique_ptr<ResDBReplicaClient>
+ConsensusService::GetReplicaClient(const std::vector<ReplicaInfo> &replicas,
+                                   bool is_use_long_conn) {
   return std::make_unique<ResDBReplicaClient>(
       replicas, verifier_ == nullptr ? nullptr : verifier_.get(),
       is_use_long_conn, config_.GetOutputWorkerNum());
 }
 
-void ConsensusService::AddNewReplica(const ReplicaInfo& info) {}
+void ConsensusService::AddNewReplica(const ReplicaInfo &info) {}
 
-void ConsensusService::AddNewClient(const ReplicaInfo& info) {
+void ConsensusService::AddNewClient(const ReplicaInfo &info) {
   clients_.push_back(info);
   bc_client_->UpdateClientReplicas(clients_);
 }
 
-}  // namespace resdb
+} // namespace resdb

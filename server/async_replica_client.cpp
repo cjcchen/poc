@@ -8,8 +8,8 @@
 
 namespace resdb {
 
-AsyncReplicaClient::AsyncReplicaClient(boost::asio::io_service* io_service,
-                                       const std::string& ip, int port,
+AsyncReplicaClient::AsyncReplicaClient(boost::asio::io_service *io_service,
+                                       const std::string &ip, int port,
                                        bool is_use_long_conn)
     : socket_(*io_service),
       endpoint_(boost::asio::ip::address::from_string(ip), port),
@@ -17,7 +17,7 @@ AsyncReplicaClient::AsyncReplicaClient(boost::asio::io_service* io_service,
 
 AsyncReplicaClient::~AsyncReplicaClient() {}
 
-int AsyncReplicaClient::SendMessage(const std::string& data) {
+int AsyncReplicaClient::SendMessage(const std::string &data) {
   queue_.Push(std::make_unique<std::string>(data));
   if (!in_process_.load()) {
     bool old_value = false;
@@ -45,7 +45,7 @@ void AsyncReplicaClient::OnSendMessage() {
   if (status_ == 0) {
     data_size_ = pending_data_->size();
     sending_data_size_ = sizeof(data_size_);
-    sending_data_ptr_ = reinterpret_cast<char*>(&data_size_);
+    sending_data_ptr_ = reinterpret_cast<char *>(&data_size_);
     sending_data_idx_ = 0;
     status_ = 1;
     OnSend();
@@ -65,7 +65,7 @@ void AsyncReplicaClient::OnSend() {
   socket_.async_write_some(
       boost::asio::buffer(sending_data_ptr_ + sending_data_idx_,
                           sending_data_size_ - sending_data_idx_),
-      [&](const boost::system::error_code& error, size_t send_size) {
+      [&](const boost::system::error_code &error, size_t send_size) {
         if (error) {
           ReConnect();
         } else {
@@ -80,7 +80,7 @@ void AsyncReplicaClient::OnSend() {
 }
 
 void AsyncReplicaClient::ReConnect() {
-  socket_.async_connect(endpoint_, [&](const boost::system::error_code& error) {
+  socket_.async_connect(endpoint_, [&](const boost::system::error_code &error) {
     if (!error) {
       status_ = 0;
       OnSendMessage();
@@ -91,4 +91,4 @@ void AsyncReplicaClient::ReConnect() {
   });
 }
 
-}  // namespace resdb
+} // namespace resdb

@@ -7,7 +7,7 @@
 
 namespace resdb {
 
-ResDBClient::ResDBClient(const std::string& ip, int port)
+ResDBClient::ResDBClient(const std::string &ip, int port)
     : ip_(ip), port_(port) {
   socket_ = std::make_unique<TcpSocket>();
   socket_->SetSendTimeout(300);
@@ -30,7 +30,7 @@ ResDBClient::ResDBClient(std::unique_ptr<Socket> socket, bool connected) {
 
 void ResDBClient::Close() { socket_->Close(); }
 
-void ResDBClient::SetSignatureVerifier(SignatureVerifier* verifier) {
+void ResDBClient::SetSignatureVerifier(SignatureVerifier *verifier) {
   verifier_ = verifier;
 }
 
@@ -38,7 +38,7 @@ void ResDBClient::SetSocket(std::unique_ptr<Socket> socket) {
   socket_ = std::move(socket);
 }
 
-void ResDBClient::SetDestReplicaInfo(const ReplicaInfo& replica) {
+void ResDBClient::SetDestReplicaInfo(const ReplicaInfo &replica) {
   ip_ = replica.ip();
   port_ = replica.port();
 }
@@ -53,12 +53,12 @@ int ResDBClient::Connect() {
   return socket_->Connect(ip_, port_);
 }
 
-int ResDBClient::SendDataInternal(const std::string& data) {
+int ResDBClient::SendDataInternal(const std::string &data) {
   return socket_->Send(data);
 }
 
 // Connect to the server if not connected and send data.
-int ResDBClient::SendFromKeepAlive(const std::string& data) {
+int ResDBClient::SendFromKeepAlive(const std::string &data) {
   for (int i = 0; i < max_retry_time_; ++i) {
     if (!long_connecting_) {
       if (Connect() == 0) {
@@ -78,7 +78,7 @@ int ResDBClient::SendFromKeepAlive(const std::string& data) {
   return -1;
 }
 
-int ResDBClient::Send(const std::string& data) {
+int ResDBClient::Send(const std::string &data) {
   if (long_connect_tion_) {
     return SendFromKeepAlive(data);
   }
@@ -100,19 +100,20 @@ int ResDBClient::Send(const std::string& data) {
 }
 
 // Receive data from the server.
-int ResDBClient::Recv(std::string* data) {
+int ResDBClient::Recv(std::string *data) {
   std::unique_ptr<DataInfo> resp = std::make_unique<DataInfo>();
   int ret = socket_->Recv(&resp->buff, &resp->data_len);
   if (ret > 0) {
-    *data = std::string((char*)resp->buff, resp->data_len);
+    *data = std::string((char *)resp->buff, resp->data_len);
   }
   return ret;
 }
 
 // Sign the message if verifier has been provied and send the message to the
 // server.
-std::string ResDBClient::GetRawMessageString(
-    const google::protobuf::Message& message, SignatureVerifier* verifier) {
+std::string
+ResDBClient::GetRawMessageString(const google::protobuf::Message &message,
+                                 SignatureVerifier *verifier) {
   ResDBMessage sig_message;
   if (!message.SerializeToString(sig_message.mutable_data())) {
     return "";
@@ -136,15 +137,15 @@ std::string ResDBClient::GetRawMessageString(
   return message_str;
 }
 
-int ResDBClient::SendRawMessageData(const std::string& message_str) {
+int ResDBClient::SendRawMessageData(const std::string &message_str) {
   return Send(message_str);
 }
 
-int ResDBClient::RecvRawMessageData(std::string* message_str) {
+int ResDBClient::RecvRawMessageData(std::string *message_str) {
   return Recv(message_str);
 }
 
-int ResDBClient::SendRawMessage(const google::protobuf::Message& message) {
+int ResDBClient::SendRawMessage(const google::protobuf::Message &message) {
   ResDBMessage sig_message;
   if (!message.SerializeToString(sig_message.mutable_data())) {
     return -1;
@@ -165,7 +166,7 @@ int ResDBClient::SendRawMessage(const google::protobuf::Message& message) {
   return Send(message_str);
 }
 
-int ResDBClient::RecvRawMessageStr(std::string* message) {
+int ResDBClient::RecvRawMessageStr(std::string *message) {
   std::string recv_str;
   int ret = Recv(&recv_str);
   if (ret <= 0) {
@@ -180,7 +181,7 @@ int ResDBClient::RecvRawMessageStr(std::string* message) {
   return 0;
 }
 
-int ResDBClient::RecvRawMessage(google::protobuf::Message* message) {
+int ResDBClient::RecvRawMessage(google::protobuf::Message *message) {
   std::string resp_data;
   int ret = Recv(&resp_data);
   if (ret <= 0) {
@@ -198,7 +199,7 @@ int ResDBClient::RecvRawMessage(google::protobuf::Message* message) {
   return 0;
 }
 
-int ResDBClient::SendRequest(const google::protobuf::Message& message,
+int ResDBClient::SendRequest(const google::protobuf::Message &message,
                              Request::Type type, bool need_response) {
   Request request;
   request.set_type(type);
@@ -209,4 +210,4 @@ int ResDBClient::SendRequest(const google::protobuf::Message& message,
   return SendRawMessage(request);
 }
 
-}  // namespace resdb
+} // namespace resdb

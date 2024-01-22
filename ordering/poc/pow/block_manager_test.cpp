@@ -41,7 +41,7 @@ CertificateInfo GetCertInfo(int64_t node_id) {
 }
 
 class BlockManagerTest : public Test {
- protected:
+protected:
   BlockManagerTest()
       : bft_config_({GenerateReplicaInfo(1, "127.0.0.1", 1234),
                      GenerateReplicaInfo(2, "127.0.0.1", 1235),
@@ -60,17 +60,18 @@ class BlockManagerTest : public Test {
     config_.SetDifficulty(1);
   }
 
-  Block* GenerateNewBlock(
-      BlockManager* block_manager,
-      std::unique_ptr<BatchClientTransactions> client_request) {
+  Block *
+  GenerateNewBlock(BlockManager *block_manager,
+                   std::unique_ptr<BatchClientTransactions> client_request) {
     if (block_manager->SetNewMiningBlock(std::move(client_request)) != 0) {
       return nullptr;
     }
     return block_manager->GetNewMiningBlock();
   }
 
-  Block GenerateExpectedBlock(
-      const BatchClientTransactions& batch_client_request, int height) {
+  Block
+  GenerateExpectedBlock(const BatchClientTransactions &batch_client_request,
+                        int height) {
     Block expected_block;
     expected_block.mutable_header()->set_height(height);
     batch_client_request.SerializeToString(
@@ -99,7 +100,7 @@ TEST_F(BlockManagerTest, GenerateNewBlock) {
 
   Block expected_block = GenerateExpectedBlock(*batch_client_request, 1);
 
-  Block* block =
+  Block *block =
       GenerateNewBlock(&block_manager, std::move(batch_client_request));
 
   EXPECT_THAT(block, Pointee(EqualsProto(expected_block)));
@@ -108,7 +109,7 @@ TEST_F(BlockManagerTest, GenerateNewBlock) {
 TEST_F(BlockManagerTest, ResetSliceFail) {
   BlockManager block_manager(config_);
   BatchClientTransactions batch_client_request;
-  ClientTransactions* client_request = batch_client_request.add_transactions();
+  ClientTransactions *client_request = batch_client_request.add_transactions();
   client_request->set_seq(1);
   client_request->set_transaction_data("test");
   batch_client_request.set_min_seq(1);
@@ -116,7 +117,7 @@ TEST_F(BlockManagerTest, ResetSliceFail) {
 
   Block expected_block = GenerateExpectedBlock(batch_client_request, 1);
 
-  Block* block = GenerateNewBlock(
+  Block *block = GenerateNewBlock(
       &block_manager,
       std::make_unique<BatchClientTransactions>(batch_client_request));
   EXPECT_THAT(block, Pointee(EqualsProto(expected_block)));
@@ -131,7 +132,7 @@ TEST_F(BlockManagerTest, ResetSliceFail) {
 TEST_F(BlockManagerTest, ResetSlice) {
   BlockManager block_manager(config_);
   BatchClientTransactions batch_client_request;
-  ClientTransactions* client_request = batch_client_request.add_transactions();
+  ClientTransactions *client_request = batch_client_request.add_transactions();
   client_request->set_seq(1);
   client_request->set_transaction_data("test");
   batch_client_request.set_min_seq(1);
@@ -139,7 +140,7 @@ TEST_F(BlockManagerTest, ResetSlice) {
 
   Block expected_block = GenerateExpectedBlock(batch_client_request, 1);
 
-  Block* block = GenerateNewBlock(
+  Block *block = GenerateNewBlock(
       &block_manager,
       std::make_unique<BatchClientTransactions>(batch_client_request));
   EXPECT_THAT(block, Pointee(EqualsProto(expected_block)));
@@ -171,7 +172,7 @@ TEST_F(BlockManagerTest, Mine) {
 
   Block expected_block = GenerateExpectedBlock(*batch_client_request, 1);
 
-  Block* block =
+  Block *block =
       GenerateNewBlock(&block_manager, std::move(batch_client_request));
   EXPECT_THAT(block, Pointee(EqualsProto(expected_block)));
 
@@ -192,7 +193,7 @@ TEST_F(BlockManagerTest, MineFail) {
 
   Block expected_block = GenerateExpectedBlock(*batch_client_request, 1);
 
-  Block* block =
+  Block *block =
       GenerateNewBlock(&block_manager, std::move(batch_client_request));
   EXPECT_THAT(block, Pointee(EqualsProto(expected_block)));
 
@@ -210,7 +211,7 @@ TEST_F(BlockManagerTest, MineSeqNotValid) {
   batch_client_request->set_min_seq(2);
   batch_client_request->set_max_seq(2);
 
-  Block* block =
+  Block *block =
       GenerateNewBlock(&block_manager, std::move(batch_client_request));
   EXPECT_EQ(block, nullptr);
 }
@@ -228,7 +229,7 @@ TEST_F(BlockManagerTest, Commit) {
 
   Block expected_block = GenerateExpectedBlock(*batch_client_request, 1);
 
-  Block* block =
+  Block *block =
       GenerateNewBlock(&block_manager, std::move(batch_client_request));
   EXPECT_THAT(block, Pointee(EqualsProto(expected_block)));
   EXPECT_TRUE(block_manager.Mine().ok());
@@ -253,7 +254,7 @@ TEST_F(BlockManagerTest, MineACommittedSeq) {
 
     Block expected_block = GenerateExpectedBlock(*batch_client_request, 1);
 
-    Block* block =
+    Block *block =
         GenerateNewBlock(&block_manager, std::move(batch_client_request));
     EXPECT_THAT(block, Pointee(EqualsProto(expected_block)));
 
@@ -272,7 +273,7 @@ TEST_F(BlockManagerTest, MineACommittedSeq) {
 
     Block expected_block = GenerateExpectedBlock(*batch_client_request, 1);
 
-    Block* block =
+    Block *block =
         GenerateNewBlock(&block_manager, std::move(batch_client_request));
     EXPECT_EQ(block, nullptr);
   }
@@ -291,7 +292,7 @@ TEST_F(BlockManagerTest, CommitWithInvalidHeight) {
 
   Block expected_block = GenerateExpectedBlock(*batch_client_request, 1);
 
-  Block* block =
+  Block *block =
       GenerateNewBlock(&block_manager, std::move(batch_client_request));
   EXPECT_THAT(block, Pointee(EqualsProto(expected_block)));
   EXPECT_TRUE(block_manager.Mine().ok());
@@ -316,7 +317,7 @@ TEST_F(BlockManagerTest, MineCommittedBlock) {
 
   Block expected_block = GenerateExpectedBlock(*batch_client_request, 1);
 
-  Block* block =
+  Block *block =
       GenerateNewBlock(&block_manager, std::move(batch_client_request));
   std::unique_ptr<Block> d_block = std::make_unique<Block>(*block);
 
@@ -343,7 +344,7 @@ TEST_F(BlockManagerTest, VerifyWithInvalidHash) {
 
   Block expected_block = GenerateExpectedBlock(*batch_client_request, 1);
 
-  Block* block =
+  Block *block =
       GenerateNewBlock(&block_manager, std::move(batch_client_request));
   EXPECT_THAT(block, Pointee(EqualsProto(expected_block)));
   EXPECT_TRUE(block_manager.Mine().ok());
@@ -365,7 +366,7 @@ TEST_F(BlockManagerTest, VerifyBlockWithInvalidTxn) {
 
   Block expected_block = GenerateExpectedBlock(*batch_client_request, 1);
 
-  Block* block =
+  Block *block =
       GenerateNewBlock(&block_manager, std::move(batch_client_request));
   EXPECT_THAT(block, Pointee(EqualsProto(expected_block)));
   EXPECT_TRUE(block_manager.Mine().ok());
@@ -387,7 +388,7 @@ TEST_F(BlockManagerTest, VerifyBlock) {
 
   Block expected_block = GenerateExpectedBlock(*batch_client_request, 1);
 
-  Block* block =
+  Block *block =
       GenerateNewBlock(&block_manager, std::move(batch_client_request));
   EXPECT_TRUE(block_manager.Mine().ok());
   LOG(ERROR) << "block:" << block->DebugString();
@@ -396,5 +397,5 @@ TEST_F(BlockManagerTest, VerifyBlock) {
   EXPECT_TRUE(block_manager.VerifyBlock(block));
 }
 
-}  // namespace
-}  // namespace resdb
+} // namespace
+} // namespace resdb

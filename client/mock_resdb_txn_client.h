@@ -7,11 +7,11 @@ namespace resdb {
 
 // A mock class for ResDBClient.
 class MockResDBTxnClient : public ResDBTxnClient {
- public:
-  MockResDBTxnClient(const ResDBConfig& config) : ResDBTxnClient(config) {}
+public:
+  MockResDBTxnClient(const ResDBConfig &config) : ResDBTxnClient(config) {}
 
   MOCK_METHOD((absl::StatusOr<std::vector<std::pair<uint64_t, std::string>>>),
               GetTxn, (uint64_t, uint64_t), (override));
 };
 
-}  // namespace resdb
+} // namespace resdb

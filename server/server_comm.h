@@ -10,4 +10,4 @@ struct Context {
   SignatureInfo signature;
 };
 
-}  // namespace resdb
+} // namespace resdb

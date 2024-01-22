@@ -12,7 +12,7 @@ using ::resdb::testing::EqualsProto;
 using ::testing::ElementsAre;
 using ::testing::ElementsAreArray;
 
-ReplicaInfo GenerateReplicaInfo(const std::string& ip, int port,
+ReplicaInfo GenerateReplicaInfo(const std::string &ip, int port,
                                 int64_t node_id) {
   ReplicaInfo info;
   info.set_ip(ip);
@@ -51,6 +51,6 @@ TEST(SystemInfoTest, GetReplicas) {
                                                 EqualsProto(new_replica)));
 }
 
-}  // namespace
+} // namespace
 
-}  // namespace resdb
+} // namespace resdb

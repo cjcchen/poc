@@ -11,7 +11,7 @@
 namespace resdb {
 namespace {
 
-KeyInfo ReadKey(const std::string& file_name) {
+KeyInfo ReadKey(const std::string &file_name) {
   int fd = open(file_name.c_str(), O_RDONLY, 0666);
   if (fd < 0) {
     LOG(ERROR) << "open file:" << file_name << " fail:" << strerror(errno);
@@ -34,7 +34,7 @@ KeyInfo ReadKey(const std::string& file_name) {
   return key;
 }
 
-CertificateInfo ReadCert(const std::string& file_name) {
+CertificateInfo ReadCert(const std::string &file_name) {
   int fd = open(file_name.c_str(), O_RDONLY, 0666);
   if (fd < 0) {
     LOG(ERROR) << "open file:" << file_name << " fail" << strerror(errno);
@@ -57,9 +57,9 @@ CertificateInfo ReadCert(const std::string& file_name) {
   return info;
 }
 
-}  // namespace
+} // namespace
 
-ReplicaInfo GenerateReplicaInfo(int id, const std::string& ip, int port) {
+ReplicaInfo GenerateReplicaInfo(int id, const std::string &ip, int port) {
   ReplicaInfo info;
   info.set_id(id);
   info.set_ip(ip);
@@ -67,7 +67,7 @@ ReplicaInfo GenerateReplicaInfo(int id, const std::string& ip, int port) {
   return info;
 }
 
-std::vector<ReplicaInfo> ReadConfig(const std::string& file_name) {
+std::vector<ReplicaInfo> ReadConfig(const std::string &file_name) {
   std::vector<ReplicaInfo> replicas;
   std::string line;
   std::ifstream infile(file_name.c_str());
@@ -85,8 +85,8 @@ std::vector<ReplicaInfo> ReadConfig(const std::string& file_name) {
 }
 
 std::unique_ptr<ResDBConfig> GenerateResDBConfig(
-    const std::string& config_file, const std::string& private_key_file,
-    const std::string& cert_file, std::optional<ReplicaInfo> self_info,
+    const std::string &config_file, const std::string &private_key_file,
+    const std::string &cert_file, std::optional<ReplicaInfo> self_info,
     std::optional<ConfigGenFunc> gen_func) {
   std::vector<ReplicaInfo> replicas = ReadConfig(config_file);
   KeyInfo private_key = ReadKey(private_key_file);
@@ -111,9 +111,9 @@ std::unique_ptr<ResDBConfig> GenerateResDBConfig(
                                        cert_info);
 }
 
-ResDBConfig GenerateResDBConfig(const std::string& config_file) {
+ResDBConfig GenerateResDBConfig(const std::string &config_file) {
   std::vector<ReplicaInfo> replicas = ReadConfig(config_file);
   return ResDBConfig(replicas, ReplicaInfo());
 }
 
-}  // namespace resdb
+} // namespace resdb

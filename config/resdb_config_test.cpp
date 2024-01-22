@@ -26,7 +26,7 @@ MATCHER_P(EqualsReplicas, replicas, "") {
   return true;
 }
 
-ReplicaInfo GenerateReplicaInfo(const std::string& ip, int port) {
+ReplicaInfo GenerateReplicaInfo(const std::string &ip, int port) {
   ReplicaInfo info;
   info.set_ip(ip);
   info.set_port(port);
@@ -102,6 +102,6 @@ TEST(TcpSocket, ResDBConfigWith2Replicas) {
   EXPECT_EQ(config.GetMinDataReceiveNum(), 1);
 }
 
-}  // namespace
+} // namespace
 
-}  // namespace resdb
+} // namespace resdb

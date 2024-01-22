@@ -8,7 +8,7 @@ using resdb::ReplicaInfo;
 using resdb::ResDBConfig;
 using resdb::ResDBStateClient;
 
-int main(int argc, char** argv) {
+int main(int argc, char **argv) {
   if (argc < 4) {
     printf("<config path> <private key path> <cert_file>\n");
     return 0;
@@ -28,7 +28,7 @@ int main(int argc, char** argv) {
     LOG(ERROR) << "get replica state fail";
     exit(1);
   }
-  for (auto& state : *states) {
+  for (auto &state : *states) {
     LOG(ERROR) << state.DebugString();
   }
 }

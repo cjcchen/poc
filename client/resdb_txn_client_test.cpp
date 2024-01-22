@@ -19,10 +19,10 @@ using ::testing::Pointee;
 using ::testing::Return;
 
 class MockResDBTxnClient : public ResDBTxnClient {
- public:
-  MockResDBTxnClient(const ResDBConfig& config) : ResDBTxnClient(config) {}
+public:
+  MockResDBTxnClient(const ResDBConfig &config) : ResDBTxnClient(config) {}
   MOCK_METHOD(std::unique_ptr<ResDBClient>, GetResDBClient,
-              (const std::string&, int), (override));
+              (const std::string &, int), (override));
 };
 
 TEST(ResDBTxnClientTest, GetTransactionsFail) {
@@ -38,13 +38,13 @@ TEST(ResDBTxnClientTest, GetTransactionsFail) {
   MockResDBTxnClient client(config);
   EXPECT_CALL(client, GetResDBClient)
       .Times(4)
-      .WillRepeatedly(Invoke([&](const std::string& ip, int port) {
+      .WillRepeatedly(Invoke([&](const std::string &ip, int port) {
         auto client = std::make_unique<MockResDBClient>(ip, port);
         EXPECT_CALL(*client,
                     SendRequest(EqualsProto(request), Request::TYPE_QUERY, _))
             .WillOnce(Return(0));
         EXPECT_CALL(*client, RecvRawMessageStr)
-            .WillOnce(Invoke([&](std::string* resp) { return -1; }));
+            .WillOnce(Invoke([&](std::string *resp) { return -1; }));
         return client;
       }));
   absl::StatusOr<std::vector<std::pair<uint64_t, std::string>>> resp =
@@ -70,14 +70,14 @@ TEST(ResDBTxnClientTest, GetTransactions) {
   MockResDBTxnClient client(config);
   EXPECT_CALL(client, GetResDBClient)
       .Times(4)
-      .WillRepeatedly(Invoke([&](const std::string& ip, int port) {
+      .WillRepeatedly(Invoke([&](const std::string &ip, int port) {
         auto client = std::make_unique<MockResDBClient>(ip, port);
         EXPECT_CALL(*client,
                     SendRequest(EqualsProto(request), Request::TYPE_QUERY, _))
             .WillOnce(Return(0));
 
         EXPECT_CALL(*client, RecvRawMessageStr)
-            .WillOnce(Invoke([&](std::string* resp) {
+            .WillOnce(Invoke([&](std::string *resp) {
               query_resp.SerializeToString(resp);
               return 0;
             }));
@@ -108,7 +108,7 @@ TEST(ResDBTxnClientTest, GetTransactionsOneDelay) {
   MockResDBTxnClient client(config);
   EXPECT_CALL(client, GetResDBClient)
       .Times(4)
-      .WillRepeatedly(Invoke([&](const std::string& ip, int port) {
+      .WillRepeatedly(Invoke([&](const std::string &ip, int port) {
         auto client = std::make_unique<MockResDBClient>(ip, port);
         EXPECT_CALL(*client,
                     SendRequest(EqualsProto(request), Request::TYPE_QUERY, _))
@@ -116,13 +116,13 @@ TEST(ResDBTxnClientTest, GetTransactionsOneDelay) {
 
         if (port == 1237) {
           EXPECT_CALL(*client, RecvRawMessageStr)
-              .WillOnce(Invoke([&](std::string* resp) {
+              .WillOnce(Invoke([&](std::string *resp) {
                 sleep(2);
                 return 0;
               }));
         } else {
           EXPECT_CALL(*client, RecvRawMessageStr)
-              .WillOnce(Invoke([&](std::string* resp) {
+              .WillOnce(Invoke([&](std::string *resp) {
                 query_resp.SerializeToString(resp);
                 return 0;
               }));
@@ -136,5 +136,5 @@ TEST(ResDBTxnClientTest, GetTransactionsOneDelay) {
   EXPECT_THAT(*resp, ElementsAre(std::make_pair(1, "test_resp")));
 }
 
-}  // namespace
-}  // namespace resdb
+} // namespace
+} // namespace resdb

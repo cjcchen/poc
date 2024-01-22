@@ -6,9 +6,9 @@
 #include "crypto/signature_verifier.h"
 namespace resdb {
 
-HashValue DigestToHash(const std::string& value) {
+HashValue DigestToHash(const std::string &value) {
   HashValue hash;
-  const char* pos = value.c_str();
+  const char *pos = value.c_str();
   for (int j = 0; j < 4; ++j) {
     uint64_t v = 0;
     for (int i = 56; i >= 0; i -= 8) {
@@ -20,7 +20,7 @@ HashValue DigestToHash(const std::string& value) {
   return hash;
 }
 
-std::string GetHashDigest(const HashValue& hash) {
+std::string GetHashDigest(const HashValue &hash) {
   if (hash.bits().empty()) {
     return "";
   }
@@ -45,7 +45,7 @@ std::string GetDigestHexString(const std::string digest) {
   return hex;
 }
 
-bool IsValidDigest(const std::string& digest, uint32_t difficulty) {
+bool IsValidDigest(const std::string &digest, uint32_t difficulty) {
   uint32_t num = 0;
   for (size_t i = 0; i < digest.size(); ++i) {
     int zeros = 8;
@@ -58,19 +58,21 @@ bool IsValidDigest(const std::string& digest, uint32_t difficulty) {
       }
     }
     num += zeros;
-    if (zeros != 8) break;
+    if (zeros != 8)
+      break;
   }
-  //LOG(ERROR)<<"digest:"<<digest<<" num:"<<num;
+  // LOG(ERROR)<<"digest:"<<digest<<" num:"<<num;
   return num >= difficulty;
 }
 
-std::string GetHashValue(const std::string& data) {
+std::string GetHashValue(const std::string &data) {
   return SignatureVerifier::CalculateHash(
       SignatureVerifier::CalculateHash(data));
 }
 
-int CmpHash(const HashValue& h1, const HashValue& h2) {
-  if (h1.bits_size() != 4 || h2.bits_size() != 4) return -1;
+int CmpHash(const HashValue &h1, const HashValue &h2) {
+  if (h1.bits_size() != 4 || h2.bits_size() != 4)
+    return -1;
   for (int i = 0; i < 4; ++i) {
     if (h1.bits(i) != h2.bits(i)) {
       return h1.bits(i) < h2.bits(i) ? -1 : 1;
@@ -79,24 +81,24 @@ int CmpHash(const HashValue& h1, const HashValue& h2) {
   return 0;
 }
 
-bool operator<(const HashValue& h1, const HashValue& h2) {
+bool operator<(const HashValue &h1, const HashValue &h2) {
   return CmpHash(h1, h2) < 0;
 }
 
-bool operator<=(const HashValue& h1, const HashValue& h2) {
+bool operator<=(const HashValue &h1, const HashValue &h2) {
   return CmpHash(h1, h2) <= 0;
 }
 
-bool operator>(const HashValue& h1, const HashValue& h2) {
+bool operator>(const HashValue &h1, const HashValue &h2) {
   return CmpHash(h1, h2) > 0;
 }
 
-bool operator>=(const HashValue& h1, const HashValue& h2) {
+bool operator>=(const HashValue &h1, const HashValue &h2) {
   return CmpHash(h1, h2) >= 0;
 }
 
-bool operator==(const HashValue& h1, const HashValue& h2) {
+bool operator==(const HashValue &h1, const HashValue &h2) {
   return CmpHash(h1, h2) == 0;
 }
 
-}  // namespace resdb
+} // namespace resdb

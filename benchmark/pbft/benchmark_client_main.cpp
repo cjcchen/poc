@@ -10,7 +10,7 @@ using resdb::get_sys_clock;
 using resdb::ReplicaInfo;
 using resdb::ResDBConfig;
 
-int main(int argc, char** argv) {
+int main(int argc, char **argv) {
   if (argc < 5) {
     printf("<config path> <data_size> <request num> <thread num> \n");
     return 0;

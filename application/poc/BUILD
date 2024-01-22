@@ -7,7 +7,7 @@ cc_binary(
         "//config:resdb_config_utils",
         "//ordering/poc/pow:consensus_service_pow",
         "//server:resdb_server",
-	"//statistic:stats"
+        "//statistic:stats",
     ],
 )
 

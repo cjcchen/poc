@@ -38,27 +38,25 @@ PerformanceClientTimeout::PerformanceClientTimeout(std::string hash_,
 }
 
 PerformanceClientTimeout::PerformanceClientTimeout(
-    const PerformanceClientTimeout& other) {
+    const PerformanceClientTimeout &other) {
   this->hash = other.hash;
   this->timeout_time = other.timeout_time;
 }
 
 bool PerformanceClientTimeout::operator<(
-    const PerformanceClientTimeout& other) const {
+    const PerformanceClientTimeout &other) const {
   return timeout_time > other.timeout_time;
 }
 
 PerformanceManager::PerformanceManager(
-    const ResDBConfig& config, ReplicaCommunicator* replica_communicator,
-    SystemInfo* system_info, SignatureVerifier* verifier)
-    : config_(config),
-      replica_communicator_(replica_communicator),
+    const ResDBConfig &config, ReplicaCommunicator *replica_communicator,
+    SystemInfo *system_info, SignatureVerifier *verifier)
+    : config_(config), replica_communicator_(replica_communicator),
       collector_pool_(std::make_unique<LockFreeCollectorPool>(
           "response", config_.GetMaxProcessTxn(), nullptr)),
       context_pool_(std::make_unique<LockFreeCollectorPool>(
           "context", config_.GetMaxProcessTxn(), nullptr)),
-      batch_queue_("user request"),
-      system_info_(system_info),
+      batch_queue_("user request"), system_info_(system_info),
       verifier_(verifier) {
   stop_ = false;
   eval_started_ = false;
@@ -80,7 +78,7 @@ PerformanceManager::PerformanceManager(
     send_num_.push_back(0);
   }
   total_num_ = 0;
-  timeout_length_ = 10000000;  // 10s
+  timeout_length_ = 10000000; // 10s
 }
 
 PerformanceManager::~PerformanceManager() {
@@ -146,8 +144,8 @@ int PerformanceManager::ProcessResponseMsg(std::unique_ptr<Context> context,
   }
   CollectorResultCode ret =
       AddResponseMsg(context->signature, std::move(request),
-                     [&](const Request& request,
-                         const TransactionCollector::CollectorDataType*) {
+                     [&](const Request &request,
+                         const TransactionCollector::CollectorDataType *) {
                        response = std::make_unique<Request>(request);
                        return;
                      });
@@ -172,26 +170,26 @@ int PerformanceManager::ProcessResponseMsg(std::unique_ptr<Context> context,
 }
 
 bool PerformanceManager::MayConsensusChangeStatus(
-    int type, int received_count, std::atomic<TransactionStatue>* status) {
+    int type, int received_count, std::atomic<TransactionStatue> *status) {
   switch (type) {
-    case Request::TYPE_RESPONSE:
-      // if receive f+1 response results, ack to the caller.
-      if (*status == TransactionStatue::None &&
-          config_.GetMinClientReceiveNum() <= received_count) {
-        TransactionStatue old_status = TransactionStatue::None;
-        return status->compare_exchange_strong(
-            old_status, TransactionStatue::EXECUTED, std::memory_order_acq_rel,
-            std::memory_order_acq_rel);
-      }
-      break;
+  case Request::TYPE_RESPONSE:
+    // if receive f+1 response results, ack to the caller.
+    if (*status == TransactionStatue::None &&
+        config_.GetMinClientReceiveNum() <= received_count) {
+      TransactionStatue old_status = TransactionStatue::None;
+      return status->compare_exchange_strong(
+          old_status, TransactionStatue::EXECUTED, std::memory_order_acq_rel,
+          std::memory_order_acq_rel);
+    }
+    break;
   }
   return false;
 }
 
 CollectorResultCode PerformanceManager::AddResponseMsg(
-    const SignatureInfo& signature, std::unique_ptr<Request> request,
-    std::function<void(const Request&,
-                       const TransactionCollector::CollectorDataType*)>
+    const SignatureInfo &signature, std::unique_ptr<Request> request,
+    std::function<void(const Request &,
+                       const TransactionCollector::CollectorDataType *)>
         response_call_back) {
   if (request == nullptr) {
     return CollectorResultCode::INVALID;
@@ -202,9 +200,9 @@ CollectorResultCode PerformanceManager::AddResponseMsg(
   int resp_received_count = 0;
   int ret = collector_pool_->GetCollector(seq)->AddRequest(
       std::move(request), signature, false,
-      [&](const Request& request, int received_count,
-          TransactionCollector::CollectorDataType* data,
-          std::atomic<TransactionStatue>* status, bool force) {
+      [&](const Request &request, int received_count,
+          TransactionCollector::CollectorDataType *data,
+          std::atomic<TransactionStatue> *status, bool force) {
         if (MayConsensusChangeStatus(type, received_count, status)) {
           resp_received_count = 1;
           response_call_back(request, data);
@@ -221,7 +219,7 @@ CollectorResultCode PerformanceManager::AddResponseMsg(
 }
 
 void PerformanceManager::SendResponseToClient(
-    const BatchUserResponse& batch_response) {
+    const BatchUserResponse &batch_response) {
   uint64_t create_time = batch_response.createtime();
   uint64_t local_id = batch_response.local_id();
   if (create_time > 0) {
@@ -286,7 +284,7 @@ int PerformanceManager::BatchProposeMsg() {
 }
 
 int PerformanceManager::DoBatch(
-    const std::vector<std::unique_ptr<QueueItem>>& batch_req) {
+    const std::vector<std::unique_ptr<QueueItem>> &batch_req) {
   auto new_request =
       NewRequest(Request::TYPE_NEW_TXNS, Request(), config_.GetSelfInfo().id());
   if (new_request == nullptr) {
@@ -296,7 +294,7 @@ int PerformanceManager::DoBatch(
 
   BatchUserRequest batch_request;
   for (size_t i = 0; i < batch_req.size(); ++i) {
-    BatchUserRequest::UserRequest* req = batch_request.add_user_requests();
+    BatchUserRequest::UserRequest *req = batch_request.add_user_requests();
     *req->mutable_request() = *batch_req[i]->user_request.get();
     if (batch_req[i]->context) {
       *req->mutable_signature() = batch_req[i]->context->signature;
@@ -367,8 +365,8 @@ bool PerformanceManager::CheckTimeOut(std::string hash) {
   return value;
 }
 
-std::unique_ptr<Request> PerformanceManager::GetTimeOutRequest(
-    std::string hash) {
+std::unique_ptr<Request>
+PerformanceManager::GetTimeOutRequest(std::string hash) {
   pm_lock_.lock();
   auto value = std::move(waiting_response_batches_.find(hash)->second);
   pm_lock_.unlock();
@@ -401,4 +399,4 @@ void PerformanceManager::MonitoringClientTimeOut() {
   }
 }
 
-}  // namespace resdb
+} // namespace resdb

@@ -10,13 +10,10 @@
 
 namespace resdb {
 
-ResDBServer::ResDBServer(const ResDBConfig& config,
+ResDBServer::ResDBServer(const ResDBConfig &config,
                          std::unique_ptr<ResDBService> service)
-    : socket_(std::make_unique<TcpSocket>()),
-      service_(std::move(service)),
-      input_queue_("input"),
-      resp_queue_("resp"),
-      config_(config) {
+    : socket_(std::make_unique<TcpSocket>()), service_(std::move(service)),
+      input_queue_("input"), resp_queue_("resp"), config_(config) {
   struct sigaction sa;
   sa.sa_handler = SIG_IGN;
   sa.sa_flags = 0;
@@ -25,7 +22,7 @@ ResDBServer::ResDBServer(const ResDBConfig& config,
     exit(EXIT_FAILURE);
   }
 
-  socket_->SetRecvTimeout(1000000);  // set 1s timeout.
+  socket_->SetRecvTimeout(1000000); // set 1s timeout.
   LOG(ERROR) << "listen ip:" << config.GetSelfInfo().ip()
              << " port:" << config.GetSelfInfo().port();
   assert(socket_->Listen(config.GetSelfInfo().ip(),
@@ -41,14 +38,14 @@ ResDBServer::ResDBServer(const ResDBConfig& config,
 
 ResDBServer::~ResDBServer() {}
 
-void ResDBServer::AcceptorHandler(const char* buffer, size_t data_len) {
+void ResDBServer::AcceptorHandler(const char *buffer, size_t data_len) {
   BroadcastData data;
   if (!data.ParseFromArray(buffer, data_len)) {
     LOG(ERROR) << "parse broad cast fail:" << data_len;
     return;
   }
 
-  for (auto& sub_data : data.data()) {
+  for (auto &sub_data : data.data()) {
     std::unique_ptr<DataInfo> sub_request_info = std::make_unique<DataInfo>();
     sub_request_info->data_len = sub_data.size();
     sub_request_info->buff = new char[sub_request_info->data_len];
@@ -81,7 +78,7 @@ void ResDBServer::InputProcess() {
     }));
   }
 
-  for (auto& th : threads) {
+  for (auto &th : threads) {
     if (th.joinable()) {
       th.join();
     }
@@ -128,7 +125,7 @@ void ResDBServer::Run() {
     socket_queue.Push(std::move(client_socket));
   }
 
-  for (auto& th : threads) {
+  for (auto &th : threads) {
     if (th.joinable()) {
       th.join();
     }
@@ -162,4 +159,4 @@ void ResDBServer::Stop() {
 
 bool ResDBServer::ServiceIsReady() const { return service_->IsReady(); }
 
-}  // namespace resdb
+} // namespace resdb

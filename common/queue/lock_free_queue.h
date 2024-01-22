@@ -9,12 +9,11 @@
 
 namespace resdb {
 
-template <typename T>
-class LockFreeQueue {
- public:
-  LockFreeQueue(const std::string& name = "") : name_(name), queue_(1024) {}
+template <typename T> class LockFreeQueue {
+public:
+  LockFreeQueue(const std::string &name = "") : name_(name), queue_(1024) {}
   void Push(std::unique_ptr<T> data) {
-    T* ptr = data.release();
+    T *ptr = data.release();
     while (!queue_.push(ptr)) {
       LOG(ERROR) << "push data:" << name_ << " fail";
     }
@@ -31,7 +30,7 @@ class LockFreeQueue {
   }
 
   std::unique_ptr<T> Pop(int timeout_ms = 100) {
-    T* ret = nullptr;
+    T *ret = nullptr;
     if (!queue_.pop(ret)) {
       if (timeout_ms > 0) {
         std::unique_lock<std::mutex> lk(mutex_);
@@ -47,12 +46,12 @@ class LockFreeQueue {
     return std::unique_ptr<T>(ret);
   }
 
- private:
+private:
   std::string name_;
-  boost::lockfree::queue<T*> queue_;
+  boost::lockfree::queue<T *> queue_;
   std::condition_variable cv_;
   std::mutex mutex_;
   std::atomic<bool> need_notify_;
 };
 
-}  // namespace resdb
+} // namespace resdb

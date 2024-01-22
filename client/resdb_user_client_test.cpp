@@ -17,7 +17,7 @@ using ::testing::Invoke;
 using ::testing::Return;
 using ::testing::Test;
 
-std::string GenerateRequestData(const ClientTestRequest& client_request,
+std::string GenerateRequestData(const ClientTestRequest &client_request,
                                 bool need_resp = false) {
   ResDBMessage message;
 
@@ -33,14 +33,14 @@ std::string GenerateRequestData(const ClientTestRequest& client_request,
   return request_data;
 }
 
-std::string GenerateResponseData(const ClientTestResponse& client_responses) {
+std::string GenerateResponseData(const ClientTestResponse &client_responses) {
   std::string response_data;
   client_responses.SerializeToString(&response_data);
   return response_data;
 }
 
 class UserClientTest : public Test {
- public:
+public:
   UserClientTest() {
     self_info_.set_ip("127.0.0.1");
     self_info_.set_port(1234);
@@ -56,7 +56,7 @@ class UserClientTest : public Test {
     config_->SetClientTimeoutMs(10000);
   }
 
- protected:
+protected:
   ReplicaInfo dest_info_;
   ReplicaInfo self_info_;
   std::vector<ReplicaInfo> replicas_;
@@ -95,7 +95,7 @@ TEST_F(UserClientTest, GetResponse) {
   EXPECT_CALL(*socket, Send(GenerateRequestData(client_request, true)))
       .WillOnce(Return(0));
   EXPECT_CALL(*socket, Recv(_, _))
-      .WillOnce(Invoke([&](void** buf, size_t* len) {
+      .WillOnce(Invoke([&](void **buf, size_t *len) {
         ClientTestResponse response;
         response.set_value("ack");
 
@@ -136,6 +136,6 @@ TEST_F(UserClientTest, RecvResponseFail) {
             0);
 }
 
-}  // namespace
+} // namespace
 
-}  // namespace resdb
+} // namespace resdb

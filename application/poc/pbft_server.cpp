@@ -9,15 +9,15 @@ using resdb::ResDBServer;
 
 void ShowUsage() { printf("<config> <private_key> <cert_file>\n"); }
 
-int main(int argc, char** argv) {
+int main(int argc, char **argv) {
   if (argc < 3) {
     ShowUsage();
     exit(0);
   }
 
-  char* config_file = argv[1];
-  char* private_key_file = argv[2];
-  char* cert_file = argv[3];
+  char *config_file = argv[1];
+  char *private_key_file = argv[2];
+  char *cert_file = argv[3];
 
   std::unique_ptr<ResDBConfig> config =
       GenerateResDBConfig(config_file, private_key_file, cert_file);
@@ -26,4 +26,3 @@ int main(int argc, char** argv) {
                      std::make_unique<ConsensusServicePBFT>(*config, nullptr));
   server.Run();
 }
-

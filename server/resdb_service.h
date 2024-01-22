@@ -9,7 +9,7 @@
 namespace resdb {
 
 class ResDBService {
- public:
+public:
   ResDBService() : is_running_(false) {}
   virtual ~ResDBService() = default;
 
@@ -21,8 +21,8 @@ class ResDBService {
   virtual void Start();
   void Stop();
 
- private:
+private:
   std::atomic<bool> is_running_;
 };
 
-}  // namespace resdb
+} // namespace resdb

@@ -2,8 +2,8 @@
 
 #include <glog/logging.h>
 #include <prometheus/counter.h>
-#include <prometheus/histogram.h>
 #include <prometheus/exposer.h>
+#include <prometheus/histogram.h>
 #include <prometheus/registry.h>
 
 namespace resdb {
@@ -25,8 +25,8 @@ enum MetricName {
 };
 
 class PrometheusHandler {
- public:
-  PrometheusHandler(const std::string& server_address);
+public:
+  PrometheusHandler(const std::string &server_address);
   ~PrometheusHandler();
 
   void Set(MetricName name, double value);
@@ -34,20 +34,20 @@ class PrometheusHandler {
   void Inc(MetricName name, int num);
   void Inc(MetricName name, double value);
 
- protected:
+protected:
   void Register();
-  void RegisterGaugeMetric(const std::string& table_name,
-                      const std::string& metric_name);
-  void RegisterHistogramMetric(const std::string& table_name,
-                      const std::string& metric_name);
-  void RegisterCounterMetric(const std::string& table_name,
-                      const std::string& metric_name);
+  void RegisterGaugeMetric(const std::string &table_name,
+                           const std::string &metric_name);
+  void RegisterHistogramMetric(const std::string &table_name,
+                               const std::string &metric_name);
+  void RegisterCounterMetric(const std::string &table_name,
+                             const std::string &metric_name);
 
-  void RegisterGauge(const std::string& name);
-  void RegisterHistogram(const std::string& name);
-  void RegisterCounter(const std::string& name);
+  void RegisterGauge(const std::string &name);
+  void RegisterHistogram(const std::string &name);
+  void RegisterCounter(const std::string &name);
 
- private:
+private:
   typedef prometheus::Family<prometheus::Gauge> GaugeBuilder;
   typedef prometheus::Family<prometheus::Histogram> HistogramBuilder;
   typedef prometheus::Family<prometheus::Counter> CounterBuilder;
@@ -56,12 +56,12 @@ class PrometheusHandler {
       exposer_;
   std::shared_ptr<prometheus::Registry> registry_;
 
-  std::map<std::string, GaugeBuilder*> gauge_builder_;
-  std::map<std::string, HistogramBuilder*> histogram_builder_;
-  std::map<std::string, CounterBuilder*> counter_builder_;
-  std::map<std::string, prometheus::Histogram*> histogram_metric_;
-  std::map<std::string, prometheus::Counter*> counter_metric_;
-  std::map<std::string, prometheus::Gauge*> gauge_metric_;
+  std::map<std::string, GaugeBuilder *> gauge_builder_;
+  std::map<std::string, HistogramBuilder *> histogram_builder_;
+  std::map<std::string, CounterBuilder *> counter_builder_;
+  std::map<std::string, prometheus::Histogram *> histogram_metric_;
+  std::map<std::string, prometheus::Counter *> counter_metric_;
+  std::map<std::string, prometheus::Gauge *> gauge_metric_;
 };
 
-}  // namespace resdb
+} // namespace resdb

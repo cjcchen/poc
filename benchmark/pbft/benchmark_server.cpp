@@ -1,17 +1,17 @@
 #include "application/utils/server_factory.h"
 #include "benchmark/pbft/benchmark_server_impl.h"
-#include "ordering/pbft/consensus_service_pbft.h"
-#include "statistic/stats.h"
 #include "config/resdb_config_utils.h"
+#include "ordering/pbft/consensus_service_pbft.h"
 #include "proto/kv_server.pb.h"
+#include "statistic/stats.h"
 
-using resdb::ResDBServer;
-using resdb::KVRequest;
-using resdb::GenerateResDBConfig;
 using resdb::BenchmarkServerImpl;
 using resdb::ConsensusServicePBFT;
+using resdb::GenerateResDBConfig;
 using resdb::GenerateResDBServer;
+using resdb::KVRequest;
 using resdb::ResDBConfig;
+using resdb::ResDBServer;
 using resdb::Stats;
 
 void ShowUsage() { printf("<config> <private_key> <cert_file>\n"); }
@@ -22,21 +22,21 @@ std::string GetRandomKey() {
   return std::to_string(num1) + std::to_string(num2);
 }
 
-int main(int argc, char** argv) {
+int main(int argc, char **argv) {
   if (argc < 3) {
     ShowUsage();
     exit(0);
   }
 
-  char* config_file = argv[1];
-  char* private_key_file = argv[2];
-  char* cert_file = argv[3];
+  char *config_file = argv[1];
+  char *private_key_file = argv[2];
+  char *cert_file = argv[3];
 
   std::unique_ptr<ResDBConfig> config =
       GenerateResDBConfig(config_file, private_key_file, cert_file);
 
   Stats::GetGlobalStats(/*int sleep_seconds = */ 5);
-  
+
   auto performance_consens = std::make_unique<ConsensusServicePBFT>(
       *config, std::make_unique<BenchmarkServerImpl>());
   performance_consens->SetupPerformanceDataFunc([]() {
@@ -49,14 +49,13 @@ int main(int argc, char** argv) {
     return request_data;
   });
 
-  //auto server = std::make_unique<ResDBServer>(
+  // auto server = std::make_unique<ResDBServer>(
   //    *config,
   //    std::make_unique<ConsensusServicePBFT>(*config, std::move(executor)));
 
-
   auto server =
       std::make_unique<ResDBServer>(*config, std::move(performance_consens));
-  //auto server = GenerateResDBServer(
+  // auto server = GenerateResDBServer(
   //    config_file, private_key_file, cert_file,
   //    std::make_unique<BenchmarkServerImpl>(), nullptr,
   //    [&](ResDBConfig* config) { config->RunningPerformance(true); });

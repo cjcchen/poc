@@ -10,10 +10,10 @@
 namespace resdb {
 
 class Stats {
- public:
-  static Stats* GetGlobalStats(int sleep_seconds = 5);
-  static PrometheusHandler* GetGlobalPrometheus();
-  static void InitGlobalPrometheus(const std::string& prometheus_address);
+public:
+  static Stats *GetGlobalStats(int sleep_seconds = 5);
+  static PrometheusHandler *GetGlobalPrometheus();
+  static void InitGlobalPrometheus(const std::string &prometheus_address);
 
   void Stop();
 
@@ -45,11 +45,11 @@ class Stats {
   void ServerCall();
   void ServerProcess();
 
- protected:
+protected:
   Stats(int sleep_time = 5);
   ~Stats();
 
- private:
+private:
   std::string name_;
   std::atomic<int> num_call_, run_call_;
   std::atomic<uint64_t> last_time_, run_time_, run_call_time_;
@@ -71,7 +71,7 @@ class Stats {
   std::atomic<uint64_t> run_req_run_time_;
   std::atomic<uint64_t> seq_gap_;
   std::atomic<uint64_t> total_request_;
-  int monitor_sleep_time_ = 5;  // default 5s.
+  int monitor_sleep_time_ = 5; // default 5s.
 };
 
-}  // namespace resdb
+} // namespace resdb

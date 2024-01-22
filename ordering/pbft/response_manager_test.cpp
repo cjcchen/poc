@@ -17,9 +17,9 @@ using ::testing::Invoke;
 using ::testing::Test;
 
 class ResponseManagerTest : public Test {
- public:
+public:
   ResponseManagerTest()
-      :  // just set the monitor time to 1 second to return early.
+      : // just set the monitor time to 1 second to return early.
         global_stats_(Stats::GetGlobalStats(1)),
         config_({GenerateReplicaInfo(1, "127.0.0.1", 1234),
                  GenerateReplicaInfo(2, "127.0.0.1", 1235),
@@ -44,8 +44,8 @@ class ResponseManagerTest : public Test {
                                        std::make_unique<Request>(request));
   }
 
- protected:
-  Stats* global_stats_;
+protected:
+  Stats *global_stats_;
   ResDBConfig config_;
   SystemInfo system_info_;
   MockResDBReplicaClient replica_client_;
@@ -176,6 +176,6 @@ TEST_F(ResponseManagerTest, ProcessResponseWithSameSender) {
   EXPECT_EQ(AddResponseMsg(1, batch_resp), 0);
 }
 
-}  // namespace
+} // namespace
 
-}  // namespace resdb
+} // namespace resdb

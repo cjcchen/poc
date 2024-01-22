@@ -8,21 +8,21 @@ namespace resdb {
 
 // Socket for Tcp Server
 class TcpSocket : public Socket {
- public:
+public:
   TcpSocket();
   TcpSocket(int socket_fd);
   ~TcpSocket();
 
   // For Server
-  int Listen(const std::string& ip, int port) override;
+  int Listen(const std::string &ip, int port) override;
   std::unique_ptr<Socket> Accept() override;
   virtual void ReInit();
   void Close() override;
 
-  int Connect(const std::string& ip, int port) override;
+  int Connect(const std::string &ip, int port) override;
 
-  int Send(const std::string& data) override;
-  int Recv(void** buf, size_t* len) override;
+  int Send(const std::string &data) override;
+  int Recv(void **buf, size_t *len) override;
 
   int GetBindingPort() override;
 
@@ -30,11 +30,11 @@ class TcpSocket : public Socket {
   void SetSendTimeout(int64_t microseconds) override;
   int SetAsync(bool is_open = true) override;
 
- private:
+private:
   int InitSocket();
 
- private:
+private:
   int socket_fd_;
   int binding_port_ = 0;
 };
-}  // namespace resdb
+} // namespace resdb

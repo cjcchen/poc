@@ -27,7 +27,7 @@ ResDBConfig GenerateDBConfig() {
   return ResDBConfig(replicas, self_info, KeyInfo(), CertificateInfo());
 }
 
-void SendData(const std::string& data) {
+void SendData(const std::string &data) {
   TcpSocket client_socket;
   int ret = client_socket.Connect("127.0.0.1", 1234);
   ASSERT_EQ(ret, 0);
@@ -53,7 +53,7 @@ TEST(ResDBServerTest, RecvData) {
       .WillOnce(Invoke([&](std::unique_ptr<Context>,
                            std::unique_ptr<DataInfo> request_info) {
         EXPECT_EQ(
-            std::string((char*)request_info->buff, request_info->data_len),
+            std::string((char *)request_info->buff, request_info->data_len),
             "test");
         recv.set_value(true);
         return 0;
@@ -94,4 +94,4 @@ TEST(ResDBServerTest, RunningDone) {
   svr_thead2.join();
 }
 
-}  // namespace resdb
+} // namespace resdb

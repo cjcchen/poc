@@ -28,10 +28,10 @@ std::map<MetricName, std::pair<TableName, std::string>> metric_names = {
     {SHIFT_MSG, {MSG, "shift_msg"}},
 };
 
-PrometheusHandler::PrometheusHandler(const std::string& server_address) {
+PrometheusHandler::PrometheusHandler(const std::string &server_address) {
   exposer_ =
       prometheus::detail::make_unique<prometheus::Exposer>(server_address);
-	LOG(ERROR)<<"handler address:"<<server_address;
+  LOG(ERROR) << "handler address:" << server_address;
   registry_ = std::make_shared<prometheus::Registry>();
   exposer_->RegisterCollectable(registry_);
 
@@ -45,88 +45,92 @@ PrometheusHandler::~PrometheusHandler() {
 }
 
 void PrometheusHandler::Register() {
-  for (auto& table : histogram_table_names) {
+  for (auto &table : histogram_table_names) {
     RegisterHistogram(table.second);
   }
 
-  for (auto& metric_pair : metric_names) {
-	  if (histogram_table_names.find(metric_pair.second.first) == histogram_table_names.end()){
-		  continue;
-	  }
+  for (auto &metric_pair : metric_names) {
+    if (histogram_table_names.find(metric_pair.second.first) ==
+        histogram_table_names.end()) {
+      continue;
+    }
     RegisterHistogramMetric(histogram_table_names[metric_pair.second.first],
-                   metric_pair.second.second);
+                            metric_pair.second.second);
   }
-  
-  for (auto& table : counter_table_names) {
+
+  for (auto &table : counter_table_names) {
     RegisterCounter(table.second);
   }
 
-  for (auto& metric_pair : metric_names) {
-	  if (counter_table_names.find(metric_pair.second.first) == counter_table_names.end()){
-		  continue;
-	  }
+  for (auto &metric_pair : metric_names) {
+    if (counter_table_names.find(metric_pair.second.first) ==
+        counter_table_names.end()) {
+      continue;
+    }
     RegisterCounterMetric(counter_table_names[metric_pair.second.first],
-                   metric_pair.second.second);
+                          metric_pair.second.second);
   }
-  
-  
-  for (auto& table : gauge_table_names) {
+
+  for (auto &table : gauge_table_names) {
     RegisterGauge(table.second);
   }
 
-  for (auto& metric_pair : metric_names) {
-	  if (gauge_table_names.find(metric_pair.second.first) == gauge_table_names.end()){
-		  continue;
-	  }
+  for (auto &metric_pair : metric_names) {
+    if (gauge_table_names.find(metric_pair.second.first) ==
+        gauge_table_names.end()) {
+      continue;
+    }
     RegisterGaugeMetric(gauge_table_names[metric_pair.second.first],
-                   metric_pair.second.second);
+                        metric_pair.second.second);
   }
 }
 
-void PrometheusHandler::RegisterHistogram(const std::string& name) {
+void PrometheusHandler::RegisterHistogram(const std::string &name) {
   histogram_builder_[name] = &prometheus::BuildHistogram()
-                         .Name(name)
-                         .Help(name + " metrics")
-                         .Register(*registry_);
+                                  .Name(name)
+                                  .Help(name + " metrics")
+                                  .Register(*registry_);
 }
 
-void PrometheusHandler::RegisterCounter(const std::string& name) {
+void PrometheusHandler::RegisterCounter(const std::string &name) {
   counter_builder_[name] = &prometheus::BuildCounter()
-                         .Name(name)
-                         .Help(name + " metrics")
-                         .Register(*registry_);
+                                .Name(name)
+                                .Help(name + " metrics")
+                                .Register(*registry_);
 }
 
-void PrometheusHandler::RegisterGauge(const std::string& name) {
+void PrometheusHandler::RegisterGauge(const std::string &name) {
   gauge_builder_[name] = &prometheus::BuildGauge()
-                         .Name(name)
-                         .Help(name + " metrics")
-                         .Register(*registry_);
+                              .Name(name)
+                              .Help(name + " metrics")
+                              .Register(*registry_);
 }
 
-void PrometheusHandler::RegisterHistogramMetric(const std::string& table_name,
-                                       const std::string& metric_name) {
+void PrometheusHandler::RegisterHistogramMetric(
+    const std::string &table_name, const std::string &metric_name) {
   if (histogram_builder_.find(table_name) == histogram_builder_.end()) {
     return;
   }
-  histogram_metric_[metric_name] = &histogram_builder_[table_name]->Add({{"metrics", metric_name}},
-                                Histogram::BucketBoundaries{0,1,5});
+  histogram_metric_[metric_name] = &histogram_builder_[table_name]->Add(
+      {{"metrics", metric_name}}, Histogram::BucketBoundaries{0, 1, 5});
 }
 
-void PrometheusHandler::RegisterCounterMetric(const std::string& table_name,
-                                       const std::string& metric_name) {
+void PrometheusHandler::RegisterCounterMetric(const std::string &table_name,
+                                              const std::string &metric_name) {
   if (counter_builder_.find(table_name) == counter_builder_.end()) {
     return;
   }
-  counter_metric_[metric_name] = &counter_builder_[table_name]->Add({{"metrics", metric_name}});
+  counter_metric_[metric_name] =
+      &counter_builder_[table_name]->Add({{"metrics", metric_name}});
 }
 
-void PrometheusHandler::RegisterGaugeMetric(const std::string& table_name,
-                                       const std::string& metric_name) {
+void PrometheusHandler::RegisterGaugeMetric(const std::string &table_name,
+                                            const std::string &metric_name) {
   if (gauge_builder_.find(table_name) == gauge_builder_.end()) {
     return;
   }
-  gauge_metric_[metric_name] = &gauge_builder_[table_name]->Add({{"metrics", metric_name}});
+  gauge_metric_[metric_name] =
+      &gauge_builder_[table_name]->Add({{"metrics", metric_name}});
 }
 
 void PrometheusHandler::SetValue(MetricName name, double value) {
@@ -135,7 +139,7 @@ void PrometheusHandler::SetValue(MetricName name, double value) {
     return;
   }
   gauge_metric_[metric_name_str]->Set(value);
-  LOG(ERROR)<<"set value:"<<name<<" "<<value;
+  LOG(ERROR) << "set value:" << name << " " << value;
 }
 
 void PrometheusHandler::Set(MetricName name, double value) {
@@ -162,4 +166,4 @@ void PrometheusHandler::Inc(MetricName name, int num) {
   counter_metric_[metric_name_str]->Increment(num);
 }
 
-}  // namespace resdb
+} // namespace resdb

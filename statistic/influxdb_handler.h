@@ -1,17 +1,16 @@
 #pragma once
 
-#include <glog/logging.h>
 #include "statistic/influxdb.hpp"
-
+#include <glog/logging.h>
 
 namespace resdb {
 
 class InfluxdbHandler {
- public:
-  InfluxdbHandler(const std::string& server_address);
+public:
+  InfluxdbHandler(const std::string &server_address);
   ~InfluxdbHandler();
 
   void IncQPS();
 };
 
-}  // namespace resdb
+} // namespace resdb

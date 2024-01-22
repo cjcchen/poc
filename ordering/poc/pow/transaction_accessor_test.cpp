@@ -20,8 +20,8 @@ using ::testing::Pointee;
 using ::testing::Return;
 
 class MockTransactionAccessor : public TransactionAccessor {
- public:
-  MockTransactionAccessor(const ResDBPoCConfig& config)
+public:
+  MockTransactionAccessor(const ResDBPoCConfig &config)
       : TransactionAccessor(config, false) {}
   MOCK_METHOD(std::unique_ptr<ResDBTxnClient>, GetResDBTxnClient, (),
               (override));
@@ -117,5 +117,5 @@ TEST(TransactionAccessorTest, GetTransactions) {
   }
 }
 
-}  // namespace
-}  // namespace resdb
+} // namespace
+} // namespace resdb

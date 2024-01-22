@@ -8,7 +8,7 @@
 
 namespace resdb {
 
-CheckPointInfo::CheckPointInfo(const ResDBConfig& config) : config_(config) {
+CheckPointInfo::CheckPointInfo(const ResDBConfig &config) : config_(config) {
   if (!config.GetCheckPointLoggingPath().empty()) {
     logging_ = std::make_unique<Logging>(config.GetCheckPointLoggingPath());
   }
@@ -20,7 +20,7 @@ uint64_t CheckPointInfo::GetStableCheckPointSeq() {
 
 uint64_t CheckPointInfo::GetMaxCheckPointRequestSeq() { return last_seq_; }
 
-void CheckPointInfo::AddCommitData(const Request& request) {
+void CheckPointInfo::AddCommitData(const Request &request) {
   if (!config_.IsCheckPointEnabled()) {
     return;
   }
@@ -38,7 +38,7 @@ void CheckPointInfo::AddCommitData(const Request& request) {
 }
 
 // TODO as thread worker.
-void CheckPointInfo::CalculateHash(const Request& request) {
+void CheckPointInfo::CalculateHash(const Request &request) {
   std::string request_hash = request.hash();
   if (request_hash.empty()) {
     request_hash = SignatureVerifier::CalculateHash(request.data());
@@ -67,7 +67,7 @@ CheckPointData CheckPointInfo::GetCheckPointData() {
 }
 
 void CheckPointInfo::UpdateStableCheckPoint(
-    const std::vector<CheckPointData>& datas) {
+    const std::vector<CheckPointData> &datas) {
   if (datas.empty()) {
     return;
   }
@@ -82,4 +82,4 @@ void CheckPointInfo::UpdateStableCheckPoint(
   stable_checkpoints_ = datas;
 }
 
-}  // namespace resdb
+} // namespace resdb

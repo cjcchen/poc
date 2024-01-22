@@ -10,5 +10,5 @@ MATCHER_P(EqualsProto, replica, "") {
   return ::google::protobuf::util::MessageDifferencer::Equals(arg, replica);
 }
 
-}  // namespace testing
-}  // namespace resdb
+} // namespace testing
+} // namespace resdb

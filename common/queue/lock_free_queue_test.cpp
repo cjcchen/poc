@@ -26,6 +26,6 @@ TEST(LockFreeQueueTest, SendAndPop) {
   EXPECT_EQ(out->data, "test");
 }
 
-}  // namespace
+} // namespace
 
-}  // namespace resdb
+} // namespace resdb

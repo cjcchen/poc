@@ -6,8 +6,8 @@
 namespace resdb {
 
 class Query {
- public:
-  Query(const ResDBConfig& config, TransactionManager* transaction_manager);
+public:
+  Query(const ResDBConfig &config, TransactionManager *transaction_manager);
   virtual ~Query();
 
   virtual int ProcessGetReplicaState(std::unique_ptr<Context> context,
@@ -15,9 +15,9 @@ class Query {
   virtual int ProcessQuery(std::unique_ptr<Context> context,
                            std::unique_ptr<Request> request);
 
- protected:
+protected:
   ResDBConfig config_;
-  TransactionManager* transaction_manager_;
+  TransactionManager *transaction_manager_;
 };
 
-}  // namespace resdb
+} // namespace resdb

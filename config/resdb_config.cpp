@@ -2,17 +2,15 @@
 
 namespace resdb {
 
-ResDBConfig::ResDBConfig(const std::vector<ReplicaInfo>& replicas,
-                         const ReplicaInfo& self_info)
+ResDBConfig::ResDBConfig(const std::vector<ReplicaInfo> &replicas,
+                         const ReplicaInfo &self_info)
     : replicas_(replicas), self_info_(self_info) {}
 
-ResDBConfig::ResDBConfig(const std::vector<ReplicaInfo>& replicas,
-                         const ReplicaInfo& self_info,
-                         const KeyInfo& private_key,
-                         const CertificateInfo& public_key_cert_info)
-    : replicas_(replicas),
-      self_info_(self_info),
-      private_key_(private_key),
+ResDBConfig::ResDBConfig(const std::vector<ReplicaInfo> &replicas,
+                         const ReplicaInfo &self_info,
+                         const KeyInfo &private_key,
+                         const CertificateInfo &public_key_cert_info)
+    : replicas_(replicas), self_info_(self_info), private_key_(private_key),
       public_key_cert_info_(public_key_cert_info) {}
 
 KeyInfo ResDBConfig::GetPrivateKey() const { return private_key_; }
@@ -21,11 +19,11 @@ CertificateInfo ResDBConfig::GetPublicKeyCertificateInfo() const {
   return public_key_cert_info_;
 }
 
-const std::vector<ReplicaInfo>& ResDBConfig::GetReplicaInfos() const {
+const std::vector<ReplicaInfo> &ResDBConfig::GetReplicaInfos() const {
   return replicas_;
 }
 
-const ReplicaInfo& ResDBConfig::GetSelfInfo() const { return self_info_; }
+const ReplicaInfo &ResDBConfig::GetSelfInfo() const { return self_info_; }
 
 size_t ResDBConfig::GetReplicaNum() const { return replicas_.size(); }
 
@@ -55,7 +53,7 @@ std::string ResDBConfig::GetCheckPointLoggingPath() const {
   return checkpoint_logging_path_;
 }
 
-void ResDBConfig::SetCheckPointLoggingPath(const std::string& path) {
+void ResDBConfig::SetCheckPointLoggingPath(const std::string &path) {
   checkpoint_logging_path_ = path;
 }
 
@@ -122,4 +120,4 @@ uint32_t ResDBConfig::GetInputWorkerNum() const { return input_worker_num_; }
 
 uint32_t ResDBConfig::GetOutputWorkerNum() const { return output_worker_num_; }
 
-}  // namespace resdb
+} // namespace resdb

@@ -14,8 +14,8 @@ using ::testing::Return;
 using ::testing::Test;
 
 class ResDBClientTest : public Test {
- protected:
-  ResDBMessage GetSendPackage(const google::protobuf::Message& message,
+protected:
+  ResDBMessage GetSendPackage(const google::protobuf::Message &message,
                               Request::Type type) {
     ResDBMessage resdb_message;
     Request request;
@@ -25,7 +25,7 @@ class ResDBClientTest : public Test {
     return resdb_message;
   }
 
-  std::string GetSendPackageString(const google::protobuf::Message& message,
+  std::string GetSendPackageString(const google::protobuf::Message &message,
                                    Request::Type type) {
     ResDBMessage resdb_message = GetSendPackage(message, type);
     std::string data;
@@ -33,13 +33,13 @@ class ResDBClientTest : public Test {
     return data;
   }
 
-  ResDBMessage GetSendPackage(const google::protobuf::Message& message) {
+  ResDBMessage GetSendPackage(const google::protobuf::Message &message) {
     ResDBMessage resdb_message;
     EXPECT_TRUE(message.SerializeToString(resdb_message.mutable_data()));
     return resdb_message;
   }
 
-  std::string GetSendPackageString(const google::protobuf::Message& message) {
+  std::string GetSendPackageString(const google::protobuf::Message &message) {
     ResDBMessage resdb_message = GetSendPackage(message);
     std::string data;
     EXPECT_TRUE(resdb_message.SerializeToString(&data));
@@ -175,7 +175,7 @@ TEST_F(ResDBClientTest, SignMessage) {
 
   std::unique_ptr<MockSocket> socket = std::make_unique<MockSocket>();
   EXPECT_CALL(*socket, Connect("127.0.0.1", 1234)).WillOnce(Return(0));
-  EXPECT_CALL(*socket, Send).WillOnce(Invoke([&](const std::string& data) {
+  EXPECT_CALL(*socket, Send).WillOnce(Invoke([&](const std::string &data) {
     ResDBMessage resdb_message;
     EXPECT_TRUE(resdb_message.ParseFromString(data));
     EXPECT_TRUE(verifier.VerifyMessage(resdb_message.data(),
@@ -190,6 +190,6 @@ TEST_F(ResDBClientTest, SignMessage) {
   EXPECT_EQ(client.SendRawMessage(client_request), 0);
 }
 
-}  // namespace
+} // namespace
 
-}  // namespace resdb
+} // namespace resdb
