@@ -4,10 +4,11 @@ import sys
 import time
 from datetime import datetime
 
-
+import oracle_script
 from oracle_script.comm.utils import *
 from oracle_script.comm.comm_config import *
 
+oracle_script.comm.utils.debug = False
 cert_path="pbft_cert/"
 config_path=""
 home=""
@@ -57,7 +58,7 @@ def get_min_block(config):
     total_time = 0.0
     for (k,v) in mining_time.items():
       total_time = total_time +  float(v)
-    print("avg mining time:{} second:".format(total_time/len(mining_time.items())))
+    print("avg mining time:{} second.".format(total_time/len(mining_time.items())))
 
     print("=====================")
 
@@ -70,7 +71,7 @@ def get_min_block(config):
             delta = 0
             last = 0
             for s in res:
-                print("get s:",s.split())
+                #print("get s:",s.split())
                 seq = str(s.decode("utf-8").split()[5][5:-1].strip()).split(',')
                 #print("seq:",int(seq[0]),int(seq[1]))
                 t = str(s.split()[1].strip().decode('utf8'))
@@ -85,7 +86,7 @@ def get_min_block(config):
                 stamp = int(time.mktime(datetime_obj.timetuple()) * 1000.0 + datetime_obj.microsecond / 1000.0)
                 if last > 0:
                     delta = stamp - last
-                    print("last :{} cur:{}, delta:{}, time:{}, {}-{}".format(last, stamp, delta, t, int(seq[1]), int(seq[0])))
+                    #print("last :{} cur:{}, delta:{}, time:{}, {}-{}".format(last, stamp, delta, t, int(seq[1]), int(seq[0])))
                     tps.append((int(seq[1]) - int(seq[0]))/delta*1000)
                 last = stamp
             avg_time.append(delta/(len(res)-1)/1000)
@@ -101,7 +102,6 @@ if __name__ == '__main__':
 
     config_path=os.path.dirname(config_file)
     home = os.path.realpath(config_path+"/../../../")
-    print("home:",home)
     parse_config(config)
 
     #stat(config)

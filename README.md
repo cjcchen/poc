@@ -48,35 +48,42 @@ Once the certificates are generated, place the outputs to the deploy folder
 
 	./run_cli.sh
 
+It will take 1 minute to evaluate the performance before it stops.
 
-PoC contains two parts of machines, one is for pbft and the other is for PoW.
+## Obtain the results
+Run get_result.sh to obtain the max and average TPS.
 
-## Pbft
-Go into one of the folder under pbft, like [pbft/rep_32](https://github.com/cjcchen/poc/tree/main/oracle_script/pbft/rep_32), put the certificates you have generated into the cert folder. Also put the iplist.txt, server.config, client.config generated above to this folder.
+	./get_result.sh
+
+
+## PoW
+
+1. go to oracle_script
+
+	cd oracle_script
+
+2. Add the ipaddress to iplist.txt
+3. Run script to generate certificates
+	
+	./generate_pow_config.sh
+
+Once the certificates are generated, place the outputs to the deploy folder
+	
+	cp *.txt pow/deploy/
+	cp cert/* pow/deploy/cert/
 
 Run the script to deploy the server to the machines list in the iplist.txt.
 
     sh run_svr.sh
 
-## PoW
-This is the same as deploying Pbft.
+## Deploy the PoW service
 
-Go into one of the folder under pbft, like [pow/rep_32](https://github.com/cjcchen/poc/tree/main/oracle_script/pow/rep_32), put the certificates you have generated into the cert folder. Also put the iplist.txt, server.config, client.config generated above to this folder.
+	cd pow/deploy
+	./run_poc.sh
 
-Run the script to deploy the server to the machines list in the iplist.txt.
+It will take 1 minute to evaluate the performance before it stops.
 
-    sh run_poc.sh
+## Obtain the performance of PoW service
 
-# Produce the performance
-Run the script under [pow folder](https://github.com/cjcchen/poc/blob/main/oracle_script/pow/):
+	./get_result.sh
 
-    sh run_cli.sh
-
-This will trigger the client to keep sending transactions to Pbft instances. Then PoW instances will keep fetching the transactions from Pbft instances.
-
-# Get the results
-Run the python script under [pow folder](https://github.com/cjcchen/poc/blob/main/oracle_script/pow/):
-
-    python benchmark_result.py
-  
-Then you will see the mining time, commited blocks of each instance, and the total tps among all instances.

@@ -2,13 +2,16 @@ import subprocess
 import os
 from oracle_script.comm.comm_config import *
 
+debug = True
+
 def run_cmd(cmd):
     print(cmd)
     p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     output=p.stdout.readlines()
     p.wait()
-    for o in output:
-        print(o)
+    if debug:
+        for o in output:
+            print(o)
     return output
 
 def run_cmd_no_wait(cmd):
