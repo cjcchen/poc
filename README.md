@@ -3,11 +3,11 @@ In this document, we explain how to run the PoC codebase and produce the perform
 # Steps to Setup
 
 
-## Install dependences.
+## Install dependencies.
 
     ./INSTALL.sh
 
-Note: All developement and experimentation was done on Ubuntu 20.04.
+Note: All development and experimentation were done on Ubuntu 20.04.
 
 # Steps to deploy and run performance
 
@@ -19,18 +19,18 @@ Before deploying binaries, we need to build tools to generate certificates:
 
 put the ssh key path to oracle_script/comm/comm_config.py and ensure it contains the right mode (e.g. 0600).
 
-Prepare the machines you want to run the experimance and place the ip address in the iplist file.
+Prepare the machines you want to run the experiment and place the IP address in the iplist file.
 
-1. go to oracle_script
+1. Go to oracle_script
 
 		cd oracle_script
 
-4. Add the ipaddress to iplist.txt
-5. Run script to generate certificates
+4. Add the IP address to iplist.txt. Make sure you are allowed to access them.
+5. Run the script to generate certificates
 	
 		./generate_pbft_config.sh
 
-Once the certificates are generated, place the outputs to the deploy folder
+Once the certificates are generated, place the outputs in the deploy folder
 	
 	cp *.txt pbft/deploy/
 	cp cert/* pbft/deploy/cert/
@@ -54,21 +54,21 @@ Run get_result.sh to obtain the max and average TPS.
 
 ## PoW
 
-1. go to oracle_script
+1. Go to oracle_script
 
 		cd oracle_script
 
-2. Add the ipaddress to iplist.txt
-3. Run script to generate certificates
+2. Add the IP address to iplist.txt
+3. Runthe the script to generate certificates
 	
 		./generate_pow_config.sh
 
-Once the certificates are generated, place the outputs to the deploy folder
+Once the certificates are generated, place the outputs in the deploy folder.
 	
 	cp *.txt pow/deploy/
 	cp cert/* pow/deploy/cert/
 
-Run the script to deploy the server to the machines list in the iplist.txt.
+Run the script to deploy the server to the machines listed in the iplist.txt.
 
     sh run_svr.sh
 
